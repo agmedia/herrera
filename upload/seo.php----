@@ -1,0 +1,141 @@
+<?php
+
+define('VERSION', '3.0.3.7');
+ini_set("display_errors",1);
+error_reporting(E_ALL);
+
+require_once('config.php');
+
+
+
+
+ $conn = mysqli_connect(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+ mysqli_set_charset($conn,"utf8");
+// Check the connection
+if (!$conn) {
+     die("Connection failed: " . mysqli_connect_error());
+}
+echo "Connected successfully";
+
+
+
+
+function seoURL($str) {
+    $serch = array('Č', 'Ć', 'Đ', 'Ž', 'Š', 'č', 'ć', 'đ', 'ž', 'š');
+    $change = array('c', 'c', 'd', 'z', 's', 'c', 'c', 'd', 'z', 's');
+    $str = strtolower(str_replace($serch, $change, $str));
+    $str = preg_replace('/[^a-zA-Z0-9]+/', '-', $str);
+    $str = trim($str, '-');
+    $str = strtolower($str);
+
+    return $str;
+}
+
+?>
+<html>
+<head>
+    <title>Import blog fromm wordpress</title>
+</head>
+<style type="text/css">
+    body {
+        font-family: "Arial";
+        font-size: 12px;
+    }
+</style>
+<body>
+
+    <?php
+
+
+
+
+
+    $xml = simplexml_load_file("blog.xml");
+
+        foreach($xml->children() as $blog)
+        {
+            $blog_id = $blog->ID;
+            $name = $blog->Title;
+            $description = $blog->Content;
+
+            $image = substr($blog->ImageURL, 0, strpos($blog->ImageURL, "|"));
+
+            $image = str_replace("http://liber-media.hr/blog/wp-content/uploads/","catalog/blog/",$image);
+
+         $date_added = $blog->Date;
+
+          
+
+            $keyword = $blog->Slug;
+ 
+    
+
+  
+
+        
+
+      // $sql = "INSERT INTO oc_blog (blog_id, allow_comment, count_read, sort_order, status, author, date_added, image ) VALUES ('" . (int)$blog_id . "', '1', '0', '0', '1', '', '" . $date_added . "','" . $image . "')";
+
+
+          // $sql = "INSERT INTO oc_blog_description (blog_id, language_id, title, page_title, meta_keyword, meta_description, short_description, description,tags ) VALUES ('" . (int)$blog_id . "', '3', '" . $name . "', '" . $name . "', '', '', '','" . $description . "', '')";
+
+          //   $sql = "INSERT INTO oc_blog_to_store (blog_id, store_id) VALUES ('" . (int)$blog_id . "', '0')";
+
+
+            $sql = "INSERT INTO oc_seo_url SET query = 'blog_id=" . (int)$blog_id . "', keyword = '" .$keyword . "'";
+
+      if (mysqli_query($conn, $sql)) {
+     echo "New record created successfully";
+        } else {
+             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        }
+
+
+    
+
+
+
+
+        }
+
+
+
+/*
+
+   if(isset($_GET['manufacturer'])) {
+        $manufacturerp    = $db->query("SELECT * FROM " . DB_PREFIX . "manufacturer");
+        $manufacturerp    = $manufacturerp->rows;
+
+        foreach($manufacturerp as $manufacturer) {
+
+            $url = $db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE query = 'manufacturer_id=" . (int)$manufacturer['manufacturer_id'] . "'");
+            $url = $url->rows;
+
+            if(!empty($url)) {
+                echo 'Match found for ' . $manufacturer['manufacturer_id'] . '. No action taken.<br>---------------<br>';
+            } else {
+                echo 'URL needed for ' . $manufacturer['manufacturer_id'] . '...<br>';
+
+                echo 'Name: ' . $manufacturer['name'] . ' | Converting to: ' . seoURL($manufacturer['name']);
+                $manufacturer['name'] = seoURL($manufacturer['name']);
+                sleep(1);
+                $db->query("INSERT INTO " . DB_PREFIX . "seo_url SET query = 'manufacturer_id=" . (int)$manufacturer['manufacturer_id'] . "', keyword = '" . $db->escape($manufacturer['name']) . "'");
+                echo '<br>Inserted!<br>---------------<br>';
+
+            }
+        }
+
+
+
+        echo '<br><br>All done! <a href="seo-links.php">Back</a>';
+
+    }
+    else {
+        echo '<p><a href="?manufacturer">MAnufacturer</a> - Create product-URLs</p>';
+
+    }*/
+
+    ?>
+
+</body>
+</html>

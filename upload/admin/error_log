@@ -1,0 +1,33 @@
+[08-Apr-2023 12:48:11 Europe/Zagreb] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 47616768 bytes) in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/image.php on line 45
+[08-Apr-2023 17:22:11 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
+#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
+#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
+#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
+#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
+[08-Apr-2023 17:22:27 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
+#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
+#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
+#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
+#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
+[11-Apr-2023 07:58:52 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
+#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
+#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
+#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
+#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
+[11-Apr-2023 08:00:07 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
+#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
+#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
+#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
+#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
