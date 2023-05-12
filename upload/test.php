@@ -3,7 +3,9 @@
 use Agmedia\Api\Connection\Csv;
 
 require_once('config.php');
+require_once('env.php');
 require_once(DIR_STORAGE . 'vendor/autoload.php');
+require_once(DIR_CONFIG . 'eloquent.php');
 
 $path = DIR_UPLOAD . 'csv/ideus_products.csv';
 
