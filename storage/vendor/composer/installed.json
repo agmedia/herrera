@@ -1,24 +1,24 @@
 [
     {
         "name": "agmedia/opencart-eloquent",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
+        "version": "1.2.0",
+        "version_normalized": "1.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/agmedia/opencart-eloquent.git",
-            "reference": "e960a404617f3de9840de39f12904aa0487d14ed"
+            "reference": "18d7087f6a74cb78f9e958d0a70ab2a6ee58cdc6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/agmedia/opencart-eloquent/zipball/e960a404617f3de9840de39f12904aa0487d14ed",
-            "reference": "e960a404617f3de9840de39f12904aa0487d14ed",
+            "url": "https://api.github.com/repos/agmedia/opencart-eloquent/zipball/18d7087f6a74cb78f9e958d0a70ab2a6ee58cdc6",
+            "reference": "18d7087f6a74cb78f9e958d0a70ab2a6ee58cdc6",
             "shasum": ""
         },
         "require": {
             "illuminate/database": "^5.6",
             "php": ">=5.5"
         },
-        "time": "2020-12-22T17:37:50+00:00",
+        "time": "2023-05-11T11:13:28+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

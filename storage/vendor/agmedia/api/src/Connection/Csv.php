@@ -2,7 +2,10 @@
 
 namespace Agmedia\Api\Connection;
 
+use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  *
@@ -13,16 +16,18 @@ class Csv
     /**
      * @var string|null
      */
-    protected $path = '';
+    protected ?string $path = null;
     
     /**
-     * @var
+     * @var Worksheet
      */
-    protected $csv;
+    protected Worksheet $csv;
     
     
     /**
      * @param string|null $path
+     *
+     * @throws Exception
      */
     public function __construct(string $path = null)
     {
@@ -32,20 +37,20 @@ class Csv
     
     
     /**
-     * @return mixed
+     * @return Worksheet
      */
-    public function getCsv()
+    public function getCsv(): Worksheet
     {
         return $this->csv;
     }
     
     
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    public function collect()
+    public function collect(): Collection
     {
-        return collect(json_decode($this->csv, true));
+        return collect($this->csv->toArray());
     }
     
     
@@ -53,13 +58,14 @@ class Csv
      * @param string $type
      *
      * @return $this
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws Exception
      */
     public function setFile(string $type = 'Csv'): Csv
     {
-        $reader = IOFactory::createReader($type);
-        
-        $this->csv = $reader->load($this->path)->getActiveSheet()->toArray();
+        if ($this->path) {
+            $reader    = IOFactory::createReader($type);
+            $this->csv = $reader->load($this->path)->getActiveSheet();
+        }
         
         return $this;
     }

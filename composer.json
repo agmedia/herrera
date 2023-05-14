@@ -21,7 +21,9 @@
         "illuminate/filesystem": "5.7.19",
         "guzzlehttp/guzzle": "5.3.4",
         "agmedia/opencart-eloquent": "^1.2.0",
-        "phpoffice/phpspreadsheet": "1.28.0"
+        "phpoffice/phpspreadsheet": "1.28.0",
+        "ext-json": "*",
+        "ext-gd": "*"
     },
     "autoload": {
         "psr-4": {

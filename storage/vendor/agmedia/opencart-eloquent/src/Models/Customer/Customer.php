@@ -25,8 +25,8 @@ class Customer extends Model
     protected $guarded = [
         'customer_id'
     ];
-    
-    
+
+
     /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -34,5 +34,15 @@ class Customer extends Model
     public function group()
     {
         return $this->hasOne(CustomerGroup::class, 'customer_group_id', 'customer_group_id');
+    }
+
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'address_id', 'address_id');
     }
 }
