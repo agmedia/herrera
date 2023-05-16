@@ -74,7 +74,7 @@
 <!-- .price -->
 {% endif %}
 
-<p class="model mb-0">{{ text_model }} {{ product.model }}</p>
+<p class="model mb-0">Šifra: {{ product.model }}</p>
 <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
 {% if is_logged %}
     {% if ((product.quantity < 1) and (stock_badge_status)) %}

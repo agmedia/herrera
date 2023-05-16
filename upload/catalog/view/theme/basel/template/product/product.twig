@@ -403,16 +403,13 @@
       <p class="info"><b>{{ text_model }}</b> {{ model }}</p>
 
       {% if ean %}
-      <p class="info"><b>{{ text_ean }}</b> {{ ean }}</p>
+      <p class="info"><b>EAN:</b> {{ ean }}</p>
       {% endif %}
       
       {% if reward %}
       <p class="info"><b>{{ text_reward }}</b> {{ reward }}</p>
       {% endif %}
-      
-      {% if tags %}
-      <p class="info tags"><b>{{ text_tags }}</b> &nbsp;<span>{% for tag in tags %}<a class="hover_uline" href="{{ tag.href }}">{{ tag.tag }}</a>{% endfor %}</span></p>
-      {% endif %}
+
       
   <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=61a636a5d0a9e10012e4df2d&product=sop' async='async'></script>
      <!-- ShareThis BEGIN -->
