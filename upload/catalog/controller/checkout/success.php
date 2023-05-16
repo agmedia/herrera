@@ -144,15 +144,15 @@ class ControllerCheckoutSuccess extends Controller {
 	                                ),
 	                            'receiver' =>
 	                                array (
-	                                    'name' => 'Liber media d.o.o.',
-	                                    'street' => 'Ulica Davorina Bazjanca 17',
-	                                    'place' => '23000 Zadar',
-	                                    'iban' => 'HR2123400091110659066',
+	                                    'name' => 'Herrera d.o.o.',
+	                                    'street' => 'Koprivnička Ulica 39',
+	                                    'place' => '48260 Križevci',
+	                                    'iban' => 'HR7223600001102989760',
 	                                    'model' => '00',
 	                                    'reference' => $pozivnabroj,
 	                                ),
 	                            'purpose' => 'SUPP',
-	                            'description' => 'Web narudžba Liber media',
+	                            'description' => 'Web narudžba Herrera',
 	                        ),
 	                );
 
