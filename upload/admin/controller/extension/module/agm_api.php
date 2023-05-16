@@ -76,7 +76,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $testing = collect($products_for_insert)->take(5)->toArray();
 
             $count = 0;
-            foreach ($testing as $item) {
+            foreach ($products_for_insert as $item) {
                 $has_product = Product::query()->where('sku', $item[0])->first();
 
                 if ( ! $has_product) {
