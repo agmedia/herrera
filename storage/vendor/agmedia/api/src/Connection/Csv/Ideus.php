@@ -16,7 +16,7 @@ class Ideus
     /**
      * @var array|null
      */
-    protected ?array $data = null;
+    protected $data = null;
 
 
     /**

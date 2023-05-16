@@ -16,12 +16,12 @@ class Csv
     /**
      * @var string|null
      */
-    protected ?string $path = null;
+    protected $path = null;
     
     /**
      * @var Worksheet
      */
-    protected Worksheet $csv;
+
     
     
     /**

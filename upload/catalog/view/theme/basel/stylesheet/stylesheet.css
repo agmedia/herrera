@@ -5144,10 +5144,11 @@ font-size: 16px !important;
 	font-family: 'Montserrat', sans-serif;
 }
 
-.grid .single-product .pwrap {
-	min-height:42px;
-}
+.mb-0{margin-bottom: 0}
 
+.table.specification > tbody > tr > td b {
+	font-size: 15px!important;
+}
 
 .btn-green {
 	background-color: #000000!important;

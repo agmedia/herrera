@@ -229,7 +229,7 @@ class Cell
      */
     public function setValue($value, ?IValueBinder $binder = null): self
     {
-        $binder ??= self::getValueBinder();
+        $binder = self::getValueBinder();
         if (!$binder->bindValue($this, $value)) {
             throw new Exception('Value could not be bound to cell.');
         }
