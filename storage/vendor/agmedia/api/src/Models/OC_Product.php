@@ -152,14 +152,14 @@ class OC_Product
         if ( ! empty($attributes)) {
             foreach ($attributes as $key => $attribute) {
                 if ($key) {
-                    $has = AttributeDescription::query()->where('name', $attribute[0])->first();
+                    $has = AttributeDescription::query()->where('name', $attribute['title'])->first();
 
-                    if ($has && $has->count() && $attribute[1]) {
+                    if ($has && $has->count() && $attribute['value']) {
                         $response[] = [
                             'attribute_id' => $has->attribute_id,
                             'product_attribute_description' => [
                                 agconf('import.default_language') => [
-                                    'text' => Helper::setText($attribute[1])
+                                    'text' => Helper::setText($attribute['value'])
                                 ]
                             ]
                         ];
