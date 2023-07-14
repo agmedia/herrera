@@ -40,7 +40,7 @@ class OC_Product
             if ($has) {
                 return [
                     'id' => $has->manufacturer_id,
-                    'name' => $brand->name
+                    'name' => $has->name
                 ];
             }
         }
@@ -96,8 +96,8 @@ class OC_Product
      */
     public static function resolveDescription(array $product): array
     {
-        $naziv = $product[2];
-        $description = Helper::setDescription($product[10]);
+        $naziv = $product[1];
+        $description = Helper::setDescription($product[19]);
 
         $response[agconf('import.default_language')] = [
             'name' => Helper::setText($naziv),
@@ -143,6 +143,38 @@ class OC_Product
     /**
      * @param array $product
      *
+     * @return array
+     */
+    public static function resolveGenericAttributes(array $attributes): array
+    {
+        $response = [];
+
+        if ( ! empty($attributes)) {
+            foreach ($attributes as $key => $attribute) {
+                if ($key) {
+                    $has = AttributeDescription::query()->where('name', $attribute[0])->first();
+
+                    if ($has && $has->count() && $attribute[1]) {
+                        $response[] = [
+                            'attribute_id' => $has->attribute_id,
+                            'product_attribute_description' => [
+                                agconf('import.default_language') => [
+                                    'text' => Helper::setText($attribute[1])
+                                ]
+                            ]
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * @param array $product
+     *
      * @return string[]
      */
     public static function resolveSeoUrl(array $product): array
@@ -169,9 +201,9 @@ class OC_Product
     /**
      * @param array $product
      *
-     * @return array
+     * @return array|null
      */
-    public static function resolveImages(array $product): array
+    public static function resolveImages(array $product)
     {
         $response = [];
 
@@ -197,9 +229,11 @@ class OC_Product
                     ];
                 }
             }
+
+            return $response;
         }
 
-        return $response;
+        return null;
     }
 
 

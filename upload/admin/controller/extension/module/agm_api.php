@@ -61,28 +61,37 @@ class ControllerExtensionModuleAgmApi extends Controller {
     
     public function importProducts()
     {
+        $count = 0;
         $path = DIR_UPLOAD . agconf('import.ideus_csv_path');
     
         $csv = new Csv($path);
 
-        $products_for_insert = $csv->getCsv()->toArray();
+        $products_for_insert = $csv->collect()->whereIn(21, ['Marka', 'Struhm', 'STRUHM', 'Braytron', 'BRAYTRON'])->toArray();
+
 
         if (count($products_for_insert)) {
-            $ideus = new Csv\Ideus();
-            $ideus->resolveAttributes($products_for_insert[0]);
+            $import = new Csv\Generic();
+            $collection = [];
 
-            unset($products_for_insert[0]);
+            foreach ($products_for_insert as $key => $item) {
+                if ($key > 1) {
+                    $attr = $import->resolveAttributes($item);
+                    $item['attributes'] = $attr;
 
-            $testing = collect($products_for_insert)->take(5)->toArray();
+                    $collection[] = $item;
+                }
+            }
 
-            $count = 0;
-            foreach ($products_for_insert as $item) {
+
+            //$testing = collect($products_for_insert)->take(5)->toArray();
+
+            foreach ($collection as $item) {
                 $has_product = Product::query()->where('sku', $item[0])->first();
 
                 if ( ! $has_product) {
                     $this->load->model('catalog/product');
 
-                    $this->model_catalog_product->addProduct($ideus->resolveProduct($item));
+                    $this->model_catalog_product->addProduct($import->resolveProduct($item));
 
                     $count++;
                 }
@@ -90,7 +99,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         }
 
-        //Log::store($products_for_insert, 'csv');
+        //Log::store($collection, 'csv_herrera');
         
         
         /*$prods = \Agmedia\Models\Product\Product::query()->get();
@@ -98,7 +107,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
         \Agmedia\Helpers\Log::store($prods->toArray(), 'prods');*/
     
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode(['inserted' => $count])/*$prods->toJson()*/);
+        $this->response->setOutput(/*json_encode(['inserted' => $count])*/json_encode(['inserted' => $count]));
     }
 
 	protected function validate() {
