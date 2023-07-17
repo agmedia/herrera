@@ -39,6 +39,12 @@
                                     </div>
                                     <p class="col-sm-7">Vrši se import ili update IDEUS proizvoda sa csv-a.</p>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="ideus-products-images" data-toggle="tooltip" title="Import IDEUS Fotografija Proizvoda" class="btn btn-info btn-block">IDEUS Fotografije Proizvoda</a>
+                                    </div>
+                                    <p class="col-sm-7">Vrši se import IDEUS fotografija proizvoda sa "https://e-racuni.com/..." API-a.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,17 +78,27 @@
     </div>
 
     <script type="text/javascript"><!--
-      $(() => {
-        $('#ideus-products').on('click', (e) => {
-          $.ajax({
-            url: 'index.php?route=extension/module/agm_api/importProducts&user_token={{ user_token }}',
-            dataType: 'json',
-            success: function(json) {
-              console.log(json)
-            }
-          });
-        });
+        $(() => {
+            $('#ideus-products').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/importProducts&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
 
-      })
+            //
+            $('#ideus-products-images').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/importImages&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+        });
       //--></script>
 {{ footer }}

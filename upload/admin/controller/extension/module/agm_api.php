@@ -1,5 +1,6 @@
 <?php
 
+use Agmedia\Api\Api;
 use Agmedia\Helpers\Log;
 use Agmedia\Api\Connection\Csv;
 use Agmedia\Models\Product\Product;
@@ -108,6 +109,52 @@ class ControllerExtensionModuleAgmApi extends Controller {
     
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(/*json_encode(['inserted' => $count])*/json_encode(['inserted' => $count]));
+    }
+
+
+    public function importImages()
+    {
+        /*$api = new Api();
+
+        $products = products()->where('image', '=', '')->orWhere('image', '=', 'catalog/products/no-image.jpg')->pluck('sku', 'product_id');
+
+        foreach ($products as $product_id => $sku) {
+            $data = $api->post(agconf('import.api.url_image_suffix'), $api->resolveImageData($sku));
+
+            Log::store($data, 'api_images');
+        }*/
+
+
+        $array = [
+            "username"   => 'TOMISLAV_AGMEDIA',
+            "md5pass"    => 'd1ec7fbdfd48ed2f9914c728dddaac46',
+            "token"      => '5DC91B74D6BC0D00B45E039D03E4A5E3',
+            "method"     => "ProductImageGet",
+            "parameters" => [
+                "productCode" => '00003'
+            ]
+        ];
+
+
+        $server = "https://e-racuni.com/H5h/API-CLI";
+        $ch = curl_init($server);
+        curl_setopt($ch, CURLOPT_HEADER, ("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($array));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = htmlentities(curl_exec($ch));
+
+        $curl_errno = curl_errno($ch);
+        $curl_error = curl_error($ch);
+
+        curl_close($ch);
+        if ($curl_errno > 0) {
+            return $curl_errno;
+            exit;
+        } else {
+            return print_r($data);
+        }
+        exit;
+
     }
 
 	protected function validate() {
