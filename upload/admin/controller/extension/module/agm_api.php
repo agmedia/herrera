@@ -138,6 +138,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
                         ]);
 
                         $count++;
+                        sleep(1);
                     }
                 }
             }
