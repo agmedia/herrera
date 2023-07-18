@@ -26,6 +26,11 @@ class Product extends Model
     protected $guarded = [
         'product_id'
     ];
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
     
     /**
      * Relations methods

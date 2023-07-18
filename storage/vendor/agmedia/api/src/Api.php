@@ -76,26 +76,31 @@ class Api
 
     /**
      * @param string $url
-     * @param array  $body
+     * @param string $body
      *
      * @return mixed
      */
-    public function post(string $url, array $body)
+    public function post(string $url, string $body)
     {
-        Log::store($this->url . $url, 'body');
-        Log::store($body, 'body');
-
         try {
             $ch = curl_init($this->url . $url);
-            curl_setopt($ch, CURLOPT_HEADER, ("Content-Type: application/json"));
-            curl_setopt ($ch, CURLOPT_POSTFIELDS, json_encode($body));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->resolveApiPassword());
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->resolveHeaders('form'));
 
             $response = curl_exec($ch);
+
+            if (curl_errno($ch)) {
+                $this->log($url, curl_error($ch));
+
+                return false;
+            }
+
             curl_close($ch);
 
-            return $response;
+            return json_decode($response, true);
 
         } catch (\Exception $exception) {
             $this->log($url, $exception);
@@ -105,17 +110,49 @@ class Api
     }
 
 
-    public function resolveImageData(string $sku)
+    /**
+     * @param string $sku
+     *
+     * @return string
+     */
+    public function resolveImageData(string $sku): string
     {
-        return [
-            "username"   => $this->username,
-            "md5pass"    => $this->password,
-            "token"      => $this->token,
-            "method"     => "ProductImageGet",
-            "parameters" => [
-                "productCode" => $sku
-            ]
-        ];
+        return 'productCode=' . $sku;
+    }
+
+    /*******************************************************************************
+    *                                Copyright : AGmedia                           *
+    *                              email: filip@agmedia.hr                         *
+    *******************************************************************************/
+
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
+    private function resolveApiPassword(): string
+    {
+        return $this->username . ':' . $this->token . '_' . $this->password;
+    }
+
+
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
+    private function resolveHeaders(string $type): array
+    {
+        $headers = [];
+
+        if ($type == 'form') {
+            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+
+        } else if ($type == 'xml') {
+            $headers[] = 'Content-Type: application/xml';
+        }
+
+        return $headers;
     }
 
 
