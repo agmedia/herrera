@@ -441,10 +441,10 @@
 <div class="col-sm-12">
   
   <ul class="nav nav-tabs {{ product_tabs_style }} main_tabs">
-      {% if attribute_groups %}
+
           <li class="active"><a href="#tab-specification" data-toggle="tab">{{ tab_attribute }}</a></li>
-      {% endif %}
-    <li ><a href="#tab-description" data-toggle="tab">{{ tab_description }}</a></li>
+
+
     {% if product_tabs %}
         {% for tab in product_tabs %}
         <li><a href="#custom-tab-{{ tab.tab_id }}" data-toggle="tab">{{ tab.name }}</a></li>
@@ -461,38 +461,91 @@
   
   <div class="tab-content">
     
-    <div class="tab-pane " id="tab-description">
-    {{ description }}
-    </div>
+
     
     {% if product_tabs %}
     {% for tab in product_tabs %}
     <div class="tab-pane" id="custom-tab-{{ tab.tab_id }}">
-    {{ tab.description }}
+        {{ tab.description }}
     </div>
     {% endfor %}
     {% endif %}
     
     {% if attribute_groups %}
     <div class="tab-pane active" id="tab-specification">
-      <table class="table table-striped specification">
-        {% for attribute_group in attribute_groups %}
-        <thead>
-          <tr>
-            <td colspan="2">{{ attribute_group.name }}</td>
-          </tr>
-        </thead>
-        <tbody>
-          {% for attribute in attribute_group.attribute %}
-          <tr>
-            <td class="text-left"><b>{{ attribute.name }}</b></td>
-            <td class="text-right">{{ attribute.text }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-        {% endfor %}
-      </table>
+        <div class="row">
+            <div class="col-md-6">
+              <table class="table table-striped specification">
+                {% for attribute_group in attribute_groups %}
+                <thead>
+                  <tr>
+                    <td colspan="2">{{ attribute_group.name }}</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for attribute in attribute_group.attribute %}
+                  <tr>
+                    <td class="text-left"><b>{{ attribute.name }}</b></td>
+                    <td class="text-right">{{ attribute.text }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+                {% endfor %}
+              </table>
+            </div>
+
+            <div class="col-md-6">
+
+                <table class="table table-striped specification">
+
+                        <thead>
+                        <tr>
+                            <td colspan="2">{{ tab_description }}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td class="text-left" style="padding:12px;">    {{ description }}</td>
+
+                            </tr>
+
+                        </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
     </div>
+    {% else %}
+
+        <div class="tab-pane active" id="tab-specification">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <table class="table table-striped specification">
+
+                        <thead>
+                        <tr>
+                            <td colspan="2">{{ tab_description }}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td class="text-left" style="padding:12px;">    {{ description }}</td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
     {% endif %}
     
     {% if question_status %}

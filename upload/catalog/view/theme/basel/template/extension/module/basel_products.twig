@@ -28,7 +28,7 @@
 <!-- Product Group(s) -->
 {% for key, tab in tabs %}
 <div class="tab-pane{% if key == 0 %} active in{% endif %} fade" id="tab{{ module }}{{ key }}">
-    <div class="grid-holder grid{{ columns }} prod_module{{ module }}{% if carousel %} carousel{% endif %}{% if carousel_a and rows > 1 %} sticky-arrows{% endif %}">
+    <div class="grid-holder prodc grid{{ columns }} prod_module{{ module }}{% if carousel %} carousel{% endif %}{% if carousel_a and rows > 1 %} sticky-arrows{% endif %}">
         {% for product in tab.products %}
             <div class="item single-product">
                   <div class="edge">
@@ -101,6 +101,25 @@
                 {% endif %}
             {% endif %}
             <p class="model mb-0">Šifra: {{ product.model }}</p>
+                <p class="model mb-0">EAN: {{ product.ean }}</p>
+                {% if product.attribute_groups %}
+                    <div class="attlist">
+                        <table class="table table-striped specification">
+                            {% for attribute_group in product.attribute_groups %}
+                                <tbody>
+                                {% for attribute in attribute_group.attribute %}
+                                    {% if attribute.name =='Boja svjetla' or attribute.name =='Snaga' or attribute.name =='Svjetlosni tok' or attribute.name =='Lumen' or attribute.name =='Kategorija boja'%}
+                                        <tr>
+                                            <td><b>{{ attribute.name }}:<b></td>
+                                            <td>{{ attribute.text }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
             <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
               {% if is_logged %}       
                     {% if ((product.quantity < 1) and (stock_badge_status)) %}
