@@ -122,8 +122,6 @@ class ControllerExtensionModuleAgmApi extends Controller {
                               ->orWhere('image', '=', 'catalog/products/no-image.jpg')
                               ->pluck('sku', 'product_id');
 
-        Log::store($products, 'api_products');
-
         foreach ($products as $product_id => $sku) {
             $data = $api->post(agconf('import.api.url_image_suffix'), $api->resolveImageData($sku));
 

@@ -1,4 +1,8 @@
 <?php
+
+use Agmedia\Api\Api;
+use Agmedia\Api\Helper\Helper;
+
 class ControllerCatalogProduct extends Controller {
 	private $error = array();
 
@@ -1321,4 +1325,31 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+
+
+    public function importImage()
+    {
+        $api = new Api();
+        $product = products()->where('sku', $this->request->get['sku'])->first();
+
+        $data = $api->post(agconf('import.api.url_image_suffix'), $api->resolveImageData($product->sku));
+
+        if (isset($data['response']['result'])) {
+            foreach ($data['response']['result'] as $item) {
+                if (isset($item['Attachment']['contents'])) {
+                    $image = Helper::base64_to_jpeg(
+                        $item['Attachment']['contents'],
+                        agconf('import.image_path') . $item['Attachment']['fileName']
+                    );
+
+                    $product->update([
+                        'image' => $image
+                    ]);
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
 }
