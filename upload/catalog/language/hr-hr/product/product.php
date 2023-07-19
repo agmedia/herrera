@@ -36,7 +36,7 @@ $_['text_month']               = 'mjesec';
 $_['text_year']                = 'godina';
 $_['text_short_description']              = 'Osnovne značajke';
 $_['text_spec_description']              = 'Specifikacije';
-$_['text_tax_included']                 = '25% PDV uključeno';
+$_['text_tax_included']                 = 'VPC';
 
 
 
