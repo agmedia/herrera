@@ -160,7 +160,7 @@ body {
 }
 
 .attlist .table.specification > tbody > tr > td b {
-	font-size: 14px!important;
+	font-size: 13px!important;
 }
 .prodc .slick-track { 	display: flex !important; }  .prodc .slick-slide { 	height: inherit !important; 	display: flex !important; 	justify-content: center; 	align-items: center; }
 .prodc .slick-slide > div { height: 100%; }
