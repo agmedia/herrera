@@ -393,9 +393,9 @@
       {% if price and points %}
       <p class="info"><b>{{ text_points }}</b> {{ points }}</p>
       {% endif %}
-      
+        {% if is_logged %}
       <p class="info {% if qty > 0 %}in_stock{% endif %}"><b>{{ text_stock }}</b> {{ stock }}</p>
-      
+        {% endif %}
       {% if manufacturer %}
       <p class="info"><b>{{ text_manufacturer }}</b> <a class="hover_uline" href="{{ manufacturers }}">{{ manufacturer }}</a></p>
       {% endif %}

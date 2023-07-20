@@ -17,7 +17,7 @@ $_['text_minimum']             = 'Minimalna količina za ovaj artikl je %s';
 $_['text_reviews']             = '%s recenzija'; 
 $_['text_write']               = 'Napišite recenziju';
 $_['text_login']               = 'Molim <a href="%s">prijavite se</a> ili <a href="%s">se registrirajte</a> da biste mogli napisati recenziju';
-$_['text_login_price']               = 'Molim <a href="%s">prijavite se</a> ili <a href="%s">se registrirajte</a> da biste mogli vidjeti cijenu';
+$_['text_login_price']               = 'Molim <a href="%s">prijavite se</a> ili <a href="%s">se registrirajte</a> da biste mogli vidjeti cijenu i dostupnost';
 $_['text_no_reviews']          = 'Nema recenzija za taj artikl.';
 $_['text_note']                = '<span class="text-danger">Napomena:</span> HTML tagovi nisu dopušteni i ne prikazuju se kao HTML!';
 $_['text_success']             = 'Zahvaljujemo na Vašoj recenziji. Bit će poslan administratoru web shopa radi odobrenja.';
