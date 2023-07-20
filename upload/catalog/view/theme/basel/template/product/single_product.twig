@@ -75,7 +75,9 @@
 {% endif %}
 
 <p class="model mb-0">Šifra: {{ product.model }}</p>
-    <p class="model mb-0">EAN: {{ product.ean }}</p>
+    {% if product.ean %}
+        <p class="model mb-0">EAN: {{ product.ean }}</p>
+    {% endif %}
     {% if product.attribute_groups %}
         <div class="attlist">
             <table class="table table-striped specification">
