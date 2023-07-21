@@ -214,6 +214,7 @@ class ControllerProductManufacturer extends Controller {
 					'price'       => $price,
 					'special'     => $special,
                     'model'  => $result['model'],
+                    'ean'  => $result['ean'],
 					   'priceeur'       => $priceeur,
                     'specialeur'     => $specialeur,
 					'tax'         => $tax,
