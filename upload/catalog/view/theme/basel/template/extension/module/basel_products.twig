@@ -47,10 +47,9 @@
                 <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
             {% endif %}
 
-                            
 
-         
-			{% if ((product.quantity < 1) and (stock_badge_status)) %}
+
+                {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
 			
 				{% set button_cart = basel_text_out_of_stock %}
 			{% else %}
@@ -102,7 +101,7 @@
             {% endif %}
             <p class="model mb-0">Šifra: {{ product.model }}</p>
                 {% if product.ean %}
-                <p class="model mb-0">EAN: {{ product.ean }} </p>
+                <p class="model mb-0">EAN: {{ product.ean }} {{ product.suplierqty }}</p>
                 {% endif %}
                 {% if product.attribute_groups %}
                     <div class="attlist">
@@ -123,10 +122,12 @@
                     </div>
                 {% endif %}
             <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
-              {% if is_logged %}       
-                    {% if ((product.quantity < 1) and (product.suplierqty < 1) and (stock_badge_status)) %}
-                      <a class="btn  btn-contrast" ><span class="global-cart"></span> {{ button_cart }}</a>
+              {% if is_logged %}
+                  {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
+
                         {% set button_cart = basel_text_out_of_stock %}
+                      <a class="btn  btn-contrast" ><span class="global-cart"></span> {{ button_cart }}</a>
+
                     {% else %}
                      <a class="btn  {% if basel_list_style == '6' %}btn-contrast{% else %}btn-outline{% endif %}" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');" title="{{ button_cart }}"><span class="global-cart"></span> {{ button_cart }}</a>
                     {% endif %}
