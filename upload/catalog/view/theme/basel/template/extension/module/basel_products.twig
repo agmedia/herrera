@@ -124,7 +124,7 @@
                 {% endif %}
             <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
               {% if is_logged %}       
-                    {% if ((product.quantity < 1) and (stock_badge_status)) %}
+                    {% if ((product.quantity < 1) and (product.suplierqty < 1) and (stock_badge_status)) %}
                       <a class="btn  btn-contrast" ><span class="global-cart"></span> {{ button_cart }}</a>
                         {% set button_cart = basel_text_out_of_stock %}
                     {% else %}
