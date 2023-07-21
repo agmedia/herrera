@@ -246,6 +246,7 @@ class ControllerProductSearch extends Controller {
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
+                    'ean'  => $result['ean'],
                     'attribute_groups'       => $this->model_catalog_product->getProductAttributes($result['product_id']),
                     'model'  => $result['model'],
                     'ean'  => $result['ean'],
