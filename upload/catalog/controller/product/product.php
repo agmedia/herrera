@@ -278,6 +278,8 @@ class ControllerProductProduct extends Controller {
 				$data['stock'] = $this->language->get('text_instock');
 			}
 			$data['quantity'] = $product_info['quantity'];
+
+            $data['suplierqty'] = $product_info['suplierqty'];
 			$this->load->model('tool/image');
 
 			if ($product_info['image']) {

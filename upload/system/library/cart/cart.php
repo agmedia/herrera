@@ -211,9 +211,18 @@ class Cart {
 				}
 
 				// Stock
-				if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $cart['quantity'])) {
-					$stock = false;
-				}
+                //AG media
+                if ((!$product_query->row['quantity'] && !$product_query->row['suplierqty']) || ($product_query->row['quantity'] + $product_query->row['suplierqty']  < $cart['quantity'])) {
+                    $stock = false;
+                }
+
+                //Ag media end
+
+
+                /*	if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $cart['quantity'])) {
+                        $stock = false;
+                    }
+                */
 
 				$recurring_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "recurring r LEFT JOIN " . DB_PREFIX . "product_recurring pr ON (r.recurring_id = pr.recurring_id) LEFT JOIN " . DB_PREFIX . "recurring_description rd ON (r.recurring_id = rd.recurring_id) WHERE r.recurring_id = '" . (int)$cart['recurring_id'] . "' AND pr.product_id = '" . (int)$cart['product_id'] . "' AND rd.language_id = " . (int)$this->config->get('config_language_id') . " AND r.status = 1 AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'");
 
@@ -245,6 +254,7 @@ class Cart {
 					'option'          => $option_data,
 					'download'        => $download_data,
 					'quantity'        => $cart['quantity'],
+                    'suplierqty'        => $cart['suplierqty'],
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,

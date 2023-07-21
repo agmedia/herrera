@@ -351,7 +351,7 @@
                           
                            <input type="hidden" name="product_id" value="{{ product_id }}" />
                                  
-                                      {% if ((qty < 1) and (stock_badge_status)) %}
+                                      {% if ((qty < 1) and (suplierqty <1) and (stock_badge_status)) %}
                                         <button type="button"  data-loading-text="{{ text_loading }}" class="btn btn-primary cd-btn-add"><span>{{ basel_text_out_of_stock }}</span></button>
                                       {% else %}
                                           <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary cd-btn-add"><span> <i class="global-cart icon"></i> {{ button_cart }}</span></button>
@@ -395,6 +395,7 @@
       {% endif %}
         {% if is_logged %}
       <p class="info {% if qty > 0 %}in_stock{% endif %}"><b>{{ text_stock }}</b> {{ stock }}</p>
+      <p class="info {% if suplierqty > 0 %}in_stock{% endif %}"><b>{{ text_suplierqty }}</b> {{ suplierqty }}</p>
         {% endif %}
       {% if manufacturer %}
       <p class="info"><b>{{ text_manufacturer }}</b> <a class="hover_uline" href="{{ manufacturers }}">{{ manufacturer }}</a></p>

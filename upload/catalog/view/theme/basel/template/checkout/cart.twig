@@ -67,9 +67,7 @@
                   <span class="text-danger">***</span>
                   {% endif %}
 
-                     {% if product.quantity > product.stock_available %}
-                <div class="text-danger">{{ text_stock }} {{ product.stock_available }}</div>
-            {% endif %}
+
                   {% if product.option %}
                   {% for option in product.option %}
                   <br />
