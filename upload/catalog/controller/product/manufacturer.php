@@ -11,6 +11,8 @@ class ControllerProductManufacturer extends Controller {
 
 		$data['breadcrumbs'] = array();
 
+        $data['is_logged'] = $this->customer->isLogged();
+
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
@@ -62,6 +64,8 @@ class ControllerProductManufacturer extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+
+        $data['is_logged'] = $this->customer->isLogged();
 
 		if (isset($this->request->get['manufacturer_id'])) {
 			$manufacturer_id = (int)$this->request->get['manufacturer_id'];
