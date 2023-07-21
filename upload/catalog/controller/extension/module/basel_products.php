@@ -197,7 +197,6 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 						'new_label'  => $is_new,
 						'sale_badge' => $sale_badge,
 						'special' 	 => $special,
-
                         'suplierqty'  => $result['suplierqty'],
 						'tax'        => $tax,
 						'minimum'    => $result['minimum'] > 0 ? $result['minimum'] : 1,
