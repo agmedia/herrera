@@ -1,0 +1,1 @@
+ALTER TABLE oc_product ADD  `suplierqty` int(4) NOT NULL DEFAULT '0';
