@@ -85,8 +85,12 @@
         <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
         {% endif %}
 		
-		{% if ((qty < 1) and (stock_badge_status)) %}
+		{% if ((qty < 1)  and (suplierqty < 1) and (stock_badge_status)) %}
         <span class="badge out_of_stock_badge"><i>{{ basel_text_out_of_stock}}</i></span>
+        {% elseif ((qty < 1)  and (suplierqty > 0) and (stock_badge_status)) %}
+
+            <span class="badge out_of_stock_badge"><i>Dostupnost 14 dana</i></span>
+
         {% endif %}
 
         <a class="{% if not images %}link cloud-zoom{% endif %} {% if product_layout == 'full-width' %}link{% else %}cloud-zoom{% endif %}" id="main-image" href="{{ popup }}" rel="position:'inside', showTitle: false"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a>
