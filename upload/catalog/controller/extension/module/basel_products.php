@@ -18,6 +18,8 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 		$data['button_wishlist'] = $this->language->get('button_wishlist');
 		$data['button_compare'] = $this->language->get('button_compare');
 		$data['text_tax'] = $this->language->get('text_tax');
+
+        $data['is_logged'] = $this->customer->isLogged();
 		
 		// RTL support
 		$data['direction'] = $this->language->get('direction');
