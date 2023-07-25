@@ -45,6 +45,21 @@
                                     </div>
                                     <p class="col-sm-7">Vrši se import IDEUS fotografija proizvoda sa "https://e-racuni.com/..." API-a.</p>
                                 </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="ideus-products-quantity" data-toggle="tooltip" title="Update Količine Proizvoda" class="btn btn-info btn-block">Update Količine Proizvoda</a>
+                                    </div>
+                                    <p class="col-sm-7">Vrši se update IDEUS (csv) i BRYTRON (xml) količina proizvoda.
+                                    {#<form action="{{ action_upload_ideus }}" method="post" enctype="multipart/form-data">
+                                        Upload Ideus .csv:
+                                        <input type="file" name="the_file" id="fileToUpload">
+                                        <input type="hidden" name="action" value="ideus_csv">
+                                        <input type="submit" name="submit" value="Start Upload">
+                                    </form>#}
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -93,6 +108,17 @@
             $('#ideus-products-images').on('click', (e) => {
                 $.ajax({
                     url: 'index.php?route=extension/module/agm_api/importImages&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+
+            //
+            $('#ideus-products-quantity').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/updateQuantity&user_token={{ user_token }}',
                     dataType: 'json',
                     success: function(json) {
                         console.log(json)

@@ -5,6 +5,7 @@ namespace Agmedia\Api\Connection\Csv;
 use Agmedia\Api\Helper\Helper;
 use Agmedia\Api\Models\OC_Attribute;
 use Agmedia\Api\Models\OC_Product;
+use Agmedia\Helpers\Log;
 use Illuminate\Support\Carbon;
 
 /**
@@ -110,6 +111,26 @@ class Ideus
                 }
             }
         }
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getQuantity()
+    {
+        $response = [];
+
+        foreach ($this->data as $key => $item) {
+            if ($key) {
+                $response[] = [
+                    'sku' => $item[0],
+                    'quantity' => $item[3],
+                ];
+            }
+        }
+
+        return $response;
     }
 
 
