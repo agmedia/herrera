@@ -17,7 +17,6 @@
 <div class="{{ class_panel }}" id="tab-attach-document">
     {% if  product_attachs %}
     <table class="table table-striped table-bordered">
-
         <tbody>
             {% for product_attach in product_attachs %}
             <tr>
@@ -39,12 +38,6 @@
     {% if  exten_links %}
     <span><strong>{{ external_link }}</strong></span>
     <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <td class="text-center  col-md-1 col-sm-2">{{ attach_thumb }}</td>
-                <td class="text-left col-md-11 col-sm-10">{{ attach_linkname }}</td>
-            </tr>
-        </thead>
         <tbody>
             {% for exten_link in exten_links %}
             <tr>
