@@ -50,7 +50,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
 			'href' => $this->url->link('extension/module/agm_api', 'user_token=' . $this->session->data['user_token'], 'SSL')
 		);
 
-		$data['action_import_products'] = $this->url->link('extension/module/agm_api', 'user_token=' . $this->session->data['user_token'], 'SSL');
+		$data['action_upload_ideus'] = $this->url->link('extension/module/agm_api/formAction', 'user_token=' . $this->session->data['user_token'], 'SSL');
 		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
 		
 		$data['header'] = $this->load->controller('common/header');
@@ -59,6 +59,24 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
 		$this->response->setOutput($this->load->view('extension/module/agm_api', $data));
 	}
+
+
+    public function formAction()
+    {
+        Log::store($this->request->post, 'form');
+
+        Log::store($_FILES, 'form');
+
+        if ( ! isset($this->request->post['action'])) {
+            return $this->index();
+        }
+
+        if ($this->request->post['action'] == 'ideus_csv') {
+
+        }
+
+        return $this->index();
+    }
     
     
     public function importProducts()
@@ -147,6 +165,63 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $count]));
     }
+
+
+    public function updateQuantity()
+    {
+        $braytron = new Csv\Braytron();
+
+        $braytron->getXML(true);
+
+        $csv = new Csv(DIR_UPLOAD . 'csv/ProductsData-EN.csv');
+
+        $ideus_data = $csv->collect();
+
+        $ideus = new Csv\Ideus($ideus_data->toArray());
+
+        $bt = collect($braytron->quantity);
+        $data = [];
+
+        foreach ($ideus->getQuantity() as $item) {
+            $found = $bt->where('sku', $item['sku'])->first();
+
+            if ($found) {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity'] + $found['quantity']
+                ];
+            } else {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+        }
+
+        foreach ($bt->all() as $item) {
+            if ( ! isset($data[$item['sku']])) {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+        }
+
+        $str = '';
+
+        foreach ($this->dobavljaci_stock as $item) {
+            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+        }
+
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.quantity = pt.quantity");
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+
 
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'extension/module/agm_api')) {

@@ -17,11 +17,11 @@ class Csv
      * @var string|null
      */
     protected $path = null;
-    
+
     /**
      * @var Worksheet
      */
-
+    public $csv;
     
     
     /**
