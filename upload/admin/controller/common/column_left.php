@@ -7,6 +7,12 @@ class ControllerCommonColumnLeft extends Controller {
 			// Create a 3 level menu array
 			// Level 2 can not have children
 
+            if($this->session->data['user_id'] =='13'){
+
+                $data['style'] = '1';
+
+            }
+
 			// Menu
 			$data['menus'][] = array(
 				'id'       => 'menu-dashboard',
