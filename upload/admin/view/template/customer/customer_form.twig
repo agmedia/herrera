@@ -1522,8 +1522,36 @@
                   input.val( data["sjedista"][0]["naziv_naselja"]);
 
 
+                  //$("#input-zone{{ address_row }}").val("848").change();
+
+
+                 var city = data["sjedista"][0]["naziv_naselja"];
+
+
+                  $.ajax({
+                    type: "GET",
+                    url: "https://shop.herrera.hr/image/mjestaRh.xml",
+                    cache: false,
+                    dataType: "xml",
+                    success: function(xml) {
+
+
+                      var $record = $(xml).find('mjesto').filter(function(){
+                        return $(this).find('naselje').text() === city
+                      });
+
+                      var input = $( "#input-postcode{{ address_row }}" );
+                      input.val($record.find('brojPu').text());
+
+
+
+
+                    }
+                  });
+
+
                   var input = $( "#input-email" );
-                  input.val( data["email_adrese"][0]["adresa"]);
+                  input.val(data["email_adrese"][0]["adresa"]);
 
                 })
                 .fail(function() {
