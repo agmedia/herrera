@@ -52,7 +52,18 @@
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab-customer">
                       <fieldset>
-                        <legend>{{ text_account }}</legend>
+                        <legend>Detalji o kupcu</legend>
+
+
+                        <div class="form-group ">
+                          <label class="col-sm-2 control-label" for="input-firstname">Pretraži i enter</label>
+                          <div class="col-sm-10">
+                            <input type="text" name="s" id="myInput"  placeholder="Pretraga po OIB-u"  class="form-control" />
+                          </div>
+                        </div>
+
+
+
                         <div class="form-group">
                           <label class="col-sm-2 control-label" for="input-customer-group">{{ entry_customer_group }}</label>
                           <div class="col-sm-10">
@@ -238,7 +249,7 @@
                         {% endfor %}
                       </fieldset>
                       <fieldset>
-                        <legend>{{ text_password }}</legend>
+                        <legend>Lozinka</legend>
                         <div class="form-group required">
                           <label class="col-sm-2 control-label" for="input-password">{{ entry_password }}</label>
                           <div class="col-sm-10">
@@ -257,7 +268,7 @@
                         </div>
                       </fieldset>
                       <fieldset>
-                        <legend>{{ text_other }}</legend>
+                        <legend>Ostalo</legend>
                         <div class="form-group">
                           <label class="col-sm-2 control-label" for="input-newsletter">{{ entry_newsletter }}</label>
                           <div class="col-sm-10">
@@ -322,12 +333,7 @@
                           <div class="text-danger">{{ error_address[address_row].lastname }}</div>
                           {% endif %}</div>
                       </div>
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-company{{ address_row }}">{{ entry_company }}</label>
-                        <div class="col-sm-10">
-                          <input type="text" name="address[{{ address_row }}][company]" value="{{ address.company }}" placeholder="{{ entry_company }}" id="input-company{{ address_row }}" class="form-control" />
-                        </div>
-                      </div>
+
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-address-1{{ address_row }}">{{ entry_address_1 }}</label>
                         <div class="col-sm-10">
@@ -336,12 +342,7 @@
                           <div class="text-danger">{{ error_address[address_row].address_1 }}</div>
                           {% endif %}</div>
                       </div>
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-address-2{{ address_row }}">{{ entry_address_2 }}</label>
-                        <div class="col-sm-10">
-                          <input type="text" name="address[{{ address_row }}][address_2]" value="{{ address.address_2 }}" placeholder="{{ entry_address_2 }}" id="input-address-2{{ address_row }}" class="form-control" />
-                        </div>
-                      </div>
+
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-city{{ address_row }}">{{ entry_city }}</label>
                         <div class="col-sm-10">
@@ -952,20 +953,13 @@
     html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][lastname]" value="" placeholder="{{ entry_lastname }}" id="input-lastname' + address_row + '" class="form-control" /></div>';
     html += '  </div>';
 
-    html += '  <div class="form-group">';
-    html += '    <label class="col-sm-2 control-label" for="input-company' + address_row + '">{{ entry_company }}</label>';
-    html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][company]" value="" placeholder="{{ entry_company }}" id="input-company' + address_row + '" class="form-control" /></div>';
-    html += '  </div>';
 
     html += '  <div class="form-group required">';
     html += '    <label class="col-sm-2 control-label" for="input-address-1' + address_row + '">{{ entry_address_1 }}</label>';
     html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][address_1]" value="" placeholder="{{ entry_address_1 }}" id="input-address-1' + address_row + '" class="form-control" /></div>';
     html += '  </div>';
 
-    html += '  <div class="form-group">';
-    html += '    <label class="col-sm-2 control-label" for="input-address-2' + address_row + '">{{ entry_address_2 }}</label>';
-    html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][address_2]" value="" placeholder="{{ entry_address_2 }}" id="input-address-2' + address_row + '" class="form-control" /></div>';
-    html += '  </div>';
+
 
     html += '  <div class="form-group required">';
     html += '    <label class="col-sm-2 control-label" for="input-city' + address_row + '">{{ entry_city }}</label>';
@@ -1162,11 +1156,9 @@
         $('select[name=\'address[' + index + '][country_id]\']').prop('disabled', false);
       },
       success: function(json) {
-        if (json['postcode_required'] == '1') {
+
           $('input[name=\'address[' + index + '][postcode]\']').parent().parent().addClass('required');
-        } else {
-          $('input[name=\'address[' + index + '][postcode]\']').parent().parent().removeClass('required');
-        }
+
 
         html = '<option value="">{{ text_select }}</option>';
 
@@ -1461,6 +1453,94 @@
   });
 
   $('input[name=\'payment\']:checked').trigger('change');
-  //--></script> 
+  //--></script>
+
+
+  <script type="text/javascript">
+    $(function() {
+
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+      $("#myInput").on("keypress", function(event){
+
+
+        if(event.which == 13) {
+             // Stop form from submitting normally
+             event.preventDefault();
+             // Get some values from elements on the page:
+            var term = $(this).val();
+
+            //open tab address if not exists
+            if (  address_row < 2){
+              addAddress();
+              $('a[href="#tab-customer"]').click();
+            }
+
+            var params = {
+              // Request parameters
+              "expand_relations": "True"
+            };
+            $.ajax({
+              url: "https://sudreg-api.pravosudje.hr/javni/subjekt_detalji?tipIdentifikatora=oib&identifikator=" + term +"&" + $.param(params),
+              beforeSend: function(xhrObj){
+                // Request headers
+                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","2c4ee7236ab64b538a164cbc7ae3abe8");
+              },
+              type: "GET",
+              // Request body
+              data: "{body}",
+              dataType: 'json',
+
+            })
+                .done(function(data) {
+
+                  $("#input-country{{ address_row }}").val("53").change();
+
+                  var input = $( "#input-custom-field1" );
+                  input.val( data["skracene_tvrtke"][0]["ime"]);
+
+
+                  var input = $( "#input-custom-field2" );
+                  input.val( data["oib"]);
+
+
+                  var input = $( "#input-password" );
+                  var input2 = $( "#input-confirm" );
+                  $("#input-password").prop("type", "text");
+                  $("#input-confirm").prop("type", "text");
+                  var randomstring = Math.random().toString(36).slice(-8);
+                  input.val( randomstring);
+                  input2.val( randomstring);
+
+
+                  var input = $( "#input-address-1{{ address_row }}" );
+                  input.val( data["sjedista"][0]["ulica"] +' ' + data["sjedista"][0]["kucni_broj"]);
+
+                  var input = $( "#input-city{{ address_row }}" );
+                  input.val( data["sjedista"][0]["naziv_naselja"]);
+
+
+                  var input = $( "#input-email" );
+                  input.val( data["email_adrese"][0]["adresa"]);
+
+                })
+                .fail(function() {
+                  alert("OIB nije ispravan!");
+                });
+
+
+
+          }
+
+      });
+    });
+
+
+
+  </script>
+
+
 </div>
 {{ footer }} 
