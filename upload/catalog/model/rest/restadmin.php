@@ -2665,7 +2665,7 @@ class ModelRestRestAdmin extends Model {
 
 
 
-                $oib = json_decode($order['payment_custom_field'], true);
+                $oib = json_decode($order['custom_field'], true);
 
                 $orders[$index] = array(
                     'order_id' => (int)$order['order_id'],
