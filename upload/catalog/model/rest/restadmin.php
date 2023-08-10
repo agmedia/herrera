@@ -2663,6 +2663,10 @@ class ModelRestRestAdmin extends Model {
                     $language_directory = '';
                 }
 
+
+
+                $oib = json_decode($order['payment_custom_field'], true);
+
                 $orders[$index] = array(
                     'order_id' => (int)$order['order_id'],
                     'invoice_no' => $order['invoice_no'],
@@ -2677,9 +2681,9 @@ class ModelRestRestAdmin extends Model {
                     'email' => $order['email'],
                     'payment_firstname' => $order['payment_firstname'],
                     'payment_lastname' => $order['payment_lastname'],
-                    'payment_company' => $order['payment_company'],
+                    'payment_company' => $oib['1'],
                     //'payment_company_id'      => $order['payment_company_id'],
-                    //'payment_tax_id'          => $order['payment_tax_id'],
+                    'payment_tax_id'          => $oib['2'],
                     'payment_address_1' => $order['payment_address_1'],
                     'payment_address_2' => $order['payment_address_2'],
                     'payment_postcode' => $order['payment_postcode'],
