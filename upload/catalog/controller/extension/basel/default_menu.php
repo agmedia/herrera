@@ -8,6 +8,8 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 
 		$this->load->model('catalog/product');
 
+        $this->load->model('tool/image');
+
 		$data['categories'] = array();
 
 		$categories = $this->model_catalog_category->getCategories(0);
@@ -33,8 +35,15 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 					} else {
 					$total = '';
 					}
+
+                    if($grandchild['image']){
+                        $image = $this->model_tool_image->resize($grandchild['image'], 50, 50);
+                    } else {
+                        $image = false;
+                    }
 					
 					$grandchildren_data[] = array(
+                        'thumb'    =>  $image,
 					'name' => $grandchild['name'] . $total,
 					'href' => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'] . '_' . $grandchild['category_id'])
 					);
@@ -51,7 +60,15 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 					$total = '';
 					}
 
+
+                    if($child['image']){
+                        $image = $this->model_tool_image->resize($child['image'], 50, 50);
+                    } else {
+                        $image = false;
+                    }
+
 					$children_data[] = array(
+                        'thumb'    =>  $image,
 						'name'  => $child['name'] . $total,
 						'href'  => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id']),
 						'grandchildren'	=> $grandchildren_data,
@@ -59,7 +76,14 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 				}
 
 				// Level 1
+                if($category['image']){
+                    $image = $this->model_tool_image->resize($category['image'], 50, 50);
+                } else {
+                    $image = false;
+                }
+
 				$data['categories'][] = array(
+                    'thumb'    =>  $image,
 					'name'     => $category['name'],
 					'children' => $children_data,
 					'column'   => $category['column'] ? $category['column'] : 1,
