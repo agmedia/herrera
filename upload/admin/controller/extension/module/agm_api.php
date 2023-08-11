@@ -215,7 +215,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
 
-        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+        $this->db->query("INSERT INTO oc_product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
         $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.suplierqty = pt.quantity");
 
         $this->response->addHeader('Content-Type: application/json');
