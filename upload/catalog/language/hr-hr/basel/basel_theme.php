@@ -74,3 +74,6 @@ $_['basel_text_question']				= 'Upit:';
 $_['basel_cookie_info']     			= 'Ova stranice koriste tzv. kolačiće kako bi osigurale bolje korisničko iskustvo i funkcionalnost. Koristeći naše stranice slažete se s korištenjem kolačića.';
 $_['basel_cookie_btn_close']     		= 'Zatvori';
 $_['basel_cookie_btn_more_info']     	= 'Opširnije';
+
+$_['text_stock']               = 'Dostupnost 48 sati: ';
+$_['text_suplierqty']          = 'Dostupnost 14 dana: ';

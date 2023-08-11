@@ -216,11 +216,13 @@ class ControllerProductCategory extends Controller {
 					$rating = false;
 				}
 
+
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'model'  => $result['model'],
                     'ean'  => $result['ean'],
                     'suplierqty'  => $result['suplierqty'],
+                    'quantity'  => $result['quantity'],
                     'attribute_groups'       => $this->model_catalog_product->getProductAttributes($result['product_id']),
 					'thumb'       => $image,
 					'name'        => $result['name'],
@@ -231,7 +233,7 @@ class ControllerProductCategory extends Controller {
                     'specialeur'     => $specialeur,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
-					'rating'      => $result['rating'],
+					'rating'      => $rating,
 					'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $result['product_id'] . $url)
 				);
 			}

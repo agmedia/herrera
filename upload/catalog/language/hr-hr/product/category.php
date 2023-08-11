@@ -24,3 +24,5 @@ $_['text_model_asc']    = 'Model (A -&gt; Z)';
 $_['text_model_desc']   = 'Model (Z -&gt; A)';
 $_['text_limit']        = 'Prikaži:';
 $_['text_pagination_limit']       = 'Ukupno %d ';
+$_['text_stock']               = 'Dostupnost 48 sati: ';
+$_['text_suplierqty']          = 'Dostupnost 14 dana: ';

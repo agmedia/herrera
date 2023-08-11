@@ -75,9 +75,9 @@
 <!-- .price -->
 {% endif %}
 
-<p class="model mb-0">Šifra: {{ product.model }}</p>
+<p class="model mb-0"><small>Šifra: {{ product.model }}</small></p>
     {% if product.ean %}
-        <p class="model mb-0">EAN: {{ product.ean }} </p>
+        <p class="model mb-0"><small>EAN: {{ product.ean }} </small></p>
     {% endif %}
     {% if product.attribute_groups %}
         <div class="attlist">
@@ -99,11 +99,57 @@
     {% endif %}
 <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
 {% if is_logged %}
+
+
+        <p class="mt-10"><small>{{ text_stock }} {{ product.quantity }}</small><br>
+       <small>{{ text_suplierqty }} {{ product.suplierqty }}</small></p>
+
+
+
     {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
-      <a class="btn  {% if basel_list_style == '6' %}btn-contrast{% else %}btn-outline{% endif %}" title="{{ button_cart }}" ><span class="global-cart"></span> {{ button_cart }}</a>
-        {% set button_cart = basel_text_out_of_stock %}
+        <div class="input-group addtocart" >
+
+                      <span class="input-group-btn ">
+                          <button type="button" class="btn btn-default btn-number btn-left" data-type="minus" data-field="category" onclick="descrement($(this).parent().parent())")>
+                            <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                         </span>
+            <input type="text" name="quantity" class="form-control input-number" id="category" value="1">
+            <span class="input-group-btn">
+                          <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="category" onclick="increment($(this).parent().parent())">
+                            <span class="glyphicon glyphicon-plus"></span>
+                          </button>
+                        </span>
+
+            <span class="input-group-btn">
+                        <button type="button" class="btn btn-neutral" disabled
+                                onclick="cart.add('{{ product.product_id }}', $(this).parent().parent().find('.input-number').val());">
+                            <span class="global-cart"></span> <span class="hidden-xs hidden-sm hidden-md"></span>
+                        </button>
+                       </span>
+        </div>
     {% else %}
-     <a class="btn  {% if basel_list_style == '6' %}btn-contrast{% else %}btn-outline{% endif %}" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="global-cart"></span> {{ button_cart }}</a>
+        <div class="input-group addtocart" >
+
+                      <span class="input-group-btn ">
+                          <button type="button" class="btn btn-default btn-number btn-left" data-type="minus" data-field="category" onclick="descrement($(this).parent().parent())")>
+                            <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                         </span>
+            <input type="text" name="quantity" class="form-control input-number" id="category" value="1">
+            <span class="input-group-btn">
+                          <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="category" onclick="increment($(this).parent().parent())">
+                            <span class="glyphicon glyphicon-plus"></span>
+                          </button>
+                        </span>
+
+            <span class="input-group-btn">
+                        <button type="button" class="btn btn-neutral"
+                                onclick="cart.add('{{ product.product_id }}', $(this).parent().parent().find('.input-number').val());">
+                            <span class="global-cart"></span> <span class="hidden-xs hidden-sm hidden-md"></span>
+                        </button>
+                       </span>
+        </div>
     {% endif %}
 
 {% endif %}

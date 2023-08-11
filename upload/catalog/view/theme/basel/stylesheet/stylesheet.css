@@ -84,6 +84,30 @@ body {
 	filter: grayscale(100%);
 }
 
+.input-group.addtocart .btn {
+	border-radius: 0;
+
+}
+
+.input-group.addtocart .btn-neutral {
+
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.input-group.addtocart .btn-left {
+
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+input#category{
+	border: 1px solid #FFF8E5;
+}
+.single-product .input-group.addtocart {
+	margin-top:10px
+}
+
 .support a {
 	position: relative;
 	display: block;
@@ -292,6 +316,10 @@ p.homeb{
 
 .mb-3{
 	margin-bottom:30px;
+}
+
+.mt-10{
+	margin-top:10px
 }
 
 .tag-cat .btn-default, .tag-cat a.btn-default {
