@@ -173,16 +173,16 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         $braytron->getXML(true);
 
-        $csv = new Csv(DIR_UPLOAD . 'csv/ProductsData-EN.csv');
+     /*   $csv = new Csv(DIR_UPLOAD . 'csv/ProductsData-EN.csv');
 
         $ideus_data = $csv->collect();
 
-        $ideus = new Csv\Ideus($ideus_data->toArray());
+        $ideus = new Csv\Ideus($ideus_data->toArray());*/
 
         $bt = collect($braytron->quantity);
         $data = [];
 
-        foreach ($ideus->getQuantity() as $item) {
+      /*  foreach ($ideus->getQuantity() as $item) {
             $found = $bt->where('sku', $item['sku'])->first();
 
             if ($found) {
@@ -196,7 +196,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
                     'quantity' => $item['quantity']
                 ];
             }
-        }
+        }*/
 
         foreach ($bt->all() as $item) {
             if ( ! isset($data[$item['sku']])) {
