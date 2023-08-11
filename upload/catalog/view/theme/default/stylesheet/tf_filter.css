@@ -17,6 +17,11 @@
     font-weight: 600;
 }
 
+.tf-filter label{
+    font-size: 14px;
+
+}
+
 html[dir="ltr"] .tf-filter .panel-heading .fa{
     margin-left: auto;
 }
@@ -36,7 +41,7 @@ html[dir="rtl"] .tf-filter .panel-heading .fa{
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    padding: 15px 15px;
+    padding: 15px 5px;
     font-size: 1.1em !important;
 
     -ms-flex-align: center;
@@ -60,7 +65,7 @@ html[dir="rtl"] .tf-filter-group-header .toggle-icon{
 }
 
 .tf-filter-group-content, .tf-filter-group-search {
-    padding: 8px 15px;
+    padding: 8px 5px;
     display: block;
 }
 
