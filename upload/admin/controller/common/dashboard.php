@@ -5,6 +5,19 @@ class ControllerCommonDashboard extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+        $data['link_akcije'] = $this->url->link('extension/module/megaSalesPro',
+            'user_token=' . $this->session->data['user_token'], true);
+
+
+        $data['link_top_kategorije'] = $this->url->link('extension/module/basel_categories&module_id=67',
+            'user_token=' . $this->session->data['user_token'], true);
+
+
+        $data['link_rasvjeta_kategorije'] = $this->url->link('extension/module/basel_categories&module_id=66',
+            'user_token=' . $this->session->data['user_token'], true);
+
+
+
 		$data['user_token'] = $this->session->data['user_token'];
 
 		$data['breadcrumbs'] = array();
