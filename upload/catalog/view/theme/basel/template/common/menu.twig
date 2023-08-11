@@ -13,7 +13,7 @@
 					<li class="default-menu-li has-sub dropdown-wrapper from-bottom"><a href="{{ child.href }}"><img src="{{ child.thumb }}" class="hidden-xs" alt="{{ child.name }}"/> {{ child.name }}<i class="fa fa-angle-right"></i></a>
 							<ul class="dropdown-content sub-holder dropdown-left">
 								{% for grandchild in child.grandchildren %}
-									<li class="default-menu-li"><img src="{{ grandchild.thumb }}" class="hidden-xs" alt="{{ grandchild.name }}"/> <a href="{{ grandchild.href }}">{{ grandchild.name }}</a></li>
+									<li class="default-menu-li"> <a href="{{ grandchild.href }}"><img src="{{ grandchild.thumb }}" class="hidden-xs" alt="{{ grandchild.name }}"/> {{ grandchild.name }}</a></li>
 								{% endfor %}
 							</ul>
 					</li>
