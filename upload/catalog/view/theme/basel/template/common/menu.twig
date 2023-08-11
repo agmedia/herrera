@@ -12,7 +12,7 @@
 						{% if child.grandchildren %}
 					<li class="default-menu-li has-sub dropdown-wrapper from-bottom"><a href="{{ child.href }}"><img src="{{ child.thumb }}" class="hidden-xs" alt="{{ child.name }}"/> {{ child.name }}<i class="fa fa-angle-right"></i></a>
 
-                        {% for randchild in child.grandchildren|batch(child.children|length / child.column|round(1, 'ceil')) %}
+                        {% for grandchild in child.grandchildren|batch(child.children|length / child.column|round(1, 'ceil')) %}
 
                         <ul class="dropdown-content sub-holder dropdown-left">
 								{% for grandchild in child.grandchildren %}
