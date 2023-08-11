@@ -39,7 +39,7 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
                     if($grandchild['image']){
                         $image = $this->model_tool_image->resize($grandchild['image'], 50, 50);
                     } else {
-                        $image = false;
+                        $image = 'image/No_Image_Available.jpg';
                     }
 					
 					$grandchildren_data[] = array(
@@ -64,7 +64,7 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
                     if($child['image']){
                         $image = $this->model_tool_image->resize($child['image'], 50, 50);
                     } else {
-                        $image = false;
+                        $image = 'image/No_Image_Available.jpg';
                     }
 
 					$children_data[] = array(
@@ -79,7 +79,7 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
                 if($category['image']){
                     $image = $this->model_tool_image->resize($category['image'], 50, 50);
                 } else {
-                    $image = false;
+                    $image = 'image/No_Image_Available.jpg';
                 }
 
 				$data['categories'][] = array(
