@@ -18,7 +18,7 @@
 							</ul>
 					</li>
 						{% else %}
-					<li class="default-menu-li"><a href="{{ child.href }}">{{ child.name }}</a></li>
+					<li class="default-menu-li"><a href="{{ child.href }}"><img src="{{ child.thumb }}" class="hidden-xs" alt="{{ child.name }}"/> {{ child.name }}</a></li>
 						{% endif %}
 
                     {% endfor %}
