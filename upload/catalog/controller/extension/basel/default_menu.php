@@ -70,6 +70,7 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 					$children_data[] = array(
                         'thumb'    =>  $image,
 						'name'  => $child['name'] . $total,
+                        'column'   => $child['column'] ? $child['column'] : 1,
 						'href'  => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id']),
 						'grandchildren'	=> $grandchildren_data,
 					);
