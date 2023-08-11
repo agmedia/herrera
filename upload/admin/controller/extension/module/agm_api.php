@@ -5,6 +5,8 @@ use Agmedia\Api\Helper\Helper;
 use Agmedia\Helpers\Log;
 use Agmedia\Api\Connection\Csv;
 use Agmedia\Models\Product\Product;
+use Agmedia\Models\Product\ProductImage;
+use Illuminate\Support\Str;
 
 class ControllerExtensionModuleAgmApi extends Controller {
 	private $error = array();
@@ -167,11 +169,59 @@ class ControllerExtensionModuleAgmApi extends Controller {
     }
 
 
+    public function updateBraytronImages()
+    {
+        $braytron = new Csv\Braytron();
+
+        $braytron->getXML('images');
+
+        $count = 1;
+
+        foreach ($braytron->images as $item) {
+            if ( ! empty($item['images']) && $count < 5) {
+                $product = Product::query()->where('sku', $item['sku'])->where('mpn', '!=', '1')->first();
+
+                if ($product) {
+                    $path = agconf('import.image_path') . 'braytron-' . $item['sku'] . '/';
+
+                    if ( ! is_dir(DIR_IMAGE . $path)) {
+                        mkdir(DIR_IMAGE . $path, 0777, true);
+                    }
+
+                    $sort_order = 1;
+
+                    foreach ($item['images'] as $image_url) {
+                        $image = file_get_contents($image_url);
+                        $name = $item['sku'] . '-' . Str::random(9);
+
+                        file_put_contents(DIR_IMAGE . $path . $name, $image);
+
+                        ProductImage::query()->insertGetId([
+                            'product_id' => $product['product_id'],
+                            'image' => $path . $name,
+                            'sort_order' => $sort_order
+                        ]);
+
+                        $sort_order++;
+                    }
+
+                    $product->update(['mpn' => '1']);
+
+                    $count++;
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => $count]));
+    }
+
+
     public function updateQuantity()
     {
         $braytron = new Csv\Braytron();
 
-        $braytron->getXML(true);
+        $braytron->getXML('quantity');
 
      /*   $csv = new Csv(DIR_UPLOAD . 'csv/ProductsData-EN.csv');
 

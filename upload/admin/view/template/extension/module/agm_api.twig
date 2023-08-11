@@ -48,6 +48,13 @@
 
                                 <div class="form-group">
                                     <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="braytron-products-images" data-toggle="tooltip" title="Update BRAYTRON Fotografija Proizvoda" class="btn btn-info btn-block">Update BRAYTRON Fotografija Proizvoda</a>
+                                    </div>
+                                    <p class="col-sm-7">Vrši se update BRAYTRON fotografija proizvoda sa XML-a.</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
                                         <a href="javascript:void(0)" id="ideus-products-quantity" data-toggle="tooltip" title="Update Količine Proizvoda" class="btn btn-info btn-block">Update Količine Proizvoda</a>
                                     </div>
                                     <p class="col-sm-7">Vrši se update IDEUS (csv) i BRYTRON (xml) količina proizvoda.
@@ -108,6 +115,17 @@
             $('#ideus-products-images').on('click', (e) => {
                 $.ajax({
                     url: 'index.php?route=extension/module/agm_api/importImages&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+
+            //
+            $('#braytron-products-images').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/updateBraytronImages&user_token={{ user_token }}',
                     dataType: 'json',
                     success: function(json) {
                         console.log(json)
