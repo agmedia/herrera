@@ -178,7 +178,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $count = 1;
 
         foreach ($braytron->images as $item) {
-            if ( ! empty($item['images']) && $count < 5) {
+            if ( ! empty($item['images'])) {
                 $product = Product::query()->where('sku', $item['sku'])->where('mpn', '!=', '1')->first();
 
                 if ($product) {
