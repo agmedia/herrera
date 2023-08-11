@@ -192,7 +192,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
                     foreach ($item['images'] as $image_url) {
                         $image = file_get_contents($image_url);
-                        $name = $item['sku'] . '-' . Str::random(9);
+                        $name = $item['sku'] . '-' . Str::random(9) . '.jpg';
 
                         file_put_contents(DIR_IMAGE . $path . $name, $image);
 
