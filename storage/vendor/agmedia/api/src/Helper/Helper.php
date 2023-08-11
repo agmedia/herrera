@@ -2,8 +2,48 @@
 
 namespace Agmedia\Api\Helper;
 
+use Illuminate\Support\Str;
+
 class Helper
 {
+
+    /**
+     *
+     * @param array $product
+     *
+     * @return array
+     */
+    public static function resolveDescription(string $title, string $description): array
+    {
+        $description = static::setDescription($description);
+
+        $response[agconf('import.default_language')] = [
+            'name' => static::setText($title),
+            'description' => static::setText($description),
+            'tag' => '',
+            'meta_title' => static::setText($title),
+            'meta_description' => strip_tags(static::setText($description)),
+            'meta_keyword' => static::setText(str_replace(' ', ',', $title)),
+        ];
+
+        return $response;
+    }
+
+
+    /**
+     * @param string $slug
+     *
+     * @return array
+     */
+    public static function resolveSeoUrl(string $slug): array
+    {
+        $slug = Str::slug($slug);
+
+        return [
+            agconf('import.default_language') => $slug
+        ];
+    }
+
 
     /**
      * @param string|null $text

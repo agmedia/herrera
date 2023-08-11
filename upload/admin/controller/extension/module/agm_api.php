@@ -97,7 +97,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
             foreach ($products_for_insert as $key => $item) {
                 if ($key > 1) {
-                    $attr = $import->resolveAttributes($item);
+                    $attr = $import->resolveAttributes($item, 19);
                     $item['attributes'] = $attr;
 
                     $collection[] = $item;
@@ -120,16 +120,9 @@ class ControllerExtensionModuleAgmApi extends Controller {
             }
 
         }
-
-        //Log::store($collection, 'csv_herrera');
-        
-        
-        /*$prods = \Agmedia\Models\Product\Product::query()->get();
-        
-        \Agmedia\Helpers\Log::store($prods->toArray(), 'prods');*/
     
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(/*json_encode(['inserted' => $count])*/json_encode(['inserted' => $count]));
+        $this->response->setOutput(json_encode(['inserted' => $count]));
     }
 
 
@@ -145,8 +138,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
         foreach ($products as $product_id => $sku) {
             $data = $api->post(agconf('import.api.url_image_suffix'), $api->resolveImageData($sku));
 
-            if (isset($data['response']['result'])) {
-                foreach ($data['response']['result'] as $item) {
+            if ( ! empty($data)) {
+                foreach ($data as $item) {
                     if (isset($item['Attachment']['contents'])) {
                         $image = Helper::base64_to_jpeg(
                             $item['Attachment']['contents'],
@@ -211,6 +204,38 @@ class ControllerExtensionModuleAgmApi extends Controller {
                 }
             }
         }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => $count]));
+    }
+
+
+    public function specialImport()
+    {
+        $import = new Csv\Eracuni();
+        $api = new Api();
+        $count = 0;
+
+        $data = $api->get('ProductList');
+        $for_insert = collect($data)->where('onlineShopVisibility', '=', 'visibleOnline')->all();
+
+        foreach ($for_insert as $item) {
+            $has_product = Product::query()->where('sku', $item['productCode'])->first();
+
+            if ( ! $has_product) {
+                $this->load->model('catalog/product');
+
+                $item['attributes'] = $import->resolveAttributes($item, 'description');
+
+                $resolved = $import->resolveProduct($item);
+
+                $this->model_catalog_product->addProduct($resolved);
+
+                $count++;
+            }
+        }
+
+        Log::store($count, 'special');
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $count]));

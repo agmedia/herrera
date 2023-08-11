@@ -14,22 +14,22 @@ class Api
     /**
      * @var string|mixed
      */
-    private string $username = '';
+    private $username;
 
     /**
      * @var string|mixed
      */
-    private string $password = '';
+    private $password;
 
     /**
      * @var string|mixed
      */
-    private string $token = '';
+    private $token;
 
     /**
      * @var string|mixed
      */
-    private string $url = '';
+    private $url;
 
 
     /**
@@ -48,23 +48,24 @@ class Api
 
 
     /**
-     * @param string $url
-     * @param array  $data
+     * @param string     $url
+     * @param array|null $data
      *
      * @return bool|string
      */
-    public function get(string $url, array $data)
+    public function get(string $url, array $data = null)
     {
         try {
             $ch = curl_init($this->url . $url);
             curl_setopt($ch, CURLOPT_HEADER, ("Content-Type: application/json"));
+            curl_setopt($ch, CURLOPT_USERPWD, $this->resolveApiPassword());
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 500);
 
             $response = curl_exec($ch);
             curl_close($ch);
 
-            return $response;
+            return $this->resolveResponse($response);
 
         } catch (\Exception $exception) {
             $this->log($url, $exception);
@@ -100,7 +101,7 @@ class Api
 
             curl_close($ch);
 
-            return json_decode($response, true);
+            return $this->resolveResponse($response);
 
         } catch (\Exception $exception) {
             $this->log($url, $exception);
@@ -121,9 +122,20 @@ class Api
     }
 
     /*******************************************************************************
-    *                                Copyright : AGmedia                           *
-    *                              email: filip@agmedia.hr                         *
-    *******************************************************************************/
+     *                                Copyright : AGmedia                           *
+     *                              email: filip@agmedia.hr                         *
+     *******************************************************************************/
+
+    private function resolveResponse($response)
+    {
+        $response = json_decode($response, true);
+
+        if (isset($response['response']['result'])) {
+            $response = $response['response']['result'];
+        }
+
+        return $response;
+    }
 
     /**
      * @param string $type
@@ -148,8 +160,10 @@ class Api
         if ($type == 'form') {
             $headers[] = 'Content-Type: application/x-www-form-urlencoded';
 
-        } else if ($type == 'xml') {
-            $headers[] = 'Content-Type: application/xml';
+        } else {
+            if ($type == 'xml') {
+                $headers[] = 'Content-Type: application/xml';
+            }
         }
 
         return $headers;

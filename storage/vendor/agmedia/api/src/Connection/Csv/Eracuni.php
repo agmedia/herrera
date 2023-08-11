@@ -11,13 +11,13 @@ use Illuminate\Support\Carbon;
 /**
  *
  */
-class Generic
+class Eracuni
 {
 
     /**
      * @var array|null
      */
-    protected ?array $data = null;
+    protected $data = null;
 
 
     /**
@@ -36,10 +36,10 @@ class Generic
     {
         $this->checkData($data);
 
-        $brand        = OC_Product::resolveBrand('');
-        $categories   = OC_Product::resolveCategories($this->data);
+        $brand        = OC_Product::resolveBrand();
+        $categories   = OC_Product::resolveCategories();
         $attributes   = OC_Product::resolveGenericAttributes(isset($this->data['attributes']) ? $this->data['attributes'] : []);
-        $description  = OC_Product::resolveDescription($this->data);
+        $description  = Helper::resolveDescription($this->data['name'], $this->data['description']);
         //$images       = OC_Product::resolveImages($this->data);
         $stock_status = 1 ? agconf('import.default_stock_full') : agconf('import.default_stock_empty');
         $status       = 1;
@@ -50,16 +50,16 @@ class Generic
         //unset($images[0]);
 
         return [
-            'model'               => $this->data[0],
-            'sku'                 => $this->data[0],
+            'model'               => $this->data['productCode'],
+            'sku'                 => $this->data['productCode'],
             'upc'                 => '',
-            'ean'                 => Helper::setText($this->data[8]),
+            'ean'                 => Helper::setText($this->data['barCode']),
             'jan'                 => '',
             'isbn'                => '',
             'mpn'                 => '',
             'location'            => '',
-            'price'               => (float)str_replace(',', '.', $this->data[3]),
-            'tax_class_id'        => OC_Product::resolveTax($this->data),
+            'price'               => (float)str_replace(',', '.', $this->data['grossPrice']),
+            'tax_class_id'        => OC_Product::resolveTax(),
             'quantity'            => 1,
             'minimum'             => 1,
             'subtract'            => 1,
@@ -68,9 +68,9 @@ class Generic
             'date_available'      => Carbon::now()->subDay()->format('Y-m-d'),
             'length'              => '',
             'width'               => '',
-            'height'              => $this->data[45],
+            'height'              => '',
             'length_class_id'     => 1,
-            'weight'              => $this->data[44],
+            'weight'              => '',
             'weight_class_id'     => 1,
             'status'              => $status,
             'sort_order'          => 0,
@@ -88,7 +88,7 @@ class Generic
             'product_image'       => [],
             'product_layout'      => [0 => ''],
             'product_category'    => $categories,
-            'product_seo_url'     => [0 => OC_Product::resolveSeoUrl($this->data)],
+            'product_seo_url'     => [0 => Helper::resolveSeoUrl($this->data['name'])],
         ];
     }
 
