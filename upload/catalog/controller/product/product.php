@@ -384,6 +384,9 @@ class ControllerProductProduct extends Controller {
             }
 
 
+            $data['cutomergrouppopust'] =  $product_info['cutomergrouppopust'];
+
+
 
             if ($this->config->get('config_tax')) {
 				$data['tax'] = $this->currency->format($tax_price, $this->session->data['currency']);
