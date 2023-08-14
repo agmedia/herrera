@@ -351,7 +351,36 @@ class ModelCheckoutOrder extends Model {
 				$order_products = $this->getOrderProducts($order_id);
 
 				foreach($order_products as $order_product) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+
+                    $qty_info = $this->getQty((int)$order_product['product_id']); //10
+
+
+                    $order_qty = (int)$order_product['quantity']; // 30
+
+
+                    if($order_qty >= $qty_info){
+
+                        $min_qyt = $order_qty - $qty_info;
+
+
+                        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity + " . (int)$qty_info . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+                        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET suplierqty = (suplierqty + " . (int)$min_qyt . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+
+                    }else{
+
+                        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+                    }
+
+
+
+
+
+
+
 
 					$order_options = $this->getOrderOptions($order_id, $order_product['order_product_id']);
 
@@ -382,4 +411,18 @@ class ModelCheckoutOrder extends Model {
 			$this->cache->delete('product');
 		}
 	}
+
+    public function getQty($order_product_id) {
+
+        $query =  $this->db->query("SELECT quantity FROM `" . DB_PREFIX . "product`  WHERE product_id = '" . (int)$order_product_id . "'");
+
+        return $query->row;
+    }
+
+    public function getSuplierQty($order_product_id) {
+
+        $query =  $this->db->query("SELECTsuplierqty  FROM `" . DB_PREFIX . "product`  WHERE product_id = '" . (int)$order_product_id . "'");
+
+        return $query->row;
+    }
 }
