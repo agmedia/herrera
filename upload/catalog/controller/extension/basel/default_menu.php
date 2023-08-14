@@ -37,7 +37,7 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 					}
 
                     if($grandchild['image']){
-                        $image = $this->model_tool_image->resize($grandchild['image'], 50, 50);
+                        $image = $this->model_tool_image->resize($grandchild['image'], 100, 100);
                     } else {
                         $image = 'image/No_Image_Available.jpg';
                     }
@@ -63,7 +63,7 @@ class ControllerExtensionBaselDefaultMenu extends Controller {
 
 
                     if($child['image']){
-                        $image = $this->model_tool_image->resize($child['image'], 50, 50);
+                        $image = $this->model_tool_image->resize($child['image'], 130, 130);
                     } else {
                         $image = 'image/No_Image_Available.jpg';
                     }

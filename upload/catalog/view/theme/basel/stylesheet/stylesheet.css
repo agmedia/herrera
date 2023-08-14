@@ -2143,10 +2143,13 @@ div.required .control-label:after {
 	margin-right:0px;
 }
 .main-menu .dropdown-inner .hover-menu li.has-sub > ul {
-	min-width:210px;
+	min-width:160px;
 	padding:18px 20px;
-	left:110%;
+	left:100%;
 	top:0;
+	columns: 4;
+	-webkit-columns: 4;
+	-moz-columns: 4;
 }
 /* Menu Labels */
 .menu-tag {
