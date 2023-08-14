@@ -74,7 +74,30 @@
                     <div class="col-sm-12 col-md-5">
                         <div class="panel panel-default">
                             <div class="panel-heading darker-bg">
-                                <h3 class="panel-title"><i class="fa fa-list"></i> ....</h3>
+                                <h3 class="panel-title"><i class="fa fa-list"></i> Update</h3>
+                            </div>
+                            <div class="panel-body form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="eracuni-update-price" data-toggle="tooltip" title="Obnovi cijene sa Eračuna." class="btn btn-info btn-block">Update Prices</a>
+                                    </div>
+                                    <p class="col-sm-7">Obnovi cijene sa Eračuna.</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="eracuni-update-quantity" data-toggle="tooltip" title="Obnovi količine sa Eračuna." class="btn btn-info btn-block">Update Quantity</a>
+                                    </div>
+                                    <p class="col-sm-7">Obnovi količine sa Eračuna.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-5">
+                        <div class="panel panel-default">
+                            <div class="panel-heading darker-bg">
+                                <h3 class="panel-title"><i class="fa fa-list"></i> Special</h3>
                             </div>
                             <div class="panel-body form-horizontal">
                                 <div class="form-group">
@@ -154,6 +177,28 @@
             $('#special-import').on('click', (e) => {
                 $.ajax({
                     url: 'index.php?route=extension/module/agm_api/specialImport&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+
+            //
+            $('#eracuni-update-price').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/updatePriceEracuni&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+
+            //
+            $('#eracuni-update-quantity').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/updateQuantityEracuni&user_token={{ user_token }}',
                     dataType: 'json',
                     success: function(json) {
                         console.log(json)

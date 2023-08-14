@@ -242,6 +242,42 @@ class ControllerExtensionModuleAgmApi extends Controller {
     }
 
 
+    public function updateQuantityEracuni()
+    {
+        $import = new Csv\Eracuni();
+        $api = new Api();
+
+        $data = $api->get('WarehouseGetArticleStockQuantity');
+        $data = $import->getQuantityUpdateQuary($data);
+
+        if ( ! empty($data['query'])) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($data['query'], 0, -1) . ";");
+            $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.quantity = pt.quantity");
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => $data['count']]));
+    }
+
+
+    public function updatePriceEracuni()
+    {
+        $import = new Csv\Eracuni();
+        $api = new Api();
+
+        $data = $api->get('ProductList');
+        $data = $import->getPriceUpdateQuary($data);
+
+        if ( ! empty($data['query'])) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($data['query'], 0, -1) . ";");
+            $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.price = pt.price");
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => $data['count']]));
+    }
+
+
     public function updateQuantity()
     {
         $braytron = new Csv\Braytron();

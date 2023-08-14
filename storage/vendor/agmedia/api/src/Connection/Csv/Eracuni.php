@@ -127,6 +127,60 @@ class Eracuni
     /**
      * @param array|null $data
      *
+     * @return array
+     */
+    public function getQuantityUpdateQuary(array $data = null): array
+    {
+        if ($data) {
+            $count = 1;
+            $query = '';
+
+            foreach ($data as $item) {
+                $query .= '("' . $item['StockQuantityInfo']['productCode'] . '", ' . (int)$item['StockQuantityInfo']['quantityOnStock'] . ', 0),';
+
+                $count++;
+            }
+
+            return [
+                'query' => $query,
+                'count' => $count
+            ];
+        }
+
+        return [];
+    }
+
+
+    /**
+     * @param array|null $data
+     *
+     * @return array
+     */
+    public function getPriceUpdateQuary(array $data = null): array
+    {
+        if ($data) {
+            $count = 1;
+            $query = '';
+
+            foreach ($data as $item) {
+                $query .= '("' . $item['productCode'] . '", 0, ' . (float)$item['grossPrice'] . '),';
+
+                $count++;
+            }
+
+            return [
+                'query' => $query,
+                'count' => $count
+            ];
+        }
+
+        return [];
+    }
+
+
+    /**
+     * @param array|null $data
+     *
      * @return void
      */
     private function checkData(array $data = null): void
