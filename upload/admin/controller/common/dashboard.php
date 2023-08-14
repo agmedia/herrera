@@ -16,6 +16,9 @@ class ControllerCommonDashboard extends Controller {
         $data['link_rasvjeta_kategorije'] = $this->url->link('extension/module/basel_categories&module_id=66',
             'user_token=' . $this->session->data['user_token'], true);
 
+        $data['link_proizvodi'] = $this->url->link('extension/basel/productgroups',
+            'user_token=' . $this->session->data['user_token'], true);
+
 
 
 		$data['user_token'] = $this->session->data['user_token'];
