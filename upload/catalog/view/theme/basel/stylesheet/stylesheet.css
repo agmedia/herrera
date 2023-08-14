@@ -2147,9 +2147,9 @@ div.required .control-label:after {
 	padding:18px 20px;
 	left:100%;
 	top:0;
-	columns: 2;
-	-webkit-columns: 2;
-	-moz-columns: 2;
+	columns: 3;
+	-webkit-columns: 3;
+	-moz-columns: 3;
 }
 /* Menu Labels */
 .menu-tag {
