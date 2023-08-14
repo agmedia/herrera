@@ -321,7 +321,43 @@ class ModelCheckoutOrder extends Model {
 				$order_products = $this->getOrderProducts($order_id);
 
 				foreach ($order_products as $order_product) {
-					$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+
+                    $qty_info = $this->getQty((int)$order_product['product_id']); //1
+
+                    $this->log->write('qty_info');
+                    $this->log->write($qty_info);
+
+                    $order_qty = (int)$order_product['quantity']; // 5
+
+
+                    $this->log->write('order_qty');
+                    $this->log->write($order_qty);
+
+                    if($order_qty > $qty_info){
+
+                        $min_qyt = $order_qty - $qty_info;
+
+                        //4
+
+                        $this->log->write('min_qyt');
+                        $this->log->write($min_qyt);
+
+
+                        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity - " . (int)$qty_info . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+                        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET suplierqty = (suplierqty - " . (int)$min_qyt . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+
+                    }else{
+
+                        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
+
+                    }
+
+
+
+					//$this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
 
 					$order_options = $this->getOrderOptions($order_id, $order_product['order_product_id']);
 
@@ -353,14 +389,21 @@ class ModelCheckoutOrder extends Model {
 				foreach($order_products as $order_product) {
 
 
-                    $qty_info = $this->getQty((int)$order_product['product_id']); //10
+                    $qty_info = $this->getQty((int)$order_product['product_id']); //1
 
 
-                    $order_qty = (int)$order_product['quantity']; // 30
+
+                    $order_qty = (int)$order_product['quantity']; // 5
+
+
+
 
                     if($order_qty > $qty_info){
 
                         $min_qyt = $order_qty - $qty_info;
+
+                        //4
+
 
 
                         $this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity + " . (int)$qty_info . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
