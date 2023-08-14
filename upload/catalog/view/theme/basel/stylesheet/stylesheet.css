@@ -2138,7 +2138,7 @@ div.required .control-label:after {
 	position: absolute;
 	line-height: 32px;
 	right:5px;
-	top:0;
+	top:12px;
 	opacity:1;
 	margin-right:0px;
 }
