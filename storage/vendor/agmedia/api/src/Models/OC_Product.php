@@ -14,12 +14,11 @@ class OC_Product
 {
 
     /**
-     *
-     * @param array $product
+     * @param array|null $product
      *
      * @return array
      */
-    public static function resolveCategories(array $product): array
+    public static function resolveCategories(array $product = null): array
     {
         $response = [0 => agconf('import.default_category')];
 
@@ -28,13 +27,13 @@ class OC_Product
 
 
     /**
-     * @param string $brand
+     * @param string|null $brand
      *
      * @return array
      */
-    public static function resolveBrand(string $brand): array
+    public static function resolveBrand(string $brand = null): array
     {
-        if ($brand != '') {
+        if ($brand) {
             $has = Manufacturer::where('name', $brand)->first();
 
             if ($has) {
@@ -192,7 +191,7 @@ class OC_Product
      *
      * @return int
      */
-    public static function resolveTax(array $product): int
+    public static function resolveTax(array $product = null): int
     {
         return agconf('import.default_tax_class');
     }
