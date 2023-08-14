@@ -358,8 +358,7 @@ class ModelCheckoutOrder extends Model {
 
                     $order_qty = (int)$order_product['quantity']; // 30
 
-
-                    if($order_qty >= $qty_info){
+                    if($order_qty > $qty_info){
 
                         $min_qyt = $order_qty - $qty_info;
 
@@ -374,9 +373,6 @@ class ModelCheckoutOrder extends Model {
                         $this->db->query("UPDATE `" . DB_PREFIX . "product` SET quantity = (quantity + " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
 
                     }
-
-
-
 
 
 
@@ -413,16 +409,11 @@ class ModelCheckoutOrder extends Model {
 	}
 
     public function getQty($order_product_id) {
-
         $query =  $this->db->query("SELECT quantity FROM `" . DB_PREFIX . "product`  WHERE product_id = '" . (int)$order_product_id . "'");
-
-        return $query->row;
+        if ($query->num_rows) {
+            return $query->row["quantity"];
+        }
     }
 
-    public function getSuplierQty($order_product_id) {
 
-        $query =  $this->db->query("SELECTsuplierqty  FROM `" . DB_PREFIX . "product`  WHERE product_id = '" . (int)$order_product_id . "'");
-
-        return $query->row;
-    }
 }
