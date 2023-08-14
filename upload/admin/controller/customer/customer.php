@@ -369,6 +369,9 @@ class ControllerCustomerCustomer extends Controller {
 
 		$results = $this->model_customer_customer->getCustomers($filter_data);
 
+
+
+
 		foreach ($results as $result) {
 			$login_info = $this->model_customer_customer->getTotalLoginAttempts($result['email']);
 
@@ -392,9 +395,14 @@ class ControllerCustomerCustomer extends Controller {
 				);
 			}
 
+
+            $json = json_decode($result['custom_field'], true);
+
 			$data['customers'][] = array(
 				'customer_id'    => $result['customer_id'],
 				'name'           => $result['name'],
+				'tvrtka' => $json['1'],
+                'oib' => $json['2'],
 				'email'          => $result['email'],
 				'customer_group' => $result['customer_group'],
 				'status'         => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
@@ -405,6 +413,8 @@ class ControllerCustomerCustomer extends Controller {
 				'edit'           => $this->url->link('customer/customer/edit', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . $url, true)
 			);
 		}
+
+
 
 		$data['user_token'] = $this->session->data['user_token'];
 
