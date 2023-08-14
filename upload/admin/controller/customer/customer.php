@@ -245,6 +245,19 @@ class ControllerCustomerCustomer extends Controller {
 			$filter_name = '';
 		}
 
+
+        if (isset($this->request->get['filter_tvrtka'])) {
+            $filter_tvrtka = $this->request->get['filter_tvrtka'];
+        } else {
+            $filter_tvrtka = '';
+        }
+
+        if (isset($this->request->get['filter_oib'])) {
+            $filter_oib = $this->request->get['filter_oib'];
+        } else {
+            $filter_oib = '';
+        }
+
 		if (isset($this->request->get['filter_email'])) {
 			$filter_email = $this->request->get['filter_email'];
 		} else {
@@ -298,6 +311,15 @@ class ControllerCustomerCustomer extends Controller {
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
 		}
+
+        if (isset($this->request->get['filter_tvrtka'])) {
+            $url .= '&filter_tvrtka=' . urlencode(html_entity_decode($this->request->get['filter_tvrtka'], ENT_QUOTES, 'UTF-8'));
+        }
+
+
+        if (isset($this->request->get['filter_oib'])) {
+            $url .= '&filter_oib=' . urlencode(html_entity_decode($this->request->get['filter_oib'], ENT_QUOTES, 'UTF-8'));
+        }
 
 		if (isset($this->request->get['filter_email'])) {
 			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
@@ -354,6 +376,8 @@ class ControllerCustomerCustomer extends Controller {
 
 		$filter_data = array(
 			'filter_name'              => $filter_name,
+            'filter_tvrtka'              => $filter_tvrtka,
+            'filter_oib'              => $filter_oib,
 			'filter_email'             => $filter_email,
 			'filter_customer_group_id' => $filter_customer_group_id,
 			'filter_status'            => $filter_status,
@@ -1450,7 +1474,7 @@ class ControllerCustomerCustomer extends Controller {
 	public function autocomplete() {
 		$json = array();
 
-		if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
+		if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_tvrtka']) || isset($this->request->get['filter_oib'])) {
 			if (isset($this->request->get['filter_name'])) {
 				$filter_name = $this->request->get['filter_name'];
 			} else {
@@ -1463,6 +1487,18 @@ class ControllerCustomerCustomer extends Controller {
 				$filter_email = '';
 			}
 
+            if (isset($this->request->get['filter_tvrtka'])) {
+                $filter_tvrtka = $this->request->get['filter_tvrtka'];
+            } else {
+                $filter_tvrtka = '';
+            }
+
+            if (isset($this->request->get['filter_oib'])) {
+                $filter_oib = $this->request->get['filter_oib'];
+            } else {
+                $filter_oib = '';
+            }
+
 			if (isset($this->request->get['filter_affiliate'])) {
 				$filter_affiliate = $this->request->get['filter_affiliate'];
 			} else {
@@ -1474,6 +1510,8 @@ class ControllerCustomerCustomer extends Controller {
 			$filter_data = array(
 				'filter_name'      => $filter_name,
 				'filter_email'     => $filter_email,
+                'filter_tvrtka'     => $filter_tvrtka,
+                'filter_oib'     => $filter_oib,
 				'filter_affiliate' => $filter_affiliate,
 				'start'            => 0,
 				'limit'            => 5
@@ -1481,7 +1519,15 @@ class ControllerCustomerCustomer extends Controller {
 
 			$results = $this->model_customer_customer->getCustomers($filter_data);
 
+
+
+
+
+
+
 			foreach ($results as $result) {
+                $getcustom = json_decode($result['custom_field'], true);
+
 				$json[] = array(
 					'customer_id'       => $result['customer_id'],
 					'customer_group_id' => $result['customer_group_id'],
@@ -1490,6 +1536,8 @@ class ControllerCustomerCustomer extends Controller {
 					'firstname'         => $result['firstname'],
 					'lastname'          => $result['lastname'],
 					'email'             => $result['email'],
+                    'tvrtka' => $getcustom['1'],
+                    'oib' => $getcustom['2'],
 					'telephone'         => $result['telephone'],
 					'custom_field'      => json_decode($result['custom_field'], true),
 					'address'           => $this->model_customer_customer->getAddresses($result['customer_id'])

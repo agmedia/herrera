@@ -97,6 +97,15 @@ class ModelCustomerCustomer extends Model {
 			$implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
 		}
 
+        if (!empty($data['filter_tvrtka'])) {
+            $implode[] = "c.custom_field LIKE '%" . $this->db->escape($data['filter_tvrtka']) . "%'";
+        }
+
+
+        if (!empty($data['filter_oib'])) {
+            $implode[] = "c.custom_field LIKE '%" . $this->db->escape($data['filter_oib']) . "%'";
+        }
+
 		if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
 			$implode[] = "c.newsletter = '" . (int)$data['filter_newsletter'] . "'";
 		}

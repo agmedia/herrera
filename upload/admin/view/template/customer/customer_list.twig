@@ -33,6 +33,15 @@
           </div>
           <div class="panel-body">
             <div class="form-group">
+              <label class="control-label" for="input-name">Tvrtka</label>
+              <input type="text" name="filter_tvrtka" value="{{ filter_tvrtka }}" placeholder="Tvrtka" id="input-tvrtka" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="input-oib">OIB</label>
+              <input type="text" name="filter_oib" value="{{ filter_oib }}" placeholder="OIB" id="input-oib" class="form-control" />
+            </div>
+
+            <div class="form-group">
               <label class="control-label" for="input-name">{{ entry_name }}</label>
               <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
             </div>
@@ -209,6 +218,14 @@
     if (filter_ip) {
       url += '&filter_ip=' + encodeURIComponent(filter_ip);
     }
+    var filter_tvrtka = $('input[name=\'filter_tvrtka\']').val();
+    if (filter_tvrtka) {
+      url += '&filter_tvrtka=' + encodeURIComponent(filter_tvrtka);
+    }
+    var filter_oib = $('input[name=\'filter_oib\']').val();
+    if (filter_oib) {
+      url += '&filter_oib=' + encodeURIComponent(filter_oib);
+    }
     var filter_date_added = $('input[name=\'filter_date_added\']').val();
     if (filter_date_added) {
       url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
@@ -236,6 +253,48 @@
       $('input[name=\'filter_name\']').val(item['label']);
     }
   });
+
+    $('input[name=\'filter_tvrtka\']').autocomplete({
+      'source': function(request, response) {
+        $.ajax({
+          url: 'index.php?route=customer/customer/autocomplete&user_token={{ user_token }}&filter_tvrtka=' +  encodeURIComponent(request),
+          dataType: 'json',
+          success: function(json) {
+            response($.map(json, function(item) {
+              return {
+                label: item['tvrtka'],
+                value: item['customer_id']
+              }
+            }));
+          }
+        });
+      },
+      'select': function(item) {
+        $('input[name=\'filter_tvrtka\']').val(item['label']);
+      }
+    });
+
+
+    $('input[name=\'filter_oib\']').autocomplete({
+      'source': function(request, response) {
+        $.ajax({
+          url: 'index.php?route=customer/customer/autocomplete&user_token={{ user_token }}&filter_oib=' +  encodeURIComponent(request),
+          dataType: 'json',
+          success: function(json) {
+            response($.map(json, function(item) {
+              return {
+                label: item['oib'],
+                value: item['customer_id']
+              }
+            }));
+          }
+        });
+      },
+      'select': function(item) {
+        $('input[name=\'filter_oib\']').val(item['label']);
+      }
+    });
+
   $('input[name=\'filter_email\']').autocomplete({
     'source': function(request, response) {
       $.ajax({
