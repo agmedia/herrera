@@ -20,7 +20,7 @@
     {% set class = 'col-sm-6' %}
     {% elseif column_left or column_right %}
     {% set class = 'col-md-9 col-sm-8' %}
-    {% else %}
+    {% else %}<b>{{ text_order_id }}</b> #{{ order_id }}<br />
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
@@ -71,6 +71,7 @@
         <table class="table table-bordered margin-b0">
           <thead>
             <tr>
+              <td class="text-left">Slika</td>
               <td class="text-left">{{ column_name }}</td>
               <td class="text-left hidden-xs hidden-sm">{{ column_model }}</td>
               <td class="text-right hidden-xs hidden-sm">{{ column_quantity }}</td>
@@ -84,6 +85,7 @@
           <tbody>
             {% for product in products %}
             <tr>
+              <td class="text-left"> {% if product.thumb %} <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail" /> {% endif %} </td>
               <td class="text-left">{{ product.name }}
                 {% for option in product.option %}
                 <br />

@@ -240,6 +240,9 @@ class ControllerAccountOrder extends Controller {
 
 			$products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
 
+            $data['column_image'] = $this->language->get('column_image');
+            $this->load->model('tool/image');
+
 			foreach ($products as $product) {
 				$option_data = array();
 
@@ -266,6 +269,12 @@ class ControllerAccountOrder extends Controller {
 
 				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
+                if ($product_info['image']) {
+                    $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
+                } else {
+                    $thumb = '';
+                }
+
 				if ($product_info) {
 					$reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], true);
 				} else {
@@ -274,6 +283,7 @@ class ControllerAccountOrder extends Controller {
 
 				$data['products'][] = array(
 					'name'     => $product['name'],
+                    'thumb'     => $thumb,
 					'model'    => $product['model'],
 					'option'   => $option_data,
 					'quantity' => $product['quantity'],
