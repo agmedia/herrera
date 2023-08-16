@@ -1,41 +1,41 @@
 <?php
 // Heading
-$_['heading_title1']    		= 'TMD Customer Group Price';
-$_['heading_title']     		= '<div style="color:#23A8DA;font-weight:bold;">TMD Customer Group Price</div>';
-// Text
-$_['text_extension']   			= 'Extensions';
-$_['text_success']     			= 'Success: You have modified Customer Group Price module!';
-$_['text_edit']        			= 'Edit Customer Group Price Module';
-$_['error_sucess'] 			= 'Import Successfully!';
+$_['heading_title1'] = 'Popusti za grupe kupaca';
+$_['heading_title'] = '<div style="color:#23A8DA;font-weight:bold;">Popusti za grupe kupaca</div>';
+// Tekst
+$_['text_extension'] = 'Proširenja';
+$_['text_success'] = 'Uspjeh: Izmijenili ste modul cijena grupe kupaca!';
+$_['text_edit'] = 'Uredi Modul cijene grupe kupaca';
+$_['error_sucess'] = 'Uspješan uvoz!';
 
-// Entry
-$_['entry_status']     			= 'Status';
-$_['entry_import']     			= 'Import';
-$_['entry_export']     			= 'Export';
-$_['entry_prefix']     			= 'Prefix';
-$_['entry_value']     			= 'Value';
-$_['entry_priority']    		= 'Priority';
-$_['entry_rule']     			= 'Advance Customer Group Settings';
-$_['export_price']     			= 'Price';
-$_['export_customer_group']     = 'Customer Group';
-$_['export_product_id']     	= 'Product Id';
-$_['export_sku']     			= 'SKU';
-$_['export_model']     			= 'Model';
-$_['column_product_id']     	= 'Product ID';
-$_['column_model']     			= 'Model';
-$_['column_sku']     			= 'SKU';
-$_['column_customer_group']     = 'Customer Group';
-$_['column_price']     			= 'Price';
-$_['column_price']     			= 'Price';
-$_['text_plus']     			= '+';
-$_['text_minus']     			= '-';
-$_['text_pluspercent']     		= '+ %';
-$_['text_minuspercent']     	= '- %';
-$_['entry_product_id']     		= 'Product ID';
-$_['entry_model']     			= 'Model';
-$_['entry_sku']     			= 'SKU';
-$_['error_empty']            	= 'Please upload xls file';
-$_['entry_importby']            = 'Import By';
+// Unos
+$_['entry_status'] = 'Status';
+$_['entry_import'] = 'Uvoz';
+$_['entry_export'] = 'Izvoz';
+$_['entry_prefix'] = 'Prefiks';
+$_['entry_value'] = 'Vrijednost';
+$_['entry_priority'] = 'Prioritet';
+$_['entry_rule'] = 'Napredne postavke grupe kupaca';
+$_['export_price'] = 'Cijena';
+$_['export_customer_group'] = 'Grupa kupaca';
+$_['export_product_id'] = 'ID proizvoda';
+$_['export_sku'] = 'SKU';
+$_['export_model'] = 'Model';
+$_['column_product_id'] = 'ID proizvoda';
+$_['column_model'] = 'Model';
+$_['column_sku'] = 'SKU';
+$_['column_customer_group'] = 'Grupa kupaca';
+$_['column_price'] = 'Cijena';
+$_['column_price'] = 'Cijena';
+$_['text_plus'] = '+';
+$_['text_minus'] = '-';
+$_['text_pluspercent'] = '+ %';
+$_['text_minuspercent'] = '- %';
+$_['entry_product_id'] = 'ID proizvoda';
+$_['entry_model'] = 'Model';
+$_['entry_sku'] = 'SKU';
+$_['error_empty'] = 'Molimo prenesite xls datoteku';
+$_['entry_importby'] = 'Uvezi prema';
 
-// Error
-$_['error_permission'] 			= 'Warning: You do not have permission to modify Customer Group Price module!';
+// Pogreška
+$_['error_permission'] = 'Upozorenje: Nemate dopuštenje za izmjenu modula Cijene grupe kupaca!';

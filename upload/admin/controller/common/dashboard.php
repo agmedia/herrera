@@ -9,6 +9,10 @@ class ControllerCommonDashboard extends Controller {
             'user_token=' . $this->session->data['user_token'], true);
 
 
+        $data['link_grupe'] = $this->url->link('extension/module/customergroupprice',
+            'user_token=' . $this->session->data['user_token'], true);
+
+
         $data['link_top_kategorije'] = $this->url->link('extension/module/basel_categories&module_id=67',
             'user_token=' . $this->session->data['user_token'], true);
 
