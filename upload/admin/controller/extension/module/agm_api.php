@@ -255,6 +255,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.quantity = pt.quantity");
         }
 
+        $this->deleteProductTempDB();
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $data['count']]));
     }
@@ -272,6 +274,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($data['query'], 0, -1) . ";");
             $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.price = pt.price");
         }
+
+        $this->deleteProductTempDB();
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $data['count']]));
@@ -342,4 +346,13 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
 		return !$this->error;
 	}
+
+
+    /**
+     * @throws \Exception
+     */
+    private function deleteProductTempDB(): void
+    {
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+    }
 }
