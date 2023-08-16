@@ -20,6 +20,10 @@ class ControllerCommonDashboard extends Controller {
             'user_token=' . $this->session->data['user_token'], true);
 
 
+        $data['link_agapi'] = $this->url->link('extension/module/agm_api',
+            'user_token=' . $this->session->data['user_token'], true);
+
+
 
 		$data['user_token'] = $this->session->data['user_token'];
 
