@@ -30,21 +30,16 @@
                     <div class="col-sm-12 col-md-7">
                         <div class="panel panel-default">
                             <div class="panel-heading darker-bg">
-                                <h3 class="panel-title"><i class="fa fa-list"></i> Proizvodi</h3>
+                                <h3 class="panel-title"><i class="fa fa-list"></i> Proizvodi dobavljači</h3>
                             </div>
                             <div class="panel-body form-horizontal">
-                                <div class="form-group">
+                               <!-- <div class="form-group">
                                     <div class="col-sm-5 text-center">
                                         <a href="javascript:void(0)" id="ideus-products" data-toggle="tooltip" title="Import ili Update IDEUS Proizvoda" class="btn btn-info btn-block">IDEUS Proizvodi</a>
                                     </div>
                                     <p class="col-sm-7">Vrši se import ili update IDEUS proizvoda sa csv-a.</p>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-5 text-center">
-                                        <a href="javascript:void(0)" id="ideus-products-images" data-toggle="tooltip" title="Import IDEUS Fotografija Proizvoda" class="btn btn-info btn-block">IDEUS Fotografije Proizvoda</a>
-                                    </div>
-                                    <p class="col-sm-7">Vrši se import IDEUS fotografija proizvoda sa "https://e-racuni.com/..." API-a.</p>
-                                </div>
+                                </div> -->
+
 
                                 <div class="form-group">
                                     <div class="col-sm-5 text-center">
@@ -55,9 +50,9 @@
 
                                 <div class="form-group">
                                     <div class="col-sm-5 text-center">
-                                        <a href="javascript:void(0)" id="ideus-products-quantity" data-toggle="tooltip" title="Update Količine Proizvoda" class="btn btn-info btn-block">Update Količine Proizvoda</a>
+                                        <a href="javascript:void(0)" id="ideus-products-quantity" data-toggle="tooltip" title="Update Količine Proizvoda" class="btn btn-info btn-block">Update Količine Dobavljača</a>
                                     </div>
-                                    <p class="col-sm-7">Vrši se update IDEUS (csv) i BRYTRON (xml) količina proizvoda.
+                                    <p class="col-sm-7">Vrši se BRYTRON (xml) količina proizvoda.
                                     {#<form action="{{ action_upload_ideus }}" method="post" enctype="multipart/form-data">
                                         Upload Ideus .csv:
                                         <input type="file" name="the_file" id="fileToUpload">
@@ -97,14 +92,20 @@
                     <div class="col-sm-12 col-md-5">
                         <div class="panel panel-default">
                             <div class="panel-heading darker-bg">
-                                <h3 class="panel-title"><i class="fa fa-list"></i> Special</h3>
+                                <h3 class="panel-title"><i class="fa fa-list"></i> Import Products</h3>
                             </div>
                             <div class="panel-body form-horizontal">
                                 <div class="form-group">
                                     <div class="col-sm-5 text-center">
-                                        <a href="javascript:void(0)" id="special-import" data-toggle="tooltip" title="Samo ako si siguran u ono što klikčeš..?" class="btn btn-info btn-block">Special Import</a>
+                                        <a href="javascript:void(0)" id="special-import" data-toggle="tooltip" title="Samo ako si siguran u ono što klikčeš..?" class="btn btn-info btn-block">Import</a>
                                     </div>
-                                    <p class="col-sm-7">Special Import/Update.</p>
+                                    <p class="col-sm-7">Import novih proizvoda sa "https://e-racuni.com/..." API-a.</p>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="ideus-products-images" data-toggle="tooltip" title="Import IDEUS Fotografija Proizvoda" class="btn btn-info btn-block">Fotografije Proizvoda</a>
+                                    </div>
+                                    <p class="col-sm-7">Vrši se import fotografija novih proizvoda sa "https://e-racuni.com/..." API-a.</p>
                                 </div>
                             </div>
                         </div>
