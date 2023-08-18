@@ -58,9 +58,9 @@ class ControllerExtensionPurchased extends Controller {
 		foreach ($results as $result) {
 			
 			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image_product = $this->model_tool_image->resize($result['image'], 40, 40);
+				$image_product = $this->model_tool_image->resize($result['image'], 120, 120);
 			} else {
-				$image_product = $this->model_tool_image->resize('no_image.jpg', 40, 40);
+				$image_product = $this->model_tool_image->resize('no_image.jpg', 120, 120);
 			}
 			
 			$option_data = array();
