@@ -251,7 +251,9 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $data = $import->getQuantityUpdateQuary($data);
 
         if ( ! empty($data['query'])) {
+
             $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($data['query'], 0, -1) . ";");
+            $this->db->query("UPDATE " . DB_PREFIX . "product p SET p.quantity = 0");
             $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.quantity = pt.quantity");
         }
 
