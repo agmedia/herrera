@@ -7,6 +7,7 @@ $_['heading_title']      = 'Moj korisnički račun';
 $_['text_account']       = 'Moj korisnički račun';
 $_['text_my_account']    = 'Moj korisnički račun';
 $_['text_my_orders']     = 'Moje narudžbe';
+$_['text_purchased']					= 'Kupljeni artikli';
 $_['text_my_newsletter'] = 'Newsletter';
 $_['text_edit']          = 'Promijeni informacije o korisničkom računu';
 $_['text_password']      = 'Promijeni lozinku';
