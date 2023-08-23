@@ -119,9 +119,24 @@ class ControllerExtensionReportCustomerOrder extends Controller {
 
 		$results = $this->model_extension_report_customer->getOrders($filter_data);
 
+
+
+
+
+
 		foreach ($results as $result) {
+
+            $result['custom_field'] = json_decode($result['custom_field'], true);
+
+            $result['oib'] = isset($result['custom_field'][2]) ? $result['custom_field'][2] : null;
+            $result['tvrtka'] = isset($result['custom_field'][1]) ? $result['custom_field'][1] : null;
+
+            $firm =  '<span style="color:#ec2426" >'. $result['tvrtka'] . ' <br> ' . $result['oib'] .'<br> </span>';
+
+
+
 			$data['customers'][] = array(
-				'customer'       => $result['customer'],
+				'customer'       => $firm. ' '.$result['customer'],
 				'email'          => $result['email'],
 				'customer_group' => $result['customer_group'],
 				'status'         => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
