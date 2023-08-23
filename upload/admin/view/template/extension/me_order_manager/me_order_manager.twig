@@ -42,7 +42,7 @@
   {% endif %}
 	<div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-filter"></i> {{ text_list }} <ul class="list-inline count_orders"><li>{{ text_orders }}: <strong>{{ order_total }}</strong></li><li>{{ text_products }}: <strong>{{ order_product_total }}</strong></li><li>{{ text_orders_total }} : <strong>{{ sum_order_total }}</strong></li></ul></h3>
+          <h3 class="panel-title"><i class="fa fa-filter"></i> {{ text_list }} <ul class="list-inline count_orders"><li>Narudžbe: <strong>{{ order_total }}</strong></li><li>{{ text_products }}: <strong>{{ order_product_total }}</strong></li><li>Ukupno : <strong>{{ sum_order_total }}</strong></li></ul></h3>
 		  {% if order_manager_filter.status %}
 		  <div class="pull-right"><a href="javascript:void(0);" data-toggle="tooltip" title="{{ button_hide_filter }}" class="toggle-btn"><i class="fa fa-th"></i></a></div>
 		  {% endif %}
