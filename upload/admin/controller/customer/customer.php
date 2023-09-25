@@ -291,7 +291,7 @@ class ControllerCustomerCustomer extends Controller {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'name';
+			$sort = 'tvrtka';
 		}
 
 		if (isset($this->request->get['order'])) {
@@ -499,6 +499,7 @@ class ControllerCustomerCustomer extends Controller {
 		}
 
 		$data['sort_name'] = $this->url->link('customer/customer', 'user_token=' . $this->session->data['user_token'] . '&sort=name' . $url, true);
+        $data['sort_tvrtka'] = $this->url->link('customer/customer', 'user_token=' . $this->session->data['user_token'] . '&sort=tvrtka' . $url, true);
 		$data['sort_email'] = $this->url->link('customer/customer', 'user_token=' . $this->session->data['user_token'] . '&sort=c.email' . $url, true);
 		$data['sort_customer_group'] = $this->url->link('customer/customer', 'user_token=' . $this->session->data['user_token'] . '&sort=customer_group' . $url, true);
 		$data['sort_status'] = $this->url->link('customer/customer', 'user_token=' . $this->session->data['user_token'] . '&sort=c.status' . $url, true);
@@ -510,6 +511,10 @@ class ControllerCustomerCustomer extends Controller {
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
 		}
+
+        if (isset($this->request->get['filter_tvrtka'])) {
+            $url .= '&filter_tvrtka=' . urlencode(html_entity_decode($this->request->get['filter_tvrtka'], ENT_QUOTES, 'UTF-8'));
+        }
 
 		if (isset($this->request->get['filter_email'])) {
 			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
@@ -550,6 +555,7 @@ class ControllerCustomerCustomer extends Controller {
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
 
 		$data['filter_name'] = $filter_name;
+        $data['filter_tvrtka'] = $filter_tvrtka;
 		$data['filter_email'] = $filter_email;
 		$data['filter_customer_group_id'] = $filter_customer_group_id;
 		$data['filter_status'] = $filter_status;

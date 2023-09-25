@@ -77,23 +77,34 @@ class ControllerExtensionPurchased extends Controller {
 			}
 
 			$product_info = $this->model_catalog_product->getProduct($result['product_id']);
+            $svenarudzbe = strip_tags($result['product_order_id']);
+            $svenarudzbe = str_replace('#', '',  $svenarudzbe);
+
+            $svenarudzbe= substr($svenarudzbe,0,2);
+
+            $svenarudzbe = $this->db->query("SELECT date_added FROM " . DB_PREFIX . "order WHERE order_id = '" . (int)$svenarudzbe . "'");
+
+
 
 			if ($product_info) {
 				$url_product = $this->url->link('product/product', '&product_id=' . $result['product_id'], true);
 			} else {
 				$url_product = '';
 			}
-				
+
+
 			$data['products'][] = array(
 				'product_id' 	=> $result['product_id'],
 				'order_id' 		=> $result['product_order_id'],
 				'image'      	=> $image_product,
 				'model'    		=> $result['model'],
 				'name'     		=> $result['name'],
+                'date_added'     		=>  $svenarudzbe->row["date_added"],
 				'url_product'  	=> $url_product,
 				'option'   		=> $option_data,
 				'quantity' 		=> $result['quantity'],
-				'total'      	=> $this->currency->format($result['product_total'], $this->session->data['currency'])
+				'total'      	=> $this->currency->format($result['product_total'], $this->session->data['currency']),
+               'return'   => $this->url->link('account/return/add', 'order_id=' . $result['order_id'] . '&product_id=' . $result['product_id'], true)
 			);
 		}
 		

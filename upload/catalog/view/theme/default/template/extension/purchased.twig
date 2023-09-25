@@ -21,18 +21,21 @@
           <thead>
             <tr>
               <td class="text-right">Narudžba</td>
+                <td class="text-right">Datum zadnje narudžbe</td>
               <td class="text-center">{{ column_image }}</td>
               <td class="text-left">{{ column_name }}</td>
               <td class="text-left">{{ column_model }}</td>
               <td class="text-right">{{ column_quantity }}</td>
               <td class="text-right">{{ column_total }}</td>
                 <td class="text-right">Naruči</td>
+                <td class="text-right">Povrat</td>
             </tr>
           </thead>
           <tbody>
             {% for product in products %}
             <tr>
               <td class="text-right">{{ product.order_id }}</td>
+                <td class="text-right">{{ product.date_added }}</td>
               <td class="text-center"><img src="{{ product.image }}" style="padding: 1px; border: 1px solid #DDDDDD;" /></td>
               <td class="text-left"><a href="{{ product.url_product }}">{{ product.name }}</a><br />
 				    {% if product.option %}
@@ -71,6 +74,10 @@
                        </span>
               </div>
               </td>
+
+                <td class="text-right">
+                    <a href="{{ product.return }}" data-toggle="tooltip" title="{{ button_return }}" class="button-circle"><i class="icon-action-undo"></i></a>
+                </td>
             </tr>
             {% endfor %}
           </tbody>
