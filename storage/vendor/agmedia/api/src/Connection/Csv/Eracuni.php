@@ -36,10 +36,10 @@ class Eracuni
     {
         $this->checkData($data);
 
-        $brand        = OC_Product::resolveBrand();
-        $categories   = OC_Product::resolveCategories();
-        $attributes   = OC_Product::resolveGenericAttributes(isset($this->data['attributes']) ? $this->data['attributes'] : []);
-        $description  = Helper::resolveDescription($this->data['name'], $this->data['description']);
+        $brand       = OC_Product::resolveBrand();
+        $categories  = OC_Product::resolveCategories();
+        $attributes  = OC_Product::resolveGenericAttributes(isset($this->data['attributes']) ? $this->data['attributes'] : []);
+        $description = Helper::resolveDescription($this->data['name'], $this->data['description']);
         //$images       = OC_Product::resolveImages($this->data);
         $stock_status = 1 ? agconf('import.default_stock_full') : agconf('import.default_stock_empty');
         $status       = 1;
@@ -58,7 +58,7 @@ class Eracuni
             'isbn'                => '',
             'mpn'                 => '',
             'location'            => '',
-            'price'               => (float)str_replace(',', '.', $this->data['grossPrice']),
+            'price'               => (float) str_replace(',', '.', $this->data['grossPrice']),
             'tax_class_id'        => OC_Product::resolveTax(),
             'quantity'            => 1,
             'minimum'             => 1,
@@ -89,6 +89,88 @@ class Eracuni
             'product_layout'      => [0 => ''],
             'product_category'    => $categories,
             'product_seo_url'     => [0 => Helper::resolveSeoUrl($this->data['name'])],
+        ];
+    }
+
+
+    public function createSale(string $type = 'order')
+    {
+        $response = [
+            'apiTransactionId'         => $this->data['order_id'],
+            'sendIssuedInvoiceByEmail' => true
+        ];
+
+        if ($type == 'order') {
+            $response['SalesOrder'] = $this->getSale();
+        }
+        if ($type == 'offer') {
+            $response['SalesQuote'] = $this->getSale();
+        }
+
+        return $response;
+    }
+
+
+    private function getSale(): array
+    {
+        $response = [
+            /*'city' => '',
+            'printingTemplate' => '', // string
+            'validUntil' => '', // date*/
+            //'documentID' => $this->data['order_id'],
+            'vatTransactionType' => '0', // string
+            'buyerName' => $this->data['payment_firstname'] . ' ' . $this->data['payment_lastname'],
+            'buyerStreet' => $this->data['payment_address_1'],
+            'buyerPostalCode' => $this->data['payment_postcode'],
+            'buyerCity' => $this->data['payment_city'],
+            'buyerEMail' => $this->data['email'],
+            'buyerPhone' => $this->data['telephone'],
+            'methodOfPayment' => $this->getSaleMethodOfPayment(),
+            'Address' => $this->getSaleAddress(),
+            'Items' => $this->getSaleItems()
+        ];
+
+        return $response;
+    }
+
+
+    private function getSaleMethodOfPayment(): string
+    {
+        if ($this->data['payment_code'] == 'cod') {
+            return 'Cash';
+        }
+        if ($this->data['payment_code'] == 'bank_transfer') {
+            return 'BankTransfer';
+        }
+
+        return 'CreditCard';
+    }
+
+
+    private function getSaleItems(): array
+    {
+        $response = [];
+
+        foreach ($this->data['products'] as $product) {
+            $response[] = [
+                'productCode' => $product['model'],
+                'productName' => $product['name'],
+                'quantity' => (int) $product['quantity'],
+                'price' => (float) number_format($product['price'], 2, ',', ''),
+            ];
+        }
+
+        return $response;
+    }
+
+
+    private function getSaleAddress(): array
+    {
+        return [
+            'street' => $this->data['payment_address_1'],
+            'postalCode' => $this->data['payment_postcode'],
+            'city' => $this->data['payment_city'],
+            'type' => 'Delivery'
         ];
     }
 
@@ -136,7 +218,7 @@ class Eracuni
             $query = '';
 
             foreach ($data as $item) {
-                $query .= '("' . $item['StockQuantityInfo']['productCode'] . '", ' . (int)$item['StockQuantityInfo']['quantityOnStock'] . ', 0),';
+                $query .= '("' . $item['StockQuantityInfo']['productCode'] . '", ' . (int) $item['StockQuantityInfo']['quantityOnStock'] . ', 0),';
 
                 $count++;
             }
@@ -163,7 +245,7 @@ class Eracuni
             $query = '';
 
             foreach ($data as $item) {
-                $query .= '("' . $item['productCode'] . '", 0, ' . (float)$item['grossPrice'] . '),';
+                $query .= '("' . $item['productCode'] . '", 0, ' . (float) $item['grossPrice'] . '),';
 
                 $count++;
             }

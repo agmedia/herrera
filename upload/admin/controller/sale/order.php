@@ -1868,4 +1868,57 @@ class ControllerSaleOrder extends Controller {
 
 		$this->response->setOutput($this->load->view('sale/order_shipping', $data));
 	}
+
+
+    /**
+     * @return mixed
+     */
+    public function sendOrder()
+    {
+        $pass = \Agmedia\Api\Helper\Helper::validate($this->request->get, 'sendOrder');
+
+        if ( ! $pass) {
+            return $this->response(300, 'Validacija nije prošla..!');
+        }
+
+        $order = \Agmedia\Models\Order\Order::query()->where('order_id', $this->request->get['order_id'])->with(['products', 'totals'])->first();
+
+        if ($order) {
+            $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
+
+            $sale = $eracuni->createSale($this->request->get['type']);
+
+            \Agmedia\Helpers\Log::store($sale, 'api_test');
+
+            $api = new \Agmedia\Api\Api();
+
+            if ($this->request->get['type'] == 'order') {
+                $sent = $api->post('SalesOrderCreate', '&SalesOrder=' . json_encode($sale));
+            } else {
+                $sent = $api->post('SalesQuoteCreate', '&SalesQuote=' . json_encode($sale));
+            }
+
+            \Agmedia\Helpers\Log::store($sent, 'api_test');
+
+            if ($sent) {
+                return $this->response(200, 'Narudžba je poslana..!');
+            }
+        }
+
+        return $this->response(300, 'Došlo je do greške. Kontaktirajte administratora..!');
+    }
+
+
+    /**
+     * @param int    $status
+     * @param string $message
+     *
+     * @return mixed
+     */
+    public function response(int $status, string $message)
+    {
+        $this->response->addHeader('Content-Type: application/json');
+
+        return $this->response->setOutput(json_encode(['status' => $status,'message' => $message]));
+    }
 }

@@ -93,4 +93,20 @@ class Helper
         return $output_file;
     }
 
+
+    public static function validate(array $request, string $type): bool
+    {
+        if ($type == 'sendOrder') {
+            $params = ['order_id', 'type'];
+        }
+
+        foreach ($params as $param) {
+            if ( ! isset($request[$param]) && empty($request[$param])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

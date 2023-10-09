@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="margin-bottom: 11px; !important;">
           <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-cog"></i> {{ text_option }}</h3>
           </div>
@@ -118,6 +118,14 @@
             </tbody>
           </table>
         </div>
+          <div class="row">
+              <div class="col-md-6">
+                  <button onclick="sendOrder('offer')" data-toggle="tooltip" title="Pošalji ponudu kupcu" class="btn btn-warning btn-sm btn-block"><i class="fa fa-truck fa-fw"></i> Pošalji Ponudu</button>
+              </div>
+              <div class="col-md-6">
+                  <button onclick="sendOrder('order')" data-toggle="tooltip" title="Pošalji narudžbu kupcu" class="btn btn-success btn-sm btn-block"><i class="fa fa-truck fa-fw"></i> Pošalji Narudžbu</button>
+              </div>
+          </div>
       </div>
     </div>
     <div class="panel panel-default">
@@ -364,6 +372,28 @@
     </div>
   </div>
   <script type="text/javascript"><!--
+      function sendOrder(type) {
+          $.ajax({
+              url: 'index.php?route=sale/order/sendOrder&user_token={{ user_token }}&order_id={{ order_id }}&type=' + type,
+              dataType: 'json',
+              success: function(json) {
+                  console.log(json)
+              }
+          });
+      }
+
+      $(() => {
+          $('#ideus-products').on('click', (e) => {
+              $.ajax({
+                  url: 'index.php?route=sale/order/importProducts&user_token={{ user_token }}',
+                  dataType: 'json',
+                  success: function(json) {
+                      console.log(json)
+                  }
+              });
+          });
+      });
+    //
   $(document).delegate('#button-invoice', 'click', function() {
 	  $.ajax({
 		  url: 'index.php?route=sale/order/createinvoiceno&user_token={{ user_token }}&order_id={{ order_id }}',

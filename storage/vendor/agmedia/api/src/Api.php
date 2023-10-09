@@ -78,10 +78,11 @@ class Api
     /**
      * @param string $url
      * @param string $body
+     * @param string $headers_type
      *
-     * @return mixed
+     * @return false|mixed
      */
-    public function post(string $url, string $body)
+    public function post(string $url, string $body, string $headers_type = 'form')
     {
         try {
             $ch = curl_init($this->url . $url);
@@ -89,7 +90,7 @@ class Api
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             curl_setopt($ch, CURLOPT_USERPWD, $this->resolveApiPassword());
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->resolveHeaders('form'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->resolveHeaders($headers_type));
 
             $response = curl_exec($ch);
 
@@ -159,11 +160,9 @@ class Api
 
         if ($type == 'form') {
             $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-
-        } else {
-            if ($type == 'xml') {
-                $headers[] = 'Content-Type: application/xml';
-            }
+        }
+        if ($type == 'xml') {
+            $headers[] = 'Content-Type: application/xml';
         }
 
         return $headers;
@@ -177,7 +176,7 @@ class Api
      */
     private function log(string $type, string $url, \Exception $exception): void
     {
-        $log_name = 'luceed_' . $type . '_error';
+        $log_name = 'eracuni_' . $type . '_error';
 
         Log::store($url, $log_name);
         Log::store($exception->getMessage(), $log_name);
