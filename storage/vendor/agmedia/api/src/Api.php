@@ -94,6 +94,9 @@ class Api
 
             $response = curl_exec($ch);
 
+            $this->log($url, $body);
+            $this->log($url, $response);
+
             if (curl_errno($ch)) {
                 $this->log($url, curl_error($ch));
 
@@ -170,11 +173,13 @@ class Api
 
 
     /**
-     * @param string     $type
-     * @param string     $url
-     * @param \Exception $exception
+     * @param string          $type
+     * @param string          $url
+     * @param \Exception|null $exception
+     *
+     * @return void
      */
-    private function log(string $type, string $url, \Exception $exception): void
+    private function log(string $type, string $url, \Exception $exception = null): void
     {
         $log_name = 'eracuni_' . $type . '_error';
 
