@@ -110,8 +110,10 @@ class Eracuni
     }
 
 
-    public function saveResponse(string $type, string $response, $order_id)
+    public function saveResponse(string $type, array $response, $order_id)
     {
+        Log::store($response, 'response');
+
         $arr = json_decode($response, true);
 
         if (isset($arr['response']['status']) && $arr['response']['status'] == 'ok') {
