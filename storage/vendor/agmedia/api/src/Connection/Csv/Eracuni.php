@@ -6,6 +6,7 @@ use Agmedia\Api\Helper\Helper;
 use Agmedia\Api\Models\OC_Attribute;
 use Agmedia\Api\Models\OC_Product;
 use Agmedia\Helpers\Log;
+use Agmedia\Models\Order\Order;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -106,6 +107,22 @@ class Eracuni
         }
 
         return $data;
+    }
+
+
+    public function saveResponse(string $type, string $response, $order_id)
+    {
+        $arr = json_decode($response, true);
+
+        if (isset($arr['response']['status']) && $arr['response']['status'] == 'ok') {
+            if ($type == 'order') {
+                $data = ['number_order' => $arr['response']['result']['number']];
+            } else {
+                $data = ['number_quote' => $arr['response']['result']['number']];
+            }
+
+            Order::query()->where('order_id', $order_id)->update($data);
+        }
     }
 
 

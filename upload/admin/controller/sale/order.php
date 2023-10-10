@@ -1881,18 +1881,19 @@ class ControllerSaleOrder extends Controller {
             return $this->response(300, 'Validacija nije prošla..!');
         }
 
-        $order = \Agmedia\Models\Order\Order::query()->where('order_id', $this->request->get['order_id'])->with(['products', 'totals'])->first();
+        $order_id = $this->request->get['order_id'];
+        $type     = $this->request->get['type'];
+        $order    = \Agmedia\Models\Order\Order::query()->where('order_id', $order_id)->with(['products', 'totals'])->first();
 
         if ($order) {
             $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
-
-            $sale = $eracuni->createSale($this->request->get['type']);
+            $sale = $eracuni->createSale($type);
 
             \Agmedia\Helpers\Log::store($sale, 'api_test');
 
             $api = new \Agmedia\Api\Api();
 
-            if ($this->request->get['type'] == 'order') {
+            if ($type == 'order') {
                 $sent = $api->post('SalesOrderCreate', $sale);
             } else {
                 $sent = $api->post('SalesQuoteCreate', $sale);
@@ -1901,6 +1902,8 @@ class ControllerSaleOrder extends Controller {
             \Agmedia\Helpers\Log::store($sent, 'api_test');
 
             if ($sent) {
+                $eracuni->saveResponse($type, $sent, $order_id);
+
                 return $this->response(200, 'Narudžba je poslana..!');
             }
         }
