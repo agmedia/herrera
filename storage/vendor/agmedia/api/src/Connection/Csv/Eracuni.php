@@ -93,21 +93,18 @@ class Eracuni
     }
 
 
-    public function createSale(string $type = 'order')
+    public function createSale(string $type = 'order'): string
     {
-        $response = [
-            'apiTransactionId'         => $this->data['order_id'],
-            'sendIssuedInvoiceByEmail' => true
-        ];
+        $data = 'apiTransactionId="' . $this->data['order_id'] . '"&sendIssuedInvoiceByEmail=true';
 
         if ($type == 'order') {
-            $response['SalesOrder'] = $this->getSale();
+            $data .= '&SalesOrder=' . json_encode($this->getSale());
         }
         if ($type == 'offer') {
-            $response['SalesQuote'] = $this->getSale();
+            $data .= '&SalesQuote=' . json_encode($this->getSale());
         }
 
-        return $response;
+        return $data;
     }
 
 
@@ -123,8 +120,10 @@ class Eracuni
             'buyerStreet' => $this->data['payment_address_1'],
             'buyerPostalCode' => $this->data['payment_postcode'],
             'buyerCity' => $this->data['payment_city'],
+            'buyerCountry' => 'HR',
             'buyerEMail' => $this->data['email'],
             'buyerPhone' => $this->data['telephone'],
+            'validUntil' => Carbon::now()->addDays(7)->format('d.m.Y'),
             'methodOfPayment' => $this->getSaleMethodOfPayment(),
             'Address' => $this->getSaleAddress(),
             'Items' => $this->getSaleItems()
