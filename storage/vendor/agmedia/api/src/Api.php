@@ -184,6 +184,9 @@ class Api
         $log_name = 'eracuni_' . $type . '_error';
 
         Log::store($url, $log_name);
-        Log::store($exception->getMessage(), $log_name);
+
+        if ($exception) {
+            Log::store($exception->getMessage(), $log_name);
+        }
     }
 }
