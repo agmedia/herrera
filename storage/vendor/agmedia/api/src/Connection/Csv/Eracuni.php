@@ -95,6 +95,11 @@ class Eracuni
     }
 
 
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
     public function createSale(string $type = 'order'): string
     {
         $data = 'apiTransactionId="' . $this->data['order_id'] . '-' . Str::random(9) . '"&sendIssuedInvoiceByEmail=true';
@@ -110,17 +115,20 @@ class Eracuni
     }
 
 
-    public function saveResponse(string $type, array $response, $order_id)
+    /**
+     * @param string $type
+     * @param array  $response
+     * @param        $order_id
+     *
+     * @return void
+     */
+    public function saveResponse(string $type, array $response, $order_id): void
     {
-        Log::store($response, 'response');
-
-        $arr = json_decode($response, true);
-
-        if (isset($arr['response']['status']) && $arr['response']['status'] == 'ok') {
+        if (isset($response['number'])) {
             if ($type == 'order') {
-                $data = ['number_order' => $arr['response']['result']['number']];
+                $data = ['number_order' => $response['number']];
             } else {
-                $data = ['number_quote' => $arr['response']['result']['number']];
+                $data = ['number_quote' => $response['number']];
             }
 
             Order::query()->where('order_id', $order_id)->update($data);
@@ -128,31 +136,33 @@ class Eracuni
     }
 
 
+    /**
+     * @return array
+     */
     private function getSale(): array
     {
         $response = [
-            /*'city' => '',
-            'printingTemplate' => '', // string
-            'validUntil' => '', // date*/
-            //'documentID' => $this->data['order_id'],
             'vatTransactionType' => '0', // string
-            'buyerName' => $this->data['payment_firstname'] . ' ' . $this->data['payment_lastname'],
-            'buyerStreet' => $this->data['payment_address_1'],
-            'buyerPostalCode' => $this->data['payment_postcode'],
-            'buyerCity' => $this->data['payment_city'],
-            'buyerCountry' => 'HR',
-            'buyerEMail' => $this->data['email'],
-            'buyerPhone' => $this->data['telephone'],
-            'validUntil' => Carbon::now()->addDays(7)->format('d.m.Y'),
-            'methodOfPayment' => $this->getSaleMethodOfPayment(),
-            'country' => 'HR',
-            'Items' => $this->getSaleItems()
+            'buyerName'          => $this->data['payment_firstname'] . ' ' . $this->data['payment_lastname'],
+            'buyerStreet'        => $this->data['payment_address_1'],
+            'buyerPostalCode'    => $this->data['payment_postcode'],
+            'buyerCity'          => $this->data['payment_city'],
+            'buyerCountry'       => 'HR',
+            'buyerEMail'         => $this->data['email'],
+            'buyerPhone'         => $this->data['telephone'],
+            'validUntil'         => Carbon::now()->addDays(7)->format('d.m.Y'),
+            'methodOfPayment'    => $this->getSaleMethodOfPayment(),
+            'country'            => 'HR',
+            'Items'              => $this->getSaleItems()
         ];
 
         return $response;
     }
 
 
+    /**
+     * @return string
+     */
     private function getSaleMethodOfPayment(): string
     {
         if ($this->data['payment_code'] == 'cod') {
@@ -166,6 +176,9 @@ class Eracuni
     }
 
 
+    /**
+     * @return array
+     */
     private function getSaleItems(): array
     {
         $response = [];
@@ -174,8 +187,8 @@ class Eracuni
             $response[] = [
                 'productCode' => $product['model'],
                 'productName' => $product['name'],
-                'quantity' => (int) $product['quantity'],
-                'price' => (float) number_format($product['price'], 2, ',', ''),
+                'quantity'    => (int) $product['quantity'],
+                'price'       => (float) number_format($product['price'], 2, ',', ''),
             ];
         }
 
@@ -183,14 +196,17 @@ class Eracuni
     }
 
 
+    /**
+     * @return array
+     */
     private function getSaleAddress(): array
     {
         return [
-            'street' => $this->data['payment_address_1'],
+            'street'     => $this->data['payment_address_1'],
             'postalCode' => $this->data['payment_postcode'],
-            'city' => $this->data['payment_city'],
-            'country' => 'HR',
-            'type' => 'Primary'
+            'city'       => $this->data['payment_city'],
+            'country'    => 'HR',
+            'type'       => 'Primary'
         ];
     }
 

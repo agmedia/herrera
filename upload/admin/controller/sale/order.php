@@ -1887,19 +1887,14 @@ class ControllerSaleOrder extends Controller {
 
         if ($order) {
             $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
-            $sale = $eracuni->createSale($type);
-
-            \Agmedia\Helpers\Log::store($sale, 'api_test');
-
-            $api = new \Agmedia\Api\Api();
+            $sale    = $eracuni->createSale($type);
+            $api     = new \Agmedia\Api\Api();
 
             if ($type == 'order') {
                 $sent = $api->post('SalesOrderCreate', $sale);
             } else {
                 $sent = $api->post('SalesQuoteCreate', $sale);
             }
-
-            \Agmedia\Helpers\Log::store($sent, 'api_test');
 
             if ($sent) {
                 $eracuni->saveResponse($type, $sent, $order_id);

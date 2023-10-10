@@ -181,7 +181,7 @@ class Api
      */
     private function log(string $type, string $url, \Exception $exception = null): void
     {
-        $log_name = 'eracuni_' . $type . '_error';
+        $log_name = 'eracuni_' . $type;
 
         Log::store($url, $log_name);
 
