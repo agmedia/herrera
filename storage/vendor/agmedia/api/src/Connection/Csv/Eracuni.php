@@ -7,6 +7,7 @@ use Agmedia\Api\Models\OC_Attribute;
 use Agmedia\Api\Models\OC_Product;
 use Agmedia\Helpers\Log;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  *
@@ -95,7 +96,7 @@ class Eracuni
 
     public function createSale(string $type = 'order'): string
     {
-        $data = 'apiTransactionId="' . $this->data['order_id'] . '"&sendIssuedInvoiceByEmail=true';
+        $data = 'apiTransactionId="' . $this->data['order_id'] . '-' . Str::random(9) . '"&sendIssuedInvoiceByEmail=true';
 
         if ($type == 'order') {
             $data .= '&SalesOrder=' . json_encode($this->getSale());
@@ -125,7 +126,7 @@ class Eracuni
             'buyerPhone' => $this->data['telephone'],
             'validUntil' => Carbon::now()->addDays(7)->format('d.m.Y'),
             'methodOfPayment' => $this->getSaleMethodOfPayment(),
-            'Address' => $this->getSaleAddress(),
+            'country' => 'HR',
             'Items' => $this->getSaleItems()
         ];
 
@@ -169,7 +170,8 @@ class Eracuni
             'street' => $this->data['payment_address_1'],
             'postalCode' => $this->data['payment_postcode'],
             'city' => $this->data['payment_city'],
-            'type' => 'Delivery'
+            'country' => 'HR',
+            'type' => 'Primary'
         ];
     }
 
