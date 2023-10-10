@@ -18,6 +18,8 @@ class Order extends Model
      * @var string
      */
     protected $primaryKey = 'order_id';
+
+    public $timestamps = false;
     
     /**
      * @var array
