@@ -1893,9 +1893,9 @@ class ControllerSaleOrder extends Controller {
             $api = new \Agmedia\Api\Api();
 
             if ($this->request->get['type'] == 'order') {
-                $sent = $api->post('SalesOrderCreate', '&SalesOrder=' . json_encode($sale));
+                $sent = $api->post('SalesOrderCreate', $sale);
             } else {
-                $sent = $api->post('SalesQuoteCreate', '&SalesQuote=' . json_encode($sale));
+                $sent = $api->post('SalesQuoteCreate', $sale);
             }
 
             \Agmedia\Helpers\Log::store($sent, 'api_test');
