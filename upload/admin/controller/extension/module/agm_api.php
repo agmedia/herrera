@@ -247,8 +247,11 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $import = new Csv\Eracuni();
         $api = new Api();
 
-        $data = $api->get('WarehouseGetArticleStockQuantity');
+        $data = $api->post('WarehouseGetArticleStockQuantity', '');
+        Log::store('Enter...', 'eracuni');
+        Log::store($data, 'eracuni');
         $data = $import->getQuantityUpdateQuary($data);
+        Log::store($data, 'eracuni');
 
         if ( ! empty($data['query'])) {
 

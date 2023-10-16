@@ -65,6 +65,9 @@ class Api
             $response = curl_exec($ch);
             curl_close($ch);
 
+            $this->log($url, '');
+            $this->log($response, '');
+
             return $this->resolveResponse($response);
 
         } catch (\Exception $exception) {
