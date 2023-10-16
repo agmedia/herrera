@@ -6,6 +6,10 @@ class ControllerStartupPermission extends Controller {
 
 			$part = explode('/', $this->request->get['route']);
 
+            if (isset($part[3]) && in_array($part[3], ['updateQuantityEracuni'])) {
+                return;
+            }
+
 			if (isset($part[0])) {
 				$route .= $part[0];
 			}
