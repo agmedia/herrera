@@ -141,9 +141,14 @@ class Eracuni
      */
     private function getSale(): array
     {
+        $company = json_decode($this->data['custom_field'], true);
+
         $response = [
             'vatTransactionType' => '0', // string
-            'buyerName'          => $this->data['payment_firstname'] . ' ' . $this->data['payment_lastname'],
+            'buyerTaxNumber'     => $company[2],
+            'buyerName'          => $company[1],
+            'buyerFirstName'     => $this->data['payment_firstname'],
+            'buyerLastName'      => $this->data['payment_lastname'],
             'buyerStreet'        => $this->data['payment_address_1'],
             'buyerPostalCode'    => $this->data['payment_postcode'],
             'buyerCity'          => $this->data['payment_city'],
