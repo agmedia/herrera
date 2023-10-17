@@ -6,7 +6,7 @@
 
 	$string = '<?xml version="1.0" encoding="UTF-8"?>
 	<request>
-        <login username="TOMISLAV_AGMEDIA" md5pass="d1ec7fbdfd48ed2f9914c728dddaac46" token="5DC91B74D6BC0D00B45E039D03E4A5E3" />
+        <login username="TOMISLAV_AGMEDIA" md5pass="f93ff2cdb12c43bec44dd9f0f2462fed" token="0CB8388F48C40D0083F58A4F0E65B21B" />
      
 
          <method name="ProductImageGet">
@@ -19,8 +19,8 @@
 
     $array = [
         "username"   => 'TOMISLAV_AGMEDIA',
-        "md5pass"    => 'd1ec7fbdfd48ed2f9914c728dddaac46',
-        "token"      => '5DC91B74D6BC0D00B45E039D03E4A5E3',
+        "md5pass"    => 'f93ff2cdb12c43bec44dd9f0f2462fed6',
+        "token"      => '0CB8388F48C40D0083F58A4F0E65B21B',
         "method"     => "ProductImageGet",
         "parameters" => [
             "productCode" => '00003'
