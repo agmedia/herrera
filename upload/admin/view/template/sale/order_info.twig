@@ -143,9 +143,9 @@
           </thead>
           <tbody>
             <tr>
-              <td class="text-left">{{ payment_address }}</td>
+              <td class="text-left" ><span style="color:red">{{ tvrtka }}<br> {{ oib }}<br></span>{{ payment_address }}</td>
               {% if shipping_method %}
-                <td class="text-left">{{ shipping_address }}</td>
+                <td class="text-left"><span style="color:red">{{ tvrtka }}<br> {{ oib }}<br></span>{{ shipping_address }}</td>
               {% endif %} </tr>
           </tbody>
         </table>

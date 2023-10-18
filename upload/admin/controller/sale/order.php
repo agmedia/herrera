@@ -224,10 +224,18 @@ class ControllerSaleOrder extends Controller {
 
 		$results = $this->model_sale_order->getOrders($filter_data);
 
+
+
+
+       // $firm =  '<span style="color:#ec2426" >'. $data['tvrtka'] . '  ' . $data['oib'] .'<br> </span>';
+
 		foreach ($results as $result) {
+
+            $tvrtka = json_decode($result['custom_field'], true);
 			$data['orders'][] = array(
 				'order_id'      => $result['order_id'],
 				'customer'      => $result['customer'],
+                'tvrtka'         => isset($tvrtka[1]) ? $tvrtka[1] : null,
 				'order_status'  => $result['order_status'] ? $result['order_status'] : $this->language->get('text_missing'),
 				'total'         => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
 				'date_added'    => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
@@ -368,6 +376,8 @@ class ControllerSaleOrder extends Controller {
 		$data['sort'] = $sort;
 		$data['order'] = $order;
 
+
+
 		$this->load->model('localisation/order_status');
 
 		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
@@ -481,6 +491,8 @@ class ControllerSaleOrder extends Controller {
 			$data['email'] = $order_info['email'];
 			$data['telephone'] = $order_info['telephone'];
 			$data['account_custom_field'] = $order_info['custom_field'];
+
+
 
 			$this->load->model('customer/customer');
 
@@ -856,6 +868,9 @@ class ControllerSaleOrder extends Controller {
 
 			$data['email'] = $order_info['email'];
 			$data['telephone'] = $order_info['telephone'];
+
+            $data['oib'] = isset($order_info['custom_field'][2]) ? $order_info['custom_field'][2] : null;
+            $data['tvrtka'] = isset($order_info['custom_field'][1]) ? $order_info['custom_field'][1] : null;
 
 			$data['shipping_method'] = $order_info['shipping_method'];
 			$data['payment_method'] = $order_info['payment_method'];
