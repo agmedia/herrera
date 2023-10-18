@@ -145,8 +145,8 @@ class Eracuni
 
         $response = [
             'vatTransactionType' => '0', // string
-            'buyerTaxNumber'     => urlencode($company[2]),
-            'buyerName'          => $company[1],
+            'buyerTaxNumber'     => $company[2],
+            'buyerName'          => urlencode($company[1]),
             'buyerFirstName'     => $this->data['payment_firstname'],
             'buyerLastName'      => $this->data['payment_lastname'],
             'buyerStreet'        => $this->data['payment_address_1'],
