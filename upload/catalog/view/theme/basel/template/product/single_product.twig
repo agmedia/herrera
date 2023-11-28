@@ -87,7 +87,7 @@
                     {% for attribute in attribute_group.attribute %}
                         {% if attribute.name =='Boja svjetla' or attribute.name =='Snaga' or attribute.name =='Svjetlosni tok' or attribute.name =='Lumen' or attribute.name =='Kategorija boja'%}
                         <tr>
-                            <td><b>{{ attribute.name }}:<b></td>
+                            <td><b>{{ attribute.name }}:</b></td>
                             <td>{{ attribute.text }}</td>
                         </tr>
                         {% endif %}
@@ -110,13 +110,13 @@
         <div class="input-group addtocart" >
 
                       <span class="input-group-btn ">
-                          <button type="button" class="btn btn-default btn-number btn-left" data-type="minus" data-field="category" onclick="descrement($(this).parent().parent())")>
+                          <button type="button" class="btn btn-default btn-number btn-left" onclick="decreaseValue({{ product.product_id }},{{ product.minimum }} )" >
                             <span class="glyphicon glyphicon-minus"></span>
                             </button>
                          </span>
-            <input type="text" name="quantity" class="form-control input-number" id="category" value="1">
+            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
             <span class="input-group-btn">
-                          <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="category" onclick="increment($(this).parent().parent())">
+                          <button type="button" class="btn btn-default btn-number" onclick="increaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-plus"></span>
                           </button>
                         </span>
@@ -132,13 +132,13 @@
         <div class="input-group addtocart" >
 
                       <span class="input-group-btn ">
-                          <button type="button" class="btn btn-default btn-number btn-left" data-type="minus" data-field="category" onclick="descrement($(this).parent().parent())")>
+                          <button type="button" class="btn btn-default btn-number btn-left" onclick="decreaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-minus"></span>
                             </button>
                          </span>
-            <input type="text" name="quantity" class="form-control input-number" id="category" value="1">
+            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
             <span class="input-group-btn">
-                          <button type="button" class="btn btn-default btn-number" data-type="plus" data-field="category" onclick="increment($(this).parent().parent())">
+                          <button type="button" class="btn btn-default btn-number" onclick="increaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-plus"></span>
                           </button>
                         </span>
@@ -182,3 +182,29 @@
 
    </div>
 </div><!-- .single-product ends -->
+
+
+<script>
+    function increaseValue(id, min) {
+        var value = parseInt(document.getElementById('category' + id).value, 10);
+
+        value = isNaN(value) ? 0 : value;
+        value = value + min;
+        document.getElementById('category' + id).value = value;
+    }
+
+    function decreaseValue(id, min) {
+        var value = parseInt(document.getElementById('category' + id).value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < min ? value = min : '';
+
+        if(value > min){
+            value = value - min;
+        }
+        else{
+            value = min;
+        }
+
+        document.getElementById('category' + id).value = value;
+    }
+</script>

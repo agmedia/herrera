@@ -201,7 +201,7 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 						'special' 	 => $special,
                         'suplierqty'  => $result['suplierqty'],
 						'tax'        => $tax,
-						'minimum'    => $result['minimum'] > 0 ? $result['minimum'] : 1,
+						'minimum'    => $result['minimum'] > 0 ? $result['minimum'] : $result['minimum'],
 						'rating'     => $rating,
 						'reviews'    => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 						'href'    	 => $this->url->link('product/product', 'product_id=' . $result['product_id']),

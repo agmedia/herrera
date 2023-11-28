@@ -217,12 +217,16 @@ class ControllerProductCategory extends Controller {
 				}
 
 
+
+
+
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'model'  => $result['model'],
                     'ean'  => $result['ean'],
                     'suplierqty'  => $result['suplierqty'],
                     'quantity'  => $result['quantity'],
+
                     'attribute_groups'       => $this->model_catalog_product->getProductAttributes($result['product_id']),
 					'thumb'       => $image,
 					'name'        => $result['name'],
@@ -232,7 +236,7 @@ class ControllerProductCategory extends Controller {
 					   'priceeur'       => $priceeur,
                     'specialeur'     => $specialeur,
 					'tax'         => $tax,
-					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
+					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : $result['minimum'],
 					'rating'      => $rating,
 					'href'        => $this->url->link('product/product', 'path=' . $this->request->get['path'] . '&product_id=' . $result['product_id'] . $url)
 				);
@@ -389,6 +393,8 @@ class ControllerProductCategory extends Controller {
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
+
+
 
 			$this->response->setOutput($this->load->view('product/category', $data));
 		} else {
