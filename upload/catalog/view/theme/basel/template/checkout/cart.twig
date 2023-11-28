@@ -88,7 +88,7 @@
                   </td>
                 <td class="hidden-xs hidden-sm">{{ product.model }}</td>
                 <td>
-                <input type="number" min="1" step="1" id="widgetFieldInput{{ product.cart_id }}" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" class="form-control qty-form" />
+                <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" id="widgetFieldInput{{ product.cart_id }}" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" class="form-control qty-form" />
 
                     </td>
 
@@ -168,4 +168,9 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
+<script>
+    $("[type='number']").keypress(function (evt) {
+        evt.preventDefault();
+    });
+</script>
 {{ footer }} 

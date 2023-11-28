@@ -31,9 +31,9 @@
             </div></td>
           <td class="quantity">{% if edit_cart %} 
 		    <div class="qty-block">
-		      <input type="text" name="quantity[{{ product.key }}]" size="1" value="{{ product.quantity }}" class="form-control" />
+		      <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity[{{ product.key }}]"  value="{{ product.quantity }}" class="form-control" />
 			  
-				<a data-toggle="tooltip" title="{{ button_update }}" class="button-update"><i class="fa fa-refresh"></i></a>
+			<a data-toggle="tooltip" title="{{ button_update }}" class="button-update"><i class="fa fa-refresh"></i></a>
 				<a data-toggle="tooltip" title="{{ button_remove }}" class="button-remove" data-remove="{{ product.key }}"><i class="fa fa-times-circle"></i></a>
 			  
 			</div>
@@ -67,3 +67,9 @@
         {% endfor %} 
 	</tbody>
  </table>
+
+<script>
+	$("[type='number']").keypress(function (evt) {
+		evt.preventDefault();
+	});
+</script>
