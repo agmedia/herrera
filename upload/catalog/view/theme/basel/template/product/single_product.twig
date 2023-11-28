@@ -208,3 +208,9 @@
         document.getElementById('category' + id).value = value;
     }
 </script>
+
+<script>
+    $('input[type="number"]').keypress(function (evt) {
+        evt.preventDefault();
+    });
+</script>

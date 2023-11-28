@@ -294,3 +294,9 @@ $(window).scroll(function() {p_sticky_arrows();});
         document.getElementById('category' + id).value = value;
     }
 </script>
+
+<script>
+    $('input[type="number"]').keypress(function (evt) {
+        evt.preventDefault();
+    });
+</script>
