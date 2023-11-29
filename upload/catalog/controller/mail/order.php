@@ -106,6 +106,9 @@ class ControllerMailOrder extends Controller {
 		$data['telephone'] = $order_info['telephone'];
 		$data['ip'] = $order_info['ip'];
 
+        $data['oib'] = isset($order_info['custom_field'][2]) ? $order_info['custom_field'][2] : null;
+        $data['tvrtka'] = isset($order_info['custom_field'][1]) ? $order_info['custom_field'][1] : null;
+
 		  if ($order_info['payment_code'] == 'bank_transfer') {
 
            
