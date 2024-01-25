@@ -158,7 +158,8 @@ class Eracuni
             'validUntil'         => Carbon::now()->addDays(7)->format('d.m.Y'),
             'methodOfPayment'    => $this->getSaleMethodOfPayment(),
             'country'            => 'HR',
-            'Items'              => $this->getSaleItems()
+            'Items'              => $this->getSaleItems(),
+            'Address'              => $this->getSaleAddress()
         ];
 
         return $response;
@@ -206,12 +207,14 @@ class Eracuni
      */
     private function getSaleAddress(): array
     {
+        $company = json_decode($this->data['custom_field'], true);
         return [
-            'street'     => $this->data['payment_address_1'],
-            'postalCode' => $this->data['payment_postcode'],
-            'city'       => $this->data['payment_city'],
+            'firstAddressLine' =>urlencode($company[1]),
+            'street'     => $this->data['shipping_address_1'],
+            'postalCode' => $this->data['shipping_postcode'],
+            'city'       => $this->data['shipping_city'],
             'country'    => 'HR',
-            'type'       => 'Primary'
+            'type'       => 'Delivery'
         ];
     }
 
