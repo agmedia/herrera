@@ -159,7 +159,7 @@ class Eracuni
             'methodOfPayment'    => $this->getSaleMethodOfPayment(),
             'country'            => 'HR',
             'Items'              => $this->getSaleItems(),
-            'Address'              => $this->getSaleAddress()
+            'Address'              => $this->getSaleAddress($company)
         ];
 
         return $response;
@@ -205,9 +205,9 @@ class Eracuni
     /**
      * @return array
      */
-    private function getSaleAddress(): array
+    private function getSaleAddress(array $company): array
     {
-        $company = json_decode($this->data['custom_field'], true);
+
         return [
             'firstAddressLine' =>urlencode($company[1]),
             'street'     => $this->data['shipping_address_1'],
