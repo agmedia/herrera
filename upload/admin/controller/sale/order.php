@@ -1907,10 +1907,12 @@ class ControllerSaleOrder extends Controller {
             $sale    = $eracuni->createSale($type);
             $api     = new \Agmedia\Api\Api();
 
+            $this->log->write($sale);
+
             if ($type == 'order') {
                 $sent = $api->post('SalesOrderCreate', $sale);
             } else {
-                $sent = $api->post('SalesQuoteCreate', $sale);
+            $sent = $api->post('SalesQuoteCreate', $sale);
             }
 
             if ($sent) {
