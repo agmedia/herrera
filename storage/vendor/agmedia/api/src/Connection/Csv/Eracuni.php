@@ -194,7 +194,9 @@ class Eracuni
                 'productCode' => $product['model'],
                 'productName' => $product['name'],
                 'quantity'    => (int) $product['quantity'],
-                'netPrice'       => floatval(number_format($product['price'], 2)),
+               // 'netPrice'       => floatval(number_format($product['price'], 2)),
+                'netPrice'       => round($product['price'], 2),
+
             ];
         }
 
