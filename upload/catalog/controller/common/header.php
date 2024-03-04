@@ -51,6 +51,8 @@ class ControllerCommonHeader extends Controller {
 
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
+            $this->load->model('account/customer');
+
 
 
             $customercompany = json_decode($customer_info['custom_field'], true);
