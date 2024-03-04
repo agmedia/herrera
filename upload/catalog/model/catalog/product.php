@@ -565,4 +565,10 @@ public function getProductRelated($product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id IN(" . implode(',', $implode) . ")");
   	    return $query->row;
 	}
+
+
+    public function getPurchaseDate($product_id, $customer_id) {
+        $query = $this->db->query("SELECT  o.date_added   FROM  " . DB_PREFIX . "order o LEFT JOIN  " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE  op.product_id = $product_id AND o.customer_id = $customer_id ");
+        return $query->row['date_added'];
+    }
 }

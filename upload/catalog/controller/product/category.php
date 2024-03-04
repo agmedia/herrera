@@ -217,7 +217,9 @@ class ControllerProductCategory extends Controller {
 				}
 
 
-
+                if ($this->customer->isLogged()) {
+                    $customer_id = $this->customer->getId();
+                }
 
 
 				$data['products'][] = array(
@@ -226,7 +228,7 @@ class ControllerProductCategory extends Controller {
                     'ean'  => $result['ean'],
                     'suplierqty'  => $result['suplierqty'],
                     'quantity'  => $result['quantity'],
-
+                    'purchase_date' => $this->model_catalog_product->getPurchaseDate($result['product_id'], $customer_id),
                     'attribute_groups'       => $this->model_catalog_product->getProductAttributes($result['product_id']),
 					'thumb'       => $image,
 					'name'        => $result['name'],
