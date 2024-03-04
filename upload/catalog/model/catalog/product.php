@@ -569,6 +569,14 @@ public function getProductRelated($product_id) {
 
     public function getPurchaseDate($product_id, $customer_id) {
         $query = $this->db->query("SELECT  o.date_added   FROM  " . DB_PREFIX . "order o LEFT JOIN  " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE  op.product_id = $product_id AND o.customer_id = $customer_id ");
-        return $query->row['date_added'];
+
+
+        if (isset($query->row['date_added'])) {
+            return $query->row['date_added'];
+        } else {
+            return 0;
+        }
+
+
     }
 }
