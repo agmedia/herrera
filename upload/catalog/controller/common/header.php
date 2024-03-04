@@ -48,10 +48,10 @@ class ControllerCommonHeader extends Controller {
 		// Wishlist
 		if ($this->customer->isLogged()) {
 			$this->load->model('account/wishlist');
-
+            $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
-            $this->load->model('account/customer');
+
 
 
 
