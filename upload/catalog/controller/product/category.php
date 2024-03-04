@@ -219,6 +219,8 @@ class ControllerProductCategory extends Controller {
 
                 if ($this->customer->isLogged()) {
                     $customer_id = $this->customer->getId();
+                } else{
+                    $customer_id = 0;
                 }
 
 

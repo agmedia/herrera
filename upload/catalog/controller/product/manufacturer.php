@@ -210,9 +210,12 @@ class ControllerProductManufacturer extends Controller {
 
                 if ($this->customer->isLogged()) {
                     $customer_id = $this->customer->getId();
+                } else{
+                    $customer_id = 0;
                 }
 
-				$data['products'][] = array(
+
+                $data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
