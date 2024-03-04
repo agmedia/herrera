@@ -134,11 +134,16 @@ class ControllerProductSpecial extends Controller {
 				$rating = false;
 			}
 
+            if ($this->customer->isLogged()) {
+                $customer_id = $this->customer->getId();
+            }
+
 			$data['products'][] = array(
 				'product_id'  => $result['product_id'],
 				'thumb'       => $image,
 				'name'        => $result['name'],
                 'attribute_groups'       => $this->model_catalog_product->getProductAttributes($result['product_id']),
+                'purchase_date' => $this->model_catalog_product->getPurchaseDate($result['product_id'], $customer_id),
                 'model'  => $result['model'],
                 'ean'  => $result['ean'],
                 'suplierqty'  => $result['suplierqty'],
