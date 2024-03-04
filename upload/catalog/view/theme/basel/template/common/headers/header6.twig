@@ -71,7 +71,9 @@
            <div class="icon-element is_wishlist">
 
                {% if logged %}
-                   <a class="shortcut-wrapper wishlist " title="Moj račun" href="{{ login }}"><i class="icon-user icon"></i></a><a class="shortcut-wrapper wishlist hidden-xs"  title="Odjava" href="{{ logout }}"> Odjava<div class="wishlist-hover"></div>
+                   <a class="shortcut-wrapper wishlist " title="Moj račun" href="{{ login }}"><i class="icon-user icon"></i></a>
+
+                   <a class="shortcut-wrapper wishlist hidden-xs"  title="Odjava" href="{{ logout }}"> Odjava<div class="wishlist-hover"></div>
                </a>
                {% else %}
                    <a class="shortcut-wrapper wishlist" title="Moj račun" href="{{ login }}">

@@ -49,6 +49,16 @@ class ControllerCommonHeader extends Controller {
 		if ($this->customer->isLogged()) {
 			$this->load->model('account/wishlist');
 
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+
+
+            $customercompany = json_decode($customer_info['custom_field'], true);
+            $customercompany = $customercompany[1];
+            $data['text_customer_name'] = $customercompany.' - '.$customer_info['firstname'] .' '. $customer_info['lastname'];
+
+
+
 			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), $this->model_account_wishlist->getTotalWishlist());
 		} else {
 			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));

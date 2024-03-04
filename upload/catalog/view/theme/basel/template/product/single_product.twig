@@ -180,32 +180,34 @@
 </script>
 {% endif %}
 
+        <script>
+            function increaseValue(id, min) {
+                var value = parseInt(document.getElementById('category' + id).value, 10);
+
+                value = isNaN(value) ? 0 : value;
+                value = value + min;
+                document.getElementById('category' + id).value = value;
+            }
+
+            function decreaseValue(id, min) {
+                var value = parseInt(document.getElementById('category' + id).value, 10);
+                value = isNaN(value) ? 0 : value;
+                value < min ? value = min : '';
+
+                if(value > min){
+                    value = value - min;
+                }
+                else{
+                    value = min;
+                }
+
+                document.getElementById('category' + id).value = value;
+            }
+        </script>
+
    </div>
 </div><!-- .single-product ends -->
 
 
-<script>
-    function increaseValue(id, min) {
-        var value = parseInt(document.getElementById('category' + id).value, 10);
 
-        value = isNaN(value) ? 0 : value;
-        value = value + min;
-        document.getElementById('category' + id).value = value;
-    }
-
-    function decreaseValue(id, min) {
-        var value = parseInt(document.getElementById('category' + id).value, 10);
-        value = isNaN(value) ? 0 : value;
-        value < min ? value = min : '';
-
-        if(value > min){
-            value = value - min;
-        }
-        else{
-            value = min;
-        }
-
-        document.getElementById('category' + id).value = value;
-    }
-</script>
 

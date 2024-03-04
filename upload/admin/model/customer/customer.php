@@ -150,9 +150,9 @@ class ModelCustomerCustomer extends Model {
 
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			//$sql .= " ORDER BY name";
+			$sql .= " ORDER BY name";
 
-            $sql .= " ORDER BY JSON_EXTRACT(custom_field, '$.1') ";
+        //    $sql .= " ORDER BY JSON_EXTRACT(custom_field, '$.1') ";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
