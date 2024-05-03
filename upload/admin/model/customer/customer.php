@@ -150,7 +150,7 @@ class ModelCustomerCustomer extends Model {
 
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY custom_field";
 
         //    $sql .= " ORDER BY JSON_EXTRACT(custom_field, '$.1') ";
 		}
