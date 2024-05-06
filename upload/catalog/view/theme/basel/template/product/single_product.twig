@@ -16,7 +16,7 @@
 {% endif %}
 
     {% if product.purchase_date %}
-        <span class="badge new_badge"><small>Zadnja kupnja: {{ product.purchase_date }}</small></span>
+        <span class="badge new_badge"><small>Zadnja kupnja: {{ product.purchase_date|date('d-m-Y H:i') }}</small></span>
     {% endif %}
 {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
  <span class="badge out_of_stock_badge"><i>{{ basel_text_out_of_stock }}</i></span>
