@@ -55,9 +55,20 @@
                         <div class="form-group ">
                           <label class="col-sm-2 control-label" for="input-firstname">Pretraži i enter</label>
                           <div class="col-sm-10">
-                            <input type="text" name="s" id="myInput"  placeholder="Pretraga po OIB-u"  class="form-control" />
+
+                            <div class="input-group">
+
+                              <input type="text" name="s" id="myInput"  placeholder="Pretraga po OIB-u"  class="form-control" />
+      <span class="input-group-btn">
+        <button class="btn btn-default" id="go" type="button">Traži</button>
+      </span>
+
+                            </div><!-- /input-group -->
                           </div>
                         </div>
+
+
+
 
 
 
@@ -1460,14 +1471,13 @@
   </script>
   <script>
     $(document).ready(function() {
-      $("#myInput").on("keypress", function(event){
+      $("#go").click( function(event){
 
-
-        if(event.which == 13) {
              // Stop form from submitting normally
              event.preventDefault();
              // Get some values from elements on the page:
-            var term = $(this).val();
+            var term = $("#myInput").val();
+
 
             //open tab address if not exists
             if (  address_row < 2){
@@ -1557,7 +1567,7 @@
 
 
 
-          }
+
 
       });
     });
