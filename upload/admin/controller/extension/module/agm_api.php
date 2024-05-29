@@ -305,7 +305,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $this->db->query("UPDATE " . DB_PREFIX . "product_description p INNER JOIN product_temp_name pt ON p.sku = pt.uid SET p.name = pt.name");
         }
 
-       // $this->deleteProductTempDB();
+        $this->deleteProductTempDB();
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $data['count']]));
