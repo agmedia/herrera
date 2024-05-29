@@ -301,7 +301,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
 
         if ( ! empty($data['query'])) {
-            $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp_name(uid, name) VALUES " . substr($data['query'], 0, -1) . ";");
+            $this->db->query("INSERT INTO product_temp_name(uid, name) VALUES " . substr($data['query'], 0, -1) . ";");
            // $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.price = pt.price");
         }
 
