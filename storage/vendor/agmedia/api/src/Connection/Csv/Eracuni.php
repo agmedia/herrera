@@ -313,7 +313,7 @@ class Eracuni
             $query = '';
 
             foreach ($data as $item) {
-                $query .= '("' . $item['productCode'] . '",' .  $item['name'] . '),';
+                $query .= '("' . $item['productCode'] . '","' . $item['name'] . '"),';
 
                 $count++;
             }
