@@ -314,7 +314,7 @@ class Eracuni
 
             foreach ($data as $item) {
 
-                $replaced = str_replace('\\"', '',$item['name']);
+                $replaced = str_replace('"', '',$item['name']);
 
 
                 $query .= '("' . $item['productCode'] . '","' . $replaced . '"),';
