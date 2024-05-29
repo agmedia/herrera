@@ -275,6 +275,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $data = $api->get('ProductList');
         $data = $import->getPriceUpdateQuary($data);
 
+
+
         if ( ! empty($data['query'])) {
             $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($data['query'], 0, -1) . ";");
             $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.price = pt.price");
@@ -285,6 +287,30 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $data['count']]));
     }
+
+
+
+    public function updateNameEracuni()
+    {
+        $import = new Csv\Eracuni();
+        $api = new Api();
+
+        $data = $api->get('ProductList');
+        $data = $import->getNameUpdateQuary($data);
+
+
+
+        if ( ! empty($data['query'])) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp_name(uid, name) VALUES " . substr($data['query'], 0, -1) . ";");
+           // $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.price = pt.price");
+        }
+
+       // $this->deleteProductTempDB();
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => $data['count']]));
+    }
+
 
 
     public function updateQuantity()

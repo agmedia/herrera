@@ -306,6 +306,28 @@ class Eracuni
     }
 
 
+    public function getNameUpdateQuary(array $data = null): array
+    {
+        if ($data) {
+            $count = 1;
+            $query = '';
+
+            foreach ($data as $item) {
+                $query .= '("' . $item['productCode'] . '",' .  $item['name'] . '),';
+
+                $count++;
+            }
+
+            return [
+                'query' => $query,
+                'count' => $count
+            ];
+        }
+
+        return [];
+    }
+
+
     /**
      * @param array|null $data
      *

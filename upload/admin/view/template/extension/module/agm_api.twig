@@ -42,6 +42,14 @@
                                     <p class="col-sm-7">Obnovi cijene sa Eračuna.</p>
                                 </div>
 
+
+                                <div class="form-group">
+                                    <div class="col-sm-5 text-center">
+                                        <a href="javascript:void(0)" id="eracuni-update-name" data-toggle="tooltip" title="Obnovi nazive Eračuna." class="btn btn-info btn-block">Update Names</a>
+                                    </div>
+                                    <p class="col-sm-7">Obnovi nazivesa Eračuna.</p>
+                                </div>
+
                                 <div class="form-group">
                                     <div class="col-sm-5 text-center">
                                         <a href="javascript:void(0)" id="eracuni-update-quantity" data-toggle="tooltip" title="Obnovi količine sa Eračuna." class="btn btn-info btn-block">Update Quantity</a>
@@ -191,6 +199,18 @@
             $('#eracuni-update-price').on('click', (e) => {
                 $.ajax({
                     url: 'index.php?route=extension/module/agm_api/updatePriceEracuni&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+
+
+            //
+            $('#eracuni-update-name').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/updateNameEracuni&user_token={{ user_token }}',
                     dataType: 'json',
                     success: function(json) {
                         console.log(json)
