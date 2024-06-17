@@ -599,6 +599,27 @@ class ControllerCustomerCustomer extends Controller {
     }
 
     protected function getForm() {
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://sudreg-data.gov.hr/api/oauth/token');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
+        curl_setopt($ch, CURLOPT_USERPWD, 'k5jLfh6ORiUiiiRaRW4kCA..' . ':' . '4xWjfhkTozpUl4-jJfVUnQ..');
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        $json = json_decode($result, TRUE);
+
+        $data['tolken'] = $json['access_token'];
+        curl_close($ch);
         $data['text_form'] = !isset($this->request->get['customer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
 
         $data['user_token'] = $this->session->data['user_token'];
