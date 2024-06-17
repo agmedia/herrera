@@ -152,6 +152,7 @@ class ControllerCustomerCustomerApproval extends Controller {
         $json = json_decode($result['custom_field'], true);
 
 		foreach ($results as $result) {
+            $json = json_decode($result['custom_field'], true);
 			$data['customer_approvals'][] = array(
 				'customer_id'    => $result['customer_id'],
 				'name'           => $result['name'],
