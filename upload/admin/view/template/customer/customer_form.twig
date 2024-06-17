@@ -1495,9 +1495,8 @@
           },
         };
 
-        $.ajax(settings).done(function (response) {
-          console.log(response);
-        })
+
+
           /*  var params = {
               // Request parameters
               "expand_relations": "True"
@@ -1513,16 +1512,16 @@
               dataType: 'json',
 
             })*/
-                .done(function(data) {
-
+            $.ajax(settings).done(function (response) {
+              console.log(response);
                   $("#input-country{{ address_row }}").val("53").change();
 
                   var input = $( "#input-custom-field1" );
-                  input.val( data["skracene_tvrtke"][0]["ime"]);
+                  input.val( response["skracene_tvrtke"][0]["ime"]);
 
 
                   var input = $( "#input-custom-field2" );
-                  input.val( data["oib"]);
+                  input.val( response["oib"]);
 
 
                   var input = $( "#input-password" );
@@ -1535,16 +1534,16 @@
 
 
                   var input = $( "#input-address-1{{ address_row }}" );
-                  input.val( data["sjedista"][0]["ulica"] +' ' + data["sjedista"][0]["kucni_broj"]);
+                  input.val( response["sjedista"][0]["ulica"] +' ' + data["sjedista"][0]["kucni_broj"]);
 
                   var input = $( "#input-city{{ address_row }}" );
-                  input.val( data["sjedista"][0]["naziv_naselja"]);
+                  input.val( response["sjedista"][0]["naziv_naselja"]);
 
 
                   //$("#input-zone{{ address_row }}").val("848").change();
 
 
-                 var city = data["sjedista"][0]["naziv_naselja"];
+                 var city = response["sjedista"][0]["naziv_naselja"];
 
 
                   $.ajax({
@@ -1570,7 +1569,7 @@
 
 
                   var input = $( "#input-email" );
-                  input.val(data["email_adrese"][0]["adresa"]);
+                  input.val(response["email_adrese"][0]["adresa"]);
 
                 })
                 .fail(function() {
@@ -1581,7 +1580,7 @@
 
 
 
-      });
+      })
     });
 
 
