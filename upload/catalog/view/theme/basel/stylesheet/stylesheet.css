@@ -5059,6 +5059,19 @@ a.button-circle {
 	width:50px;
 	border-radius:10px;
 }
+
+.single-product .image .badge,
+.main-image .badge.jan {
+	position:absolute;
+	z-index:3;
+	display:table;
+	top: 0px;
+	right: 0px;
+	left:unset;
+	height:25px;
+	width:50px;
+	border-radius:10px;
+}
 /* // PRICE_EUR */
 .single-product .image .badge.eur_badge , .single-product .badge.eur_badge{
 	border-radius: 0;

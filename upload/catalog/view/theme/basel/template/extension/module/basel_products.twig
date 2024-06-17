@@ -47,7 +47,9 @@
                 <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
             {% endif %}
 
-
+                {% if product.najprodavanije %}
+                    <span class="badge new_badge jan"><i>Najprodavanije</i></span>
+                {% endif %}
 
                 {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
 			

@@ -195,6 +195,7 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 						'model'  => $result['model'],
                         'ean'  => $result['ean'],
 						'priceeur'       => $priceeur,
+                        'najprodavanije'        => $result['jan'],
                         'specialeur'     => $specialeur,
 						'new_label'  => $is_new,
 						'sale_badge' => $sale_badge,

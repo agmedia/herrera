@@ -120,10 +120,34 @@
                   <input type="text" name="ean" value="{{ ean }}" placeholder="{{ entry_ean }}" id="input-ean" class="form-control"/>
                 </div>
               </div>
-              <div class="form-group" style="display:none">
-                <label class="col-sm-2 control-label" for="input-jan"><span data-toggle="tooltip" title="{{ help_jan }}">{{ entry_jan }}</span></label>
+              <div class="form-group" >
+                <label class="col-sm-2 control-label" for="input-jan"><span data-toggle="tooltip" title="Najprodavanije">Najprodavanije</span></label>
                 <div class="col-sm-10">
-                  <input type="text" name="jan" value="{{ jan }}" placeholder="{{ entry_jan }}" id="input-jan" class="form-control"/>
+
+                  <select name="jan" id="input-jan" class="form-control">
+
+
+                    {% if jan %}
+
+
+                      <option value="1" selected="selected">{{ text_yes }}</option>
+                      <option value="0">{{ text_no }}</option>
+
+
+                    {% else %}
+
+
+                      <option value="1">{{ text_yes }}</option>
+                      <option value="0" selected="selected">{{ text_no }}</option>
+
+
+                    {% endif %}
+
+
+                  </select>
+
+
+
                 </div>
               </div>
               <div class="form-group" style="display:none">
