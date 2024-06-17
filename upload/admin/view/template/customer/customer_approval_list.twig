@@ -3,6 +3,8 @@
     <thead>
       <tr>
         <td class="text-left">{{ column_name }}</td>
+        <td class="text-left">Tvrtka</td>
+        <td class="text-left">OIB</td>
         <td class="text-left">{{ column_email }}</td>
         <td class="text-left">{{ column_customer_group }}</td>
         <td class="text-left">{{ column_type }}</td>
@@ -15,6 +17,8 @@
     {% for customer_approval in customer_approvals %}
     <tr>
       <td class="text-left">{{ customer_approval.name }}</td>
+      <td class="text-left">{{ customer_approval.tvrtka }}</td>
+      <td class="text-left">{{ customer_approval.oib }}</td>
       <td class="text-left">{{ customer_approval.email }}</td>
       <td class="text-left">{{ customer_approval.customer_group }}</td>
       <td class="text-left">{{ customer_approval.type }}</td>

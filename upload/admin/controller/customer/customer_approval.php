@@ -149,10 +149,14 @@ class ControllerCustomerCustomerApproval extends Controller {
 
 		$results = $this->model_customer_customer_approval->getCustomerApprovals($filter_data);
 
+        $json = json_decode($result['custom_field'], true);
+
 		foreach ($results as $result) {
 			$data['customer_approvals'][] = array(
 				'customer_id'    => $result['customer_id'],
 				'name'           => $result['name'],
+                'tvrtka' => $json['1'],
+                'oib' => $json['2'],
 				'email'          => $result['email'],
 				'customer_group' => $result['customer_group'],
 				'type'           => $this->language->get('text_' . $result['type']),
