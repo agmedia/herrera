@@ -55,6 +55,7 @@ $_['text_report_customer']           = 'Kupci';
 $_['text_report_customer_activity']  = 'Aktivnosti kupaca';
 $_['text_report_customer_search']    = 'Kupci su pretraživali';
 $_['text_report_customer_online']    = 'Kupci koji su online';
+$_['text_customer_approval']    = 'Odobrenja Kupaca';
 $_['text_report_customer_order']     = 'Narudžbe';
 $_['text_report_customer_reward']    = 'Nagradni bodovi';
 $_['text_report_customer_credit']    = 'Krediti';
