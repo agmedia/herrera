@@ -1485,22 +1485,34 @@
               $('a[href="#tab-customer"]').click();
             }
 
-            var params = {
+
+        var settings = {
+          "url": "http://sudreg-data.gov.hr/api/javni/detalji_subjekta?expand_relations=true&tip_identifikatora=oib&identifikator=33539839250",
+          "method": "GET",
+          "timeout": 0,
+          "headers": {
+            "Authorization": "Bearer fdNBU6yZMyRBIBKJdWitVg"
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+        })
+          /*  var params = {
               // Request parameters
               "expand_relations": "True"
             };
             $.ajax({
-              url: "https://sudreg-api.pravosudje.hr/javni/subjekt_detalji?tipIdentifikatora=oib&identifikator=" + term +"&" + $.param(params),
-              beforeSend: function(xhrObj){
-                // Request headers
-                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","2c4ee7236ab64b538a164cbc7ae3abe8");
-              },
+              url: "https://sudreg-data.gov.hr/api/javni/detalji_subjekta?expand_relations=true&tip_identifikatora=oib=&identifikator=" + term,
               type: "GET",
+              "headers": {
+                "Authorization": "Bearer fdNBU6yZMyRBIBKJdWitVg"
+              },
               // Request body
               data: "{body}",
               dataType: 'json',
 
-            })
+            })*/
                 .done(function(data) {
 
                   $("#input-country{{ address_row }}").val("53").change();
