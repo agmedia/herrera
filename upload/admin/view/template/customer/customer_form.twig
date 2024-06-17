@@ -1500,20 +1500,22 @@
               }
           }).done(function(response) {
               console.log(response);
+
+              var settings = {
+                  "url": "https://sudreg-data.gov.hr/api/javni/detalji_subjekta?expand_relations=true&tip_identifikatora=oib&identifikator="+ term,
+                  "method": "GET",
+                  "timeout": 0,
+                  "headers": {
+                      "Authorization": "Bearer " + response.access_token
+                  },
+                  dataType: 'json',
+              };
           });
 
 
 
 
-        var settings = {
-          "url": "https://sudreg-data.gov.hr/api/javni/detalji_subjekta?expand_relations=true&tip_identifikatora=oib&identifikator="+ term,
-          "method": "GET",
-          "timeout": 0,
-          "headers": {
-            "Authorization": "Bearer " + response.access_token
-          },
-          dataType: 'json',
-        };
+
 
 
 
