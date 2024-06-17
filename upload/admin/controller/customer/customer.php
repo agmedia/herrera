@@ -19,6 +19,27 @@ class ControllerCustomerCustomer extends Controller {
 
 		$this->load->model('customer/customer');
 
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://sudreg-data.gov.hr/api/oauth/token');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
+        curl_setopt($ch, CURLOPT_USERPWD, 'k5jLfh6ORiUiiiRaRW4kCA..' . ':' . '4xWjfhkTozpUl4-jJfVUnQ..');
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+
+        $data['tolken'] = $result;
+        curl_close($ch);
+
+
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->model_customer_customer->addCustomer($this->request->post);
 
