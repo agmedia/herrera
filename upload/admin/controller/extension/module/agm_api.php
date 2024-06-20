@@ -305,7 +305,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $this->db->query("UPDATE " . DB_PREFIX . "product_description p INNER JOIN product_temp_name pt ON p.sku = pt.uid SET p.name = pt.name");
         }
 
-        $this->deleteProductTempDB();
+        $this->deleteProductTempNameDB();
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => $data['count']]));
@@ -385,5 +385,13 @@ class ControllerExtensionModuleAgmApi extends Controller {
     private function deleteProductTempDB(): void
     {
         $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function deleteProductTempNmaeDB(): void
+    {
+        $this->db->query("TRUNCATE TABLE `product_temp_name`");
     }
 }
