@@ -302,6 +302,10 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         if ( ! empty($data['query'])) {
             $this->db->query("INSERT INTO product_temp_name(uid, name) VALUES " . substr($data['query'], 0, -1) . ";");
+
+            $this->db->query("UPDATE " . DB_PREFIX . "product_description pd INNER JOIN " . DB_PREFIX . "product p ON pd.product_id = p.product_id SET pd.sku = p.sku");
+
+
             $this->db->query("UPDATE " . DB_PREFIX . "product_description p INNER JOIN product_temp_name pt ON p.sku = pt.uid SET p.name = pt.name");
         }
 
@@ -390,7 +394,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
     /**
      * @throws \Exception
      */
-    private function deleteProductTempNmaeDB(): void
+    private function deleteProductTempNameDB(): void
     {
         $this->db->query("TRUNCATE TABLE `product_temp_name`");
     }
