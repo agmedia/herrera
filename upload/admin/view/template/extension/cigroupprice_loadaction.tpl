@@ -46,11 +46,9 @@
 									</td>
 									<td>
 											<select name="customer_group_price[<?php echo $customer_group['customer_group_id']; ?>][action]" class="form-control" id="input-action-<?php echo $customer_group['customer_group_id']; ?>">
-													<option value="+" <?php if(isset($customer_group_price[$customer_group['customer_group_id']]) && $customer_group_price[$customer_group['customer_group_id']]['action'] == '+') { ?>selected="selected"<?php } ?>>+ (Plus)</option>
+
 													<option value="-" <?php if(isset($customer_group_price[$customer_group['customer_group_id']]) && $customer_group_price[$customer_group['customer_group_id']]['action'] == '-') { ?>selected="selected"<?php } ?>>- (Minus)</option>
-													<option value="=" <?php if(isset($customer_group_price[$customer_group['customer_group_id']]) && $customer_group_price[$customer_group['customer_group_id']]['action'] == '=') { ?>selected="selected"<?php } ?>>= (Equal)</option>
-													<option value="x" <?php if(isset($customer_group_price[$customer_group['customer_group_id']]) && $customer_group_price[$customer_group['customer_group_id']]['action'] == 'x') { ?>selected="selected"<?php } ?>>x (Multiply)</option>
-													<option value="/" <?php if(isset($customer_group_price[$customer_group['customer_group_id']]) && $customer_group_price[$customer_group['customer_group_id']]['action'] == '/') { ?>selected="selected"<?php } ?>>/ (Divide)</option>
+
 											</select>
 									</td>
 							</tr>
