@@ -134,15 +134,15 @@
     {% if price %}
       <ul class="list-unstyled price">
         {% if not special %}
-        <li><span class="live-price">{{ price }} <small>{{ priceeur }}</small><span>   <small>{{ text_tax_included }} </small>     {% if is_logged %} <small> - Rabat: {{ cutomergrouppopust }}%</small>       {% endif %}</li>
+        <li><span class="live-price">{{ price }} <span>   <small>{{ text_tax_included }} </small>     {% if is_logged %} <small> - Rabat: {{ cutomergrouppopust }}%</small>       {% endif %}</li>
         {% else %}
-        <li><span class="live-price-new">{{ special }}  <small>{{ specialeur }}</small></span> <br><small>{{ text_tax_included }} </small></li>
+        <li><span class="live-price-new">{{ special }}  </span> <br><small>{{ text_tax_included }} </small></li>
 
         <span id="special_countdown"></span>
         {% endif %}
       </ul>
  {% if special %}
-      <p>Najniža cijena u zadnjih 30 dana: {{ price }} <small>{{ priceeur }}</small> </p>
+      <p>Najniža cijena u zadnjih 30 dana: {{ price }} </p>
 {% endif %}
 
     

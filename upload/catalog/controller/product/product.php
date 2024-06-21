@@ -169,6 +169,7 @@ class ControllerProductProduct extends Controller {
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 
+
 		//check product page open from cateory page
 	/*	if (isset($this->request->get['path'])) {
 			$parts = explode('_', (string)$this->request->get['path']);

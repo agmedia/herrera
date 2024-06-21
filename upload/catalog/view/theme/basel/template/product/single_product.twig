@@ -65,19 +65,7 @@
 
  </div>
 
-    {% if is_logged %}
-        <span class="badge eur_badge">
 
-           {% if product.special %}
-               <small><s>{{ product.priceeur }}</s></small> <small> {{ product.specialeur }}</small>
-                    {% else %}
-               <small> {{ product.priceeur }}</small>
-           {% endif %}
-
-
-        </span>
-
-    {% endif %}
 
 <!-- .price -->
 {% endif %}
