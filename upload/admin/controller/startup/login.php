@@ -7,7 +7,8 @@ class ControllerStartupLogin extends Controller {
 			'common/login',
 			'common/forgotten',
 			'common/reset',
-            'extension/module/agm_api/updateQuantityEracuni'
+            'extension/module/agm_api/updateQuantityEracuni',
+            'extension/module/agm_api/updateQuantity'
 		);
 
 		// User
@@ -25,7 +26,8 @@ class ControllerStartupLogin extends Controller {
 				'common/reset',
 				'error/not_found',
 				'error/permission',
-                'extension/module/agm_api/updateQuantityEracuni'
+                'extension/module/agm_api/updateQuantityEracuni',
+                'extension/module/agm_api/updateQuantity'
 			);
 
 			if (!in_array($route, $ignore) && (!isset($this->request->get['user_token']) || !isset($this->session->data['user_token']) || ($this->request->get['user_token'] != $this->session->data['user_token']))) {
