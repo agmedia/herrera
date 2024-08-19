@@ -363,7 +363,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
         }
 
-    //    $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+       $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
 
         $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
 
