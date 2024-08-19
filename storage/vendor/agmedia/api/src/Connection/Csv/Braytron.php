@@ -13,7 +13,9 @@ class Braytron
     /**
      * @var string
      */
-    private $url = 'https://b2b.braytron.com/genel/xml/2159D3B6-3D43-4156-8E86-46083EB9A201';
+   // private $url = 'https://b2b.braytron.com/genel/xml/2159D3B6-3D43-4156-8E86-46083EB9A201';
+
+    private $url = 'https://www.herrera.hr/brytron.xml';
 
     /**
      * @var null
