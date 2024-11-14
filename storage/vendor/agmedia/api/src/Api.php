@@ -49,11 +49,11 @@ class Api
 
     /**
      * @param string     $url
-     * @param array|null $data
+     * @param string|null $data
      *
      * @return bool|string
      */
-    public function get(string $url, array $data = null)
+    public function get(string $url, string $data = null)
     {
         try {
             $ch = curl_init($this->url . $url);
@@ -61,6 +61,10 @@ class Api
             curl_setopt($ch, CURLOPT_USERPWD, $this->resolveApiPassword());
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 500);
+
+            if ($data !== null || $data !== '') {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            }
 
             $response = curl_exec($ch);
             curl_close($ch);
