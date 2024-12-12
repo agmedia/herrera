@@ -218,7 +218,11 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         $params = $this->setQueryData($this->request->get);
 
-        $data = $api->get('ProductList', $params);
+        if ($params != '') {
+            $params = '?' . $params;
+        }
+
+        $data = $api->get('ProductList' . $params);
         $for_insert = collect($data)->where('onlineShopVisibility', '=', 'visibleOnline')->all();
 
         foreach ($for_insert as $item) {
@@ -394,13 +398,13 @@ class ControllerExtensionModuleAgmApi extends Controller {
     {
         if (isset($request['query'])) {
             if ($request['query'] == '1') {
-                return "&productCodeFrom=\"0\"&productCodeTo=\"10000\"";
+                return "productCodeFrom=\"0\"&productCodeTo=\"10000\"";
             }
             if ($request['query'] == '2') {
-                return "&productCodeFrom=\"10001\"&productCodeTo=\"20000\"";
+                return "productCodeFrom=\"10001\"&productCodeTo=\"20000\"";
             }
             if ($request['query'] == '3') {
-                return "&productCodeFrom=\"20001\"&productCodeTo=\"30000\"";
+                return "productCodeFrom=\"20001\"&productCodeTo=\"30000\"";
             }
         }
 
