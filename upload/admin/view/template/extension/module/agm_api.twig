@@ -68,7 +68,9 @@
                             <div class="panel-body form-horizontal">
                                 <div class="form-group">
                                     <div class="col-sm-5 text-center">
-                                        <a href="javascript:void(0)" id="special-import" data-toggle="tooltip" title="Samo ako si siguran u ono što klikčeš..?" class="btn btn-info btn-block">Import</a>
+                                        <a href="javascript:void(0)" id="special-import" data-toggle="tooltip" title="Samo ako si siguran u ono što klikčeš..?" class="btn btn-info btn-block">Import 1</a>
+                                        <a href="javascript:void(0)" id="special-import2" data-toggle="tooltip" title="Samo ako si siguran u ono što klikčeš..?" class="btn btn-info btn-block">Import 2</a>
+                                        <a href="javascript:void(0)" id="special-import3" data-toggle="tooltip" title="Samo ako si siguran u ono što klikčeš..?" class="btn btn-info btn-block">Import 3</a>
                                     </div>
                                     <p class="col-sm-7">Import novih proizvoda sa "https://e-racuni.com/..." API-a.</p>
                                 </div>
@@ -187,7 +189,25 @@
             //
             $('#special-import').on('click', (e) => {
                 $.ajax({
-                    url: 'index.php?route=extension/module/agm_api/specialImport&user_token={{ user_token }}',
+                    url: 'index.php?route=extension/module/agm_api/specialImport&query=1&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+            $('#special-import2').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/specialImport&query=2&user_token={{ user_token }}',
+                    dataType: 'json',
+                    success: function(json) {
+                        console.log(json)
+                    }
+                });
+            });
+            $('#special-import3').on('click', (e) => {
+                $.ajax({
+                    url: 'index.php?route=extension/module/agm_api/specialImport&query=3&user_token={{ user_token }}',
                     dataType: 'json',
                     success: function(json) {
                         console.log(json)
