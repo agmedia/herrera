@@ -472,4 +472,44 @@ class ControllerCatalogManufacturer extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+
+
+    public function specialImportByBrand()
+    {
+        $import = new Csv\Eracuni();
+        $api = new Api();
+        $count = 0;
+
+        Log::store('public function specialImportByBrand()', 'special_brand');
+
+        if (isset($this->request->get['name'])) {
+            $param = "&brand=\"" . $this->request->get['name'] . "\"";
+
+            Log::store($param, 'special_brand');
+
+            $data = $api->post('ProductList', $param);
+            $for_insert = collect($data)->where('onlineShopVisibility', '=', 'visibleOnline')->all();
+
+            foreach ($for_insert as $item) {
+                $has_product = Product::query()->where('sku', $item['productCode'])->first();
+
+                if ( ! $has_product) {
+                    $this->load->model('catalog/product');
+
+                    $item['attributes'] = $import->resolveAttributes($item, 'description');
+
+                    $resolved = $import->resolveProduct($item);
+
+                    $this->model_catalog_product->addProduct($resolved);
+
+                    $count++;
+                }
+            }
+        }
+
+        Log::store($count, 'special_brand');
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => $count]));
+    }
 }
