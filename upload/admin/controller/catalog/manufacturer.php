@@ -1,4 +1,8 @@
 <?php
+
+use Agmedia\Api\Api;
+use Agmedia\Api\Connection\Csv;
+
 class ControllerCatalogManufacturer extends Controller {
 	private $error = array();
 
