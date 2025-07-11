@@ -220,6 +220,11 @@ class ControllerSaleOrder extends Controller {
 			'limit'                  => $this->config->get('config_limit_admin')
 		);
 
+        // fj.agmedia.hr
+        if ($this->user->getGroupId() == agconf('salesman_id')) {
+            $filter_data['filter_salesman_customers'] = true;
+        }
+
 		$order_total = $this->model_sale_order->getTotalOrders($filter_data);
 
 		$results = $this->model_sale_order->getOrders($filter_data);

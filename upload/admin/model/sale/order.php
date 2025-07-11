@@ -152,6 +152,11 @@ class ModelSaleOrder extends Model {
 	public function getOrders($data = array()) {
 		$sql = "SELECT o.order_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status, o.shipping_code, o.number_quote, o.number_order, o.custom_field, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o";
 
+        // fj.agmedia.hr
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " LEFT JOIN " . DB_PREFIX . "customer_to_user cu ON (o.customer_id = cu.customer_id)";
+        }
+
 		if (!empty($data['filter_order_status'])) {
 			$implode = array();
 
@@ -173,6 +178,11 @@ class ModelSaleOrder extends Model {
 		if (!empty($data['filter_order_id'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order_id'] . "'";
 		}
+
+        // fj.agmedia.hr
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " AND cu.user_id = " . (int)$this->user->getId();
+        }
 
 		if (!empty($data['filter_customer'])) {
 			$sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
@@ -259,7 +269,12 @@ class ModelSaleOrder extends Model {
 	}
 	
 	public function getTotalOrders($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order`";
+		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order o";
+
+        // fj.agmedia.hr
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " LEFT JOIN " . DB_PREFIX . "customer_to_user cu ON (o.customer_id = cu.customer_id)";
+        }
 
 		if (!empty($data['filter_order_status'])) {
 			$implode = array();
@@ -282,6 +297,11 @@ class ModelSaleOrder extends Model {
 		if (!empty($data['filter_order_id'])) {
 			$sql .= " AND order_id = '" . (int)$data['filter_order_id'] . "'";
 		}
+
+        // fj.agmedia.hr
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " AND cu.user_id = " . (int)$this->user->getId();
+        }
 
 		if (!empty($data['filter_customer'])) {
 			$sql .= " AND CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";

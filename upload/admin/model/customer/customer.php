@@ -83,9 +83,17 @@ class ModelCustomerCustomer extends Model {
 		
 		if (!empty($data['filter_affiliate'])) {
 			$sql .= " LEFT JOIN " . DB_PREFIX . "customer_affiliate ca ON (c.customer_id = ca.customer_id)";
-		}		
+		}
+
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " LEFT JOIN " . DB_PREFIX . "customer_to_user cu ON (c.customer_id = cu.customer_id)";
+        }
 		
 		$sql .= " WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " AND cu.user_id = " . (int)$this->user->getId();
+        }
 		
 		$implode = array();
 
@@ -250,6 +258,10 @@ class ModelCustomerCustomer extends Model {
 
 		$implode = array();
 
+        if (isset($data['filter_salesman_customers'])) {
+            $sql .= " LEFT JOIN " . DB_PREFIX . "customer_to_user cu ON (c.customer_id = cu.customer_id) WHERE cu.user_id = " . (int)$this->user->getId();
+        }
+
 		if (!empty($data['filter_name'])) {
 			$implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
 		}
@@ -341,6 +353,8 @@ class ModelCustomerCustomer extends Model {
 		if ($implode) {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
+
+        $query = $this->db->query($sql);
 		
 		return $query->row['total'];
 	}
