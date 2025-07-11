@@ -463,6 +463,11 @@ class ControllerSaleOrder extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
+        // fj.agmedia.hr
+        if ($this->user->getGroupId() == agconf('salesman_id')) {
+            $url .= '&salesman_id=' . $this->user->getId();
+        }
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -629,6 +634,14 @@ class ControllerSaleOrder extends Controller {
 			$data['voucher'] = '';
 			$data['reward'] = '';
 		}
+
+        // fj.agmedia.hr
+        if ($customer_id && isset($this->request->get['salesman_id'])) {
+            \Agmedia\Models\Customer\CustomerToUser::query()->insert([
+                'customer_id' => $customer_id,
+                'user_id' => $this->request->get['salesman_id'],
+            ]);
+        }
 
 		// Stores
 		$this->load->model('setting/store');

@@ -1579,13 +1579,12 @@ class ControllerCustomerCustomer extends Controller {
                 'limit'            => 5
             );
 
+            // fj.agmedia.hr
+            if ($this->user->getGroupId() == agconf('salesman_id')) {
+                $filter_data['filter_salesman_customers'] = true;
+            }
+
             $results = $this->model_customer_customer->getCustomers($filter_data);
-
-
-
-
-
-
 
             foreach ($results as $result) {
                 $getcustom = json_decode($result['custom_field'], true);

@@ -1,0 +1,1 @@
+ALTER TABLE oc_order ADD `salesman_made` int(11) NULL AFTER `customer_group_id`;
