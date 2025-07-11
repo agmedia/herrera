@@ -394,6 +394,32 @@ class ControllerUserUser extends Controller {
 			$data['image'] = '';
 		}
 
+        // Customers
+        $this->load->model('customer/customer');
+        $data['user_token'] = $this->session->data['user_token'];
+        $data['salesman_id'] = agconf('salesman_id');
+
+        if (isset($this->request->post['user_customer'])) {
+            $customers = $this->request->post['user_customer'];
+        } elseif (isset($this->request->get['user_id'])) {
+            $customers = $this->model_customer_customer->getCustomersByUser($this->request->get['user_id']);
+        } else {
+            $customers = array();
+        }
+
+        $data['user_customers'] = array();
+
+        foreach ($customers as $customer_id) {
+            $customer_info = $this->model_customer_customer->getCustomer($customer_id);
+
+            if ($customer_info) {
+                $data['user_customers'][] = array(
+                    'customer_id' => $customer_info['customer_id'],
+                    'name'        => $customer_info['firstname'] . ' ' . $customer_info['lastname']
+                );
+            }
+        }
+
 		$this->load->model('tool/image');
 
 		if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {

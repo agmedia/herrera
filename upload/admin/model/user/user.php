@@ -12,6 +12,15 @@ class ModelUserUser extends Model {
 		if ($data['password']) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = token(9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
+
+        // fj.agmedia.hr
+        $this->db->query("DELETE FROM " . DB_PREFIX . "customer_to_user WHERE user_id = '" . (int)$user_id . "'");
+
+        if (isset($data['user_customer'])) {
+            foreach ($data['user_customer'] as $customer_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_to_user SET customer_id = '" . (int)$customer_id . "', user_id = '" . (int)$user_id . "'");
+            }
+        }
 	}
 
 	public function editPassword($user_id, $password) {

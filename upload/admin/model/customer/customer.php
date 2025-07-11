@@ -499,4 +499,22 @@ class ModelCustomerCustomer extends Model {
 	public function deleteLoginAttempts($email) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_login` WHERE `email` = '" . $this->db->escape($email) . "'");
 	}
+
+
+    /*******************************************************************************
+    *                                Copyright : AGmedia                           *
+    *                              email: filip@agmedia.hr                         *
+    *******************************************************************************/
+
+    public function getCustomersByUser($user_id) {
+        $user_customer_data = array();
+
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_to_user WHERE user_id = '" . (int)$user_id . "'");
+
+        foreach ($query->rows as $result) {
+            $user_customer_data[] = $result['customer_id'];
+        }
+
+        return $user_customer_data;
+    }
 }

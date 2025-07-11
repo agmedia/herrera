@@ -42,7 +42,7 @@ class ControllerCustomerCustomer extends Controller {
 
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_customer_customer->addCustomer($this->request->post);
+            $customer_id = $this->model_customer_customer->addCustomer($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -82,6 +82,14 @@ class ControllerCustomerCustomer extends Controller {
 
             if (isset($this->request->get['page'])) {
                 $url .= '&page=' . $this->request->get['page'];
+            }
+
+            // fj.agmedia.hr
+            if ($customer_id && isset($this->request->get['salesman_id'])) {
+                \Agmedia\Models\Customer\CustomerToUser::query()->insert([
+                    'customer_id' => $customer_id,
+                    'user_id' => $this->request->get['salesman_id'],
+                ]);
             }
 
             $this->response->redirect($this->url->link('customer/customer', 'user_token=' . $this->session->data['user_token'] . $url, true));
@@ -415,49 +423,63 @@ class ControllerCustomerCustomer extends Controller {
 
         $results = $this->model_customer_customer->getCustomers($filter_data);
 
+        $user = \Agmedia\Models\User::query()->find($this->session->data['user_id']);
+        $user_customers = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $user->user_id)->pluck('customer_id')->toArray();
 
+        $check = true;
 
+        if ($user->user_group_id == agconf('salesman_id')) {
+            $check = false;
+        }
 
         foreach ($results as $result) {
-            $login_info = $this->model_customer_customer->getTotalLoginAttempts($result['email']);
-
-            if ($login_info && $login_info['total'] >= $this->config->get('config_login_attempts')) {
-                $unlock = $this->url->link('customer/customer/unlock', 'user_token=' . $this->session->data['user_token'] . '&email=' . $result['email'] . $url, true);
-            } else {
-                $unlock = '';
+            if ( ! $check) {
+                if (in_array($result['customer_id'], $user_customers)) {
+                    $check = true;
+                }
             }
 
-            $store_data = array();
+            if ($check) {
+                $login_info = $this->model_customer_customer->getTotalLoginAttempts($result['email']);
 
-            $store_data[] = array(
-                'name' => $this->config->get('config_name'),
-                'href' => $this->url->link('customer/customer/login', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . '&store_id=0', true)
-            );
+                if ($login_info && $login_info['total'] >= $this->config->get('config_login_attempts')) {
+                    $unlock = $this->url->link('customer/customer/unlock', 'user_token=' . $this->session->data['user_token'] . '&email=' . $result['email'] . $url, true);
+                } else {
+                    $unlock = '';
+                }
 
-            foreach ($stores as $store) {
+                $store_data = array();
+
                 $store_data[] = array(
-                    'name' => $store['name'],
-                    'href' => $this->url->link('customer/customer/login', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . '&store_id=' . $store['store_id'], true)
+                    'name' => $this->config->get('config_name'),
+                    'href' => $this->url->link('customer/customer/login', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . '&store_id=0', true)
+                );
+
+                foreach ($stores as $store) {
+                    $store_data[] = array(
+                        'name' => $store['name'],
+                        'href' => $this->url->link('customer/customer/login', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . '&store_id=' . $store['store_id'], true)
+                    );
+                }
+
+
+                $json = json_decode($result['custom_field'], true);
+
+                $data['customers'][] = array(
+                    'customer_id'    => $result['customer_id'],
+                    'name'           => $result['name'],
+                    'tvrtka' => $json['1'],
+                    'oib' => $json['2'],
+                    'email'          => $result['email'],
+                    'customer_group' => $result['customer_group'],
+                    'status'         => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                    'ip'             => $result['ip'],
+                    'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                    'unlock'         => $unlock,
+                    'store'          => $store_data,
+                    'edit'           => $this->url->link('customer/customer/edit', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . $url, true)
                 );
             }
-
-
-            $json = json_decode($result['custom_field'], true);
-
-            $data['customers'][] = array(
-                'customer_id'    => $result['customer_id'],
-                'name'           => $result['name'],
-                'tvrtka' => $json['1'],
-                'oib' => $json['2'],
-                'email'          => $result['email'],
-                'customer_group' => $result['customer_group'],
-                'status'         => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'ip'             => $result['ip'],
-                'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'unlock'         => $unlock,
-                'store'          => $store_data,
-                'edit'           => $this->url->link('customer/customer/edit', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $result['customer_id'] . $url, true)
-            );
         }
 
 
@@ -750,6 +772,11 @@ class ControllerCustomerCustomer extends Controller {
 
         if (isset($this->request->get['page'])) {
             $url .= '&page=' . $this->request->get['page'];
+        }
+
+        // fj.agmedia.hr
+        if ($this->user->getGroupId() == agconf('salesman_id')) {
+            $url .= '&salesman_id=' . $this->user->getId();
         }
 
         $data['breadcrumbs'] = array();
