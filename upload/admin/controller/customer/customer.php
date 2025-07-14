@@ -1278,6 +1278,21 @@ class ControllerCustomerCustomer extends Controller {
                 $store_id = 0;
             }
 
+            // fj.agmedia.hr
+            if ($this->user->getGroupId() == agconf('salesman_id')) {
+                $oms_id = \Agmedia\Api\Models\OC_OrderManagerSales::query()->insertGetId([
+                    'start' => date('Y-m-d H:i:s'),
+                    'user_id' => $this->user->getId(),
+                    'customer_id' => $customer_id,
+                ]);
+
+                $this->session->data['order_from_manager'] = [
+                    'oms_id' => $oms_id,
+                    'customer_id' => $customer_id,
+                    'user_id' => $this->user->getId(),
+                ];
+            }
+
             $this->load->model('setting/store');
 
             $store_info = $this->model_setting_store->getStore($store_id);
