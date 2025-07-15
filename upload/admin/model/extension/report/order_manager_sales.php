@@ -3,8 +3,13 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
     public function getOrderSalesByManager($data = [])
     {
-        $managers = \Agmedia\Models\User::query()->where('user_group_id', agconf('salesman_id'))->get();
-        $orders = [];
+        $managers = \Agmedia\Models\User::query()->where('user_group_id', agconf('salesman_id'));
+
+        if (!empty($data['filter_manager'])) {
+            $managers->where('user_id', $data['filter_manager']);
+        }
+
+        $managers = $managers->get();
 
         foreach ($managers as $manager) {
             $customers = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $manager->user_id)->pluck('customer_id');
@@ -45,6 +50,57 @@ class ModelExtensionReportOrderManagerSales extends Model {
                 'tax'        => $tax,
                 'total'      => $total
             );
+        }
+
+        return $result;
+    }
+
+
+    public function getOrderSalesFromManager($data = [])
+    {
+        $customers_ids = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $data['filter_manager'])->pluck('customer_id');
+        $customers = \Agmedia\Models\Customer\Customer::query()->whereIn('customer_id', $customers_ids)->get();
+        $orders = \Agmedia\Models\Order\Order::query()->whereIn('customer_id', $customers_ids);
+        $reports = \Agmedia\Api\Models\OC_OrderManagerSales::query()->where('user_id', $data['filter_manager']);
+
+        if (!empty($data['filter_order_status_id'])) {
+            $orders->where('order_status_id', $data['filter_order_status_id']);
+        } else {
+            $orders->where('order_status_id', '>', 0);
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $orders->where('date_added', '>=', $data['filter_date_start']);
+            $reports->where('date_added', '>=', $data['filter_date_start']);
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $orders->where('date_added', '<=', $data['filter_date_end']);
+            $reports->where('date_added', '<=', $data['filter_date_end']);
+        }
+
+        foreach ($orders->get() as $order) {
+            $customer = $customers->where('customer_id', $order->customer_id)->first();
+            $report = $reports->where('order_id', $order->order_id)->first();
+
+            if ($customer) {
+
+                $manager_made = '';
+                if ($report) {
+                    $manager_made = 'Prijava: ' . date('d.m.Y H:i', strtotime($report->start)) . ' - ' . date('d.m.Y H:i', strtotime($report->end));;
+                }
+
+                $products = $order->products->count();
+                $tax = $order->totals()->where('code', 'tax')->first()->value;
+
+                $result[] = array(
+                    'customer'   => $customer->firstname . ' ' . $customer->lastname,
+                    'manager' => $manager_made,
+                    'products'   => $products,
+                    'tax'        => $tax,
+                    'total'      => $this->currency->format($order->total, $this->config->get('config_currency'))
+                );
+            }
         }
 
         return $result;

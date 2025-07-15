@@ -143,6 +143,11 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 			);
 		}
 
+        // fj.agmedia.hr
+        if ($filter_manager != '') {
+            $data['manager_orders'] = $this->model_extension_report_order_manager_sales->getOrderSalesFromManager($filter_data);
+        }
+
 		$data['user_token'] = $this->session->data['user_token'];
 
 		$this->load->model('localisation/order_status');
