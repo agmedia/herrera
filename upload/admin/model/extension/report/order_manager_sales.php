@@ -7,20 +7,48 @@ class ModelExtensionReportOrderManagerSales extends Model {
         $orders = [];
 
         foreach ($managers as $manager) {
-            $customers = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $manager->id)->pluck('customer_id');
+            $customers = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $manager->user_id)->pluck('customer_id');
 
-            $str = '';
+            $orders = \Agmedia\Models\Order\Order::query()->whereIn('customer_id', $customers)->get();
+
+            \Agmedia\Helpers\Log::store($orders->count(), 'orders');
+            \Agmedia\Helpers\Log::store($manager->toArray(), 'orders');
+
+            $products = 0;
+            $tax = 0;
+            $total = 0;
+
+            foreach ($orders as $order) {
+                $products += $order->products->count();
+                $tax += $order->totals()->where('code', 'tax')->value;
+                $total += $order->total;
+            }
+
+
+            $result[] = array(
+                'manager'    => $manager->firstname . ' ' . $manager->lastname,
+                'date_start' => $data['filter_date_start'],
+                'date_end'   => $data['filter_date_end'],
+                'orders'     => $orders->count(),
+                'products'   => $products,
+                'tax'        => $tax,
+                'total'      => $total
+            );
+
+            /*$str = '';
 
             foreach ($customers as $customer) {
                 $str .= $customer . ',';
             }
 
-            $data['customers'] = $customers;
+            $data['customers'] = substr($str, 0, -1);
 
-            $orders[] = $this->getOrders($data);
+            \Agmedia\Helpers\Log::store($data['customers'], 'customers');
+
+            $orders[] = $this->getOrders($data);*/
         }
 
-        return $orders;
+        return $result;
     }
 
 
@@ -170,7 +198,7 @@ class ModelExtensionReportOrderManagerSales extends Model {
 		}
 
         if (isset($data['customers']) && ! empty($data['customers'])) {
-            $sql .= " AND o.customer_id IN (" . implode(',', $data['customers']) . ")";
+            $sql .= " AND o.customer_id IN (" . $data['customers'] . ")";
         }
 
 		if (!empty($data['filter_date_start'])) {
@@ -216,6 +244,8 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}
+
+        \Agmedia\Helpers\Log::store($sql, 'customers');
 
 		$query = $this->db->query($sql);
 

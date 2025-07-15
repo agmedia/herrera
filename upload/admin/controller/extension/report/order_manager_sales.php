@@ -115,11 +115,11 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 			'limit'                  => $this->config->get('config_limit_admin')
 		);
 
-        $orders = $this->model_extension_report_order_manager_sales->getOrderSalesByManager($filter_data);
 
 		$order_total = $this->model_extension_report_order_manager_sales->getTotalOrders($filter_data);
 
-		$results = $this->model_extension_report_order_manager_sales->getOrders($filter_data);
+		//$results = $this->model_extension_report_order_manager_sales->getOrders($filter_data);
+        $results = $this->model_extension_report_order_manager_sales->getOrderSalesByManager($filter_data);
 
 		foreach ($results as $result) {
 			$data['orders'][] = array(
