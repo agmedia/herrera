@@ -90,7 +90,7 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
             if ($customer) {
 
-                $manager_made = '';
+                $manager_made = date('d.m.Y', strtotime($order->date_added));
                 if ($report) {
                     $manager_made = date('d.m.Y', strtotime($report->start)) . '... Prijava: ' . date('H:i', strtotime($report->start)) . ' - Odjava: ' . date('H:i', strtotime($report->end));;
                 }
