@@ -79,9 +79,14 @@ class ModelExtensionReportOrderManagerSales extends Model {
             $reports->where('date_added', '<=', $data['filter_date_end']);
         }
 
+
+
         foreach ($orders->get() as $order) {
             $customer = $customers->where('customer_id', $order->customer_id)->first();
             $report = $reports->where('order_id', $order->order_id)->first();
+
+            /*\Agmedia\Helpers\Log::store($order->order_id, 'orders');
+            \Agmedia\Helpers\Log::store($reports->where('order_id', $order->order_id)->first(), 'orders');*/
 
             if ($customer) {
 
