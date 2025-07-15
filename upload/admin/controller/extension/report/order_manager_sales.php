@@ -116,12 +116,14 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 		);
 
 
-		$order_total = $this->model_extension_report_order_manager_sales->getTotalOrders($filter_data);
+		$order_total = 0;//$this->model_extension_report_order_manager_sales->getTotalOrders($filter_data);
 
 		//$results = $this->model_extension_report_order_manager_sales->getOrders($filter_data);
         $results = $this->model_extension_report_order_manager_sales->getOrderSalesByManager($filter_data);
 
 		foreach ($results as $result) {
+            $order_total += 1;
+
 			$data['orders'][] = array(
                 'manager'    => $result['manager'],
 				'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),

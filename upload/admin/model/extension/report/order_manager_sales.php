@@ -9,18 +9,29 @@ class ModelExtensionReportOrderManagerSales extends Model {
         foreach ($managers as $manager) {
             $customers = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $manager->user_id)->pluck('customer_id');
 
-            $orders = \Agmedia\Models\Order\Order::query()->whereIn('customer_id', $customers)->get();
+            $orders = \Agmedia\Models\Order\Order::query()->whereIn('customer_id', $customers);
 
-            \Agmedia\Helpers\Log::store($orders->count(), 'orders');
-            \Agmedia\Helpers\Log::store($manager->toArray(), 'orders');
+            if (!empty($data['filter_order_status_id'])) {
+                $orders->where('order_status_id', $data['filter_order_status_id']);
+            } else {
+                $orders->where('order_status_id', '>', 0);
+            }
+
+            if (!empty($data['filter_date_start'])) {
+                $orders->where('date_added', '>=', $data['filter_date_start']);
+            }
+
+            if (!empty($data['filter_date_end'])) {
+                $orders->where('date_added', '<=', $data['filter_date_end']);
+            }
 
             $products = 0;
             $tax = 0;
             $total = 0;
 
-            foreach ($orders as $order) {
+            foreach ($orders->get() as $order) {
                 $products += $order->products->count();
-                $tax += $order->totals()->where('code', 'tax')->value;
+                $tax += $order->totals()->where('code', 'tax')->first()->value;
                 $total += $order->total;
             }
 
@@ -34,18 +45,6 @@ class ModelExtensionReportOrderManagerSales extends Model {
                 'tax'        => $tax,
                 'total'      => $total
             );
-
-            /*$str = '';
-
-            foreach ($customers as $customer) {
-                $str .= $customer . ',';
-            }
-
-            $data['customers'] = substr($str, 0, -1);
-
-            \Agmedia\Helpers\Log::store($data['customers'], 'customers');
-
-            $orders[] = $this->getOrders($data);*/
         }
 
         return $result;
