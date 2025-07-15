@@ -1551,6 +1551,8 @@ class ControllerCustomerCustomer extends Controller {
     public function autocomplete() {
         $json = array();
 
+        \Agmedia\Helpers\Log::store($this->request->get, 'filter');
+
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_tvrtka']) || isset($this->request->get['filter_oib'])) {
             if (isset($this->request->get['filter_name'])) {
                 $filter_name = $this->request->get['filter_name'];
@@ -1598,6 +1600,9 @@ class ControllerCustomerCustomer extends Controller {
             if ($this->user->getGroupId() == agconf('salesman_id')) {
                 $filter_data['filter_salesman_customers'] = true;
             }
+
+
+            \Agmedia\Helpers\Log::store($filter_data, 'filter');
 
             $results = $this->model_customer_customer->getCustomers($filter_data);
 
