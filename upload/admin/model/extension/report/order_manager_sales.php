@@ -1,5 +1,29 @@
 <?php
-class ModelExtensionReportSale extends Model {
+class ModelExtensionReportOrderManagerSales extends Model {
+
+    public function getOrderSalesByManager($data = [])
+    {
+        $managers = \Agmedia\Models\User::query()->where('user_group_id', agconf('salesman_id'))->where('user_id', 15)->get();
+        $orders = [];
+
+        foreach ($managers as $manager) {
+            $customers = \Agmedia\Models\Customer\CustomerToUser::query()->where('user_id', $manager->id)->pluck('customer_id');
+
+            $str = '';
+
+            foreach ($customers as $customer) {
+                $str .= $customer . ',';
+            }
+
+            $data['customers'] = $customers;
+
+            $orders[] = $this->getOrders($data);
+        }
+
+        return $orders;
+    }
+
+
 	public function getTotalSales($data = array()) {
 		$sql = "SELECT SUM(total) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'";
 
@@ -144,6 +168,10 @@ class ModelExtensionReportSale extends Model {
 		} else {
 			$sql .= " WHERE o.order_status_id > '0'";
 		}
+
+        if (isset($data['customers']) && ! empty($data['customers'])) {
+            $sql .= " AND o.customer_id IN (" . implode(',', $data['customers']) . ")";
+        }
 
 		if (!empty($data['filter_date_start'])) {
 			$sql .= " AND DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_date_start']) . "')";
