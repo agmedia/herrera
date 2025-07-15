@@ -3,7 +3,7 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
     public function getOrderSalesByManager($data = [])
     {
-        $managers = \Agmedia\Models\User::query()->where('user_group_id', agconf('salesman_id'))->where('user_id', 15)->get();
+        $managers = \Agmedia\Models\User::query()->where('user_group_id', agconf('salesman_id'))->get();
         $orders = [];
 
         foreach ($managers as $manager) {

@@ -72,6 +72,13 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 	public function report() {
 		$this->load->language('extension/report/order_manager_sales');
 
+        // fj.agmedia.hr
+        if (isset($this->request->get['filter_manager'])) {
+            $filter_manager = $this->request->get['filter_manager'];
+        } else {
+            $filter_manager = '';
+        }
+
 		if (isset($this->request->get['filter_date_start'])) {
 			$filter_date_start = $this->request->get['filter_date_start'];
 		} else {
@@ -84,11 +91,11 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 			$filter_date_end = date('Y-m-d');
 		}
 
-		if (isset($this->request->get['filter_group'])) {
-			$filter_group = $this->request->get['filter_group'];
-		} else {
-			$filter_group = 'week';
-		}
+        if (isset($this->request->get['filter_group'])) {
+            $filter_group = $this->request->get['filter_group'];
+        } else {
+            $filter_group = 'week';
+        }
 
 		if (isset($this->request->get['filter_order_status_id'])) {
 			$filter_order_status_id = $this->request->get['filter_order_status_id'];
@@ -107,6 +114,7 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 		$data['orders'] = array();
 
 		$filter_data = array(
+            'filter_manager'         => $filter_manager,
 			'filter_date_start'	     => $filter_date_start,
 			'filter_date_end'	     => $filter_date_end,
 			'filter_group'           => $filter_group,
@@ -140,6 +148,16 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 		$this->load->model('localisation/order_status');
 
 		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+
+        $data['managers'] = [];
+        $managers = \Agmedia\Models\User::query()->where('user_group_id', agconf('salesman_id'))->get();
+
+        foreach ($managers as $manager) {
+            $data['managers'][] = [
+                'id' => $manager->user_id,
+                'value' => $manager->firstname . ' ' . $manager->lastname,
+            ];
+        }
 
 		$data['groups'] = array();
 

@@ -6,6 +6,19 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
+                    <label class="control-label" for="input-manager">Odaberi komercijalista</label>
+                    <select name="filter_manager" id="input-manager" class="form-control" placeholder="Odaberi komercijalista">
+                        <option></option>
+                        {% for manager in managers %}
+                            {% if manager.id == filter_manager %}
+                                <option value="{{ manager.id }}" selected="selected">{{ manager.value }}</option>
+                            {% else %}
+                                <option value="{{ manager.id }}">{{ manager.value }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="input-date-start">{{ entry_date_start }}</label>
                     <div class="input-group date">
                         <input type="text" name="filter_date_start" value="{{ filter_date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" id="input-date-start" class="form-control" />
@@ -107,6 +120,12 @@
 <script type="text/javascript"><!--
     $('#button-filter').on('click', function() {
         var url = '';
+
+        var filter_manager = $('select[name=\'filter_manager\']').val();
+
+        if (filter_manager) {
+            url += '&filter_manager=' + encodeURIComponent(filter_manager);
+        }
 
         var filter_date_start = $('input[name=\'filter_date_start\']').val();
 
