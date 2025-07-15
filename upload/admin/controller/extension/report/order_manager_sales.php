@@ -123,6 +123,7 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 
 		foreach ($results as $result) {
 			$data['orders'][] = array(
+                'manager'    => $result['manager'],
 				'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
 				'date_end'   => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
 				'orders'     => $result['orders'],
