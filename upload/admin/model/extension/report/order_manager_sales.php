@@ -92,7 +92,7 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
                 $manager_made = '';
                 if ($report) {
-                    $manager_made = 'Prijava: ' . date('d.m.Y H:i', strtotime($report->start)) . ' - ' . date('d.m.Y H:i', strtotime($report->end));;
+                    $manager_made = date('d.m.Y', strtotime($report->start)) . '... Prijava: ' . date('H:i', strtotime($report->start)) . ' - Odjava: ' . date('H:i', strtotime($report->end));;
                 }
 
                 $products = $order->products->count();
@@ -102,7 +102,7 @@ class ModelExtensionReportOrderManagerSales extends Model {
                     'customer'   => $customer->firstname . ' ' . $customer->lastname,
                     'manager' => $manager_made,
                     'products'   => $products,
-                    'tax'        => $tax,
+                    'tax'        => $this->currency->format($tax, $this->config->get('config_currency')),
                     'total'      => $this->currency->format($order->total, $this->config->get('config_currency'))
                 );
             }
