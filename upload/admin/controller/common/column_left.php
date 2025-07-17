@@ -12,6 +12,16 @@ class ControllerCommonColumnLeft extends Controller {
                 $data['style'] = '1';
 
             }
+            
+ $this->load->model('user/user');
+
+            $user_info = $this->model_user_user->getUser($this->user->getId());
+
+            if ($user_info) {
+                $data['user_group_id'] = $user_info['user_group_id'];
+            } else {
+                $data['user_group_id'] = 0;
+            }
 
 			// Menu
 			$data['menus'][] = array(

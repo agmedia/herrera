@@ -50,7 +50,7 @@
 
       </style>
 
-
+     {% if user_group_id != 12 %}
       <div class="handy-box">
           <ul>
 
@@ -60,6 +60,9 @@
               <li><a href="{{ link_top_kategorije }}" class="btn btn-info"><i class="fa fa-list" aria-hidden="true"></i> Home Top kategorije</a></li>
 
 
+              <li><a href="{{ mobile }}" class="btn btn-info"><i class="fa fa-image" aria-hidden="true"></i> Mobile Slider </a></li>
+
+ <li><a href="{{ desktop }}" class="btn btn-info"><i class="fa fa-image" aria-hidden="true"></i> Desktop Slider </a></li>
 
               <li><a href="{{ link_rasvjeta_kategorije }}" class="btn btn-info"><i class="fa fa-list" aria-hidden="true"></i> Home Bottom kategorije </a></li>
 
@@ -69,9 +72,13 @@
 
               <li><a href="{{ link_ponuda }}" class="btn btn-info"><i class="fa fa-file-text-o"></i> Ponude i računi </a></li>
 
+               <li><a href="{{ excelup }}" class="btn btn-info"><i class="fa fa-file-excel-o"></i> Excelup </a></li>
+
 
           </ul>
       </div>
+      
+          {% endif %}
     {% for row in rows %}
     <div class="row">{% for dashboard_1 in row %}
       {% set class = 'col-lg-%s %s'|format(dashboard_1.width, 'col-md-3 col-sm-6') %}

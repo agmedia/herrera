@@ -1,264 +1,271 @@
-<div class="widget module{{ module }} {% if columns != 'list' %} grid{% endif %}{% if contrast %} contrast-bg{% endif %}{% if carousel and rows > 1 %}  multiple-rows{% endif %}" {% if use_margin %}style="margin-bottom: {{ margin }}"{% endif %}> 
-{% if block_title %}
-<!-- Block Title -->
-<div class="widget-title">
-{% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
-{% if title %} 
-<p class="main-title"><span>{{ title }}</span></p>
-<p class="widget-title-separator"></p>
-{% endif %}
-{% if title_subline %}
-<p class="sub-line"><span>{{ title_subline }}</span></p>
-{% endif %}
-</div>
-{% endif %}
-{% if tabs|length > 1 %}
-<!-- Tabs -->
-<ul id="tabs-{{ module }}" class="nav nav-tabs {{ tabstyle }}" data-tabs="tabs" style="">
-    {% for keyTab, tab in tabs %}
-        {% if keyTab == 0 %}
-        <li class="active"><a href="#tab{{ module }}{{ keyTab }}" data-toggle="tab">{{ tab.title }}</a></li>
-        {% else %}
-        <li><a href="#tab{{ module }}{{ keyTab }}" data-toggle="tab">{{ tab.title }}</a></li>
-        {% endif %}
-    {% endfor %}
-</ul>
-{% endif %}
-<div class="tab-content has-carousel {% if not carousel %}overflow-hidden{% endif %}">
-<!-- Product Group(s) -->
-{% for key, tab in tabs %}
-<div class="tab-pane{% if key == 0 %} active in{% endif %} fade" id="tab{{ module }}{{ key }}">
-    <div class="grid-holder prodc grid{{ columns }} prod_module{{ module }}{% if carousel %} carousel{% endif %}{% if carousel_a and rows > 1 %} sticky-arrows{% endif %}">
-        {% for product in tab.products %}
-            <div class="item single-product">
-                  <div class="edge">
-            <div class="image"{% if columns == 'list' %} style="width:{{ img_width }}px"{% endif %}>
-                <a href="{{ product.href }}">
-                <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy" title="{{ product.name }}" />
-                {% if product.thumb2 %}
-                <img class="thumb2" src="{{ product.thumb2 }}" alt="{{ product.name }}" loading="lazy" title="{{ product.name }}" />
-                {% endif %}
-                </a>
-            {% if product.special and product.sale_badge %}
-                <div class="sale-counter id{{ product.product_id }}"></div>
-				<span class="badge sale_badge"><i>{{ product.sale_badge }}</i></span>
+<div class="widget module{{ module }} {% if columns != 'list' %} grid{% endif %}{% if contrast %} contrast-bg{% endif %}{% if carousel and rows > 1 %}  multiple-rows{% endif %}" {% if use_margin %}style="margin-bottom: {{ margin }}"{% endif %}>
+    {% if block_title %}
+        <!-- Block Title -->
+        <div class="widget-title">
+            {% if title_preline %}<p class="pre-line">{{ title_preline }}</p>{% endif %}
+            {% if title %}
+                <p class="main-title"><span>{{ title }}</span></p>
+                <p class="widget-title-separator"></p>
             {% endif %}
-            {% if product.new_label %}
-                <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
+            {% if title_subline %}
+                <p class="sub-line"><span>{{ title_subline }}</span></p>
             {% endif %}
-
-                {% if product.najprodavanije %}
-                    <span class="badge new_badge jan"><i>Najprodavanije</i></span>
+        </div>
+    {% endif %}
+    {% if tabs|length > 1 %}
+        <!-- Tabs -->
+        <ul id="tabs-{{ module }}" class="nav nav-tabs {{ tabstyle }}" data-tabs="tabs" style="">
+            {% for keyTab, tab in tabs %}
+                {% if keyTab == 0 %}
+                    <li class="active"><a href="#tab{{ module }}{{ keyTab }}" data-toggle="tab">{{ tab.title }}</a></li>
+                {% else %}
+                    <li><a href="#tab{{ module }}{{ keyTab }}" data-toggle="tab">{{ tab.title }}</a></li>
                 {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="tab-content has-carousel {% if not carousel %}overflow-hidden{% endif %}">
+        <!-- Product Group(s) -->
+        {% for key, tab in tabs %}
+            <div class="tab-pane{% if key == 0 %} active in{% endif %} fade" id="tab{{ module }}{{ key }}">
+                <div class="grid-holder prodc grid{{ columns }} prod_module{{ module }}{% if carousel %} carousel{% endif %}{% if carousel_a and rows > 1 %} sticky-arrows{% endif %}">
+                    {% for product in tab.products %}
+                        <div class="item single-product">
+                            <div class="edge">
+                                <div class="image"{% if columns == 'list' %} style="width:{{ img_width }}px"{% endif %}>
+                                    <a href="{{ product.href }}">
+                                        <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy" title="{{ product.name }}" />
+                                        {% if product.thumb2 %}
+                                            <img class="thumb2" src="{{ product.thumb2 }}" alt="{{ product.name }}" loading="lazy" title="{{ product.name }}" />
+                                        {% endif %}
+                                    </a>
+                                    {% if product.special and product.sale_badge %}
+                                        <div class="sale-counter id{{ product.product_id }}"></div>
+                                        <span class="badge sale_badge"><i>{{ product.sale_badge }}</i></span>
+                                    {% endif %}
+                                    {% if product.new_label %}
+                                        <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
+                                    {% endif %}
 
-                {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
-			
-				{% set button_cart = basel_text_out_of_stock %}
-			{% else %}
-				{% set button_cart = default_button_cart %}
-			{% endif %}
-            <a class="img-overlay" href="{{ product.href }}"></a>
-            <div class="btn-center catalog_hide"><a class="btn btn-light-outline btn-thin" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');">{{ button_cart }}</a></div>
-            <div class="icons-wrapper">
-            <a class="icon is_wishlist" data-toggle="tooltip" data-placement="{{ tooltip_align }}"  data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span></a>
-            <a class="icon is_compare" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh"></span></a>
-            <a class="icon is_quickview hidden-xs" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add"></span></a>
-            </div> <!-- .icons-wrapper -->
-            </div><!-- .image ends -->
-            <div class="caption">
-            <h3 class="product-name"><a href="{{ product.href }}">{{ product.name }}</a></h3>
-            {% if product.rating %}      
-                <div class="rating">
+                                    {% if product.najprodavanije %}
+                                        <span class="badge new_badge jan"><i>Najprodavanije</i></span>
+                                    {% endif %}
+
+                                    {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
+
+                                        {% set button_cart = basel_text_out_of_stock %}
+                                    {% else %}
+                                        {% set button_cart = default_button_cart %}
+                                    {% endif %}
+                                    <a class="img-overlay" href="{{ product.href }}"></a>
+                                    <div class="btn-center catalog_hide"><a class="btn btn-light-outline btn-thin" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');">{{ button_cart }}</a></div>
+                                    <div class="icons-wrapper">
+                                        <a class="icon is_wishlist" data-toggle="tooltip" data-placement="{{ tooltip_align }}"  data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span></a>
+                                        <a class="icon is_compare" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh"></span></a>
+                                        <a class="icon is_quickview hidden-xs" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add"></span></a>
+                                    </div> <!-- .icons-wrapper -->
+                                </div><!-- .image ends -->
+                                <div class="caption">
+                                    <h3 class="product-name"><a href="{{ product.href }}">{{ product.name }}</a></h3>
+                                    {% if product.rating %}
+                                        <div class="rating">
                 <span class="rating_stars rating r{{ product.rating }}">
                 <i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
                 </span>
-                </div>
-            {% endif %}
-            <div class="price-wrapper">
-            {% if product.price %}
-            <div class="pwrap">
-               <div class="price">
-                                            {% if not product.special %}
-                                                <span>{{ product.price }}</span>
-                                            {% else %}
-                                                <span class="price-old">{{ product.price }}</span><span class="price-new">{{ product.special }}</span>
-                                            {% endif %}
-                                            {% if product.tax %}
-                                                <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
-                                            {% endif %}
-                                        </div><!-- .price -->
-            </div>
-
-            {% endif %}
-            <p class="model mb-0"><small>Šifra: {{ product.model }}</small></p>
-                {% if product.ean %}
-                <p class="model mb-0"><small>EAN: {{ product.ean }} {{ product.suplierqty }}</small></p>
-                {% endif %}
-                {% if product.attribute_groups %}
-                    <div class="attlist">
-                        <table class="table table-striped specification">
-                            {% for attribute_group in product.attribute_groups %}
-                                <tbody>
-                                {% for attribute in attribute_group.attribute %}
-                                    {% if attribute.name =='Boja svjetla' or attribute.name =='Snaga' or attribute.name =='Svjetlosni tok' or attribute.name =='Lumen' or attribute.name =='Kategorija boja'%}
-                                        <tr>
-                                            <td><b>{{ attribute.name }}:<b></td>
-                                            <td>{{ attribute.text }}</td>
-                                        </tr>
+                                        </div>
                                     {% endif %}
-                                {% endfor %}
-                                </tbody>
-                            {% endfor %}
-                        </table>
-                    </div>
-                {% endif %}
-            <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
-                {% if is_logged %}
+                                    <div class="price-wrapper">
+                                        {% if product.price %}
+                                            <div class="pwrap">
+                                                <div class="price">
+                                                    {% if not product.special %}
+                                                        <span>{{ product.price }}</span>
+                                                    {% else %}
+                                                        <span class="price-old">{{ product.price }}</span><span class="price-new">{{ product.special }}</span>
+                                                    {% endif %}
+                                                    {% if product.tax %}
+                                                        <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+                                                    {% endif %}
+                                                </div><!-- .price -->
+                                            </div>
+
+                                        {% endif %}
+                                        <p class="model mb-0"><small>Šifra: {{ product.model }}</small></p>
+                                        {% if product.ean %}
+                                            <p class="model mb-0"><small>EAN: {{ product.ean }} {{ product.suplierqty }}</small></p>
+                                        {% endif %}
+                                        {% if product.attribute_groups %}
+                                            <div class="attlist">
+                                                <table class="table table-striped specification">
+                                                    {% for attribute_group in product.attribute_groups %}
+                                                        <tbody>
+                                                        {% for attribute in attribute_group.attribute %}
+                                                            {% if attribute.name =='Boja svjetla' or attribute.name =='Snaga' or attribute.name =='Svjetlosni tok' or attribute.name =='Lumen' or attribute.name =='Kategorija boja'%}
+                                                                <tr>
+                                                                    <td><b>{{ attribute.name }}:<b></td>
+                                                                    <td>{{ attribute.text }}</td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        {% endif %}
+                                        <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
+                                        {% if is_logged %}
+
+                                            {% if is_admin_logged %}
+                                                <p class="mt-10"><small>{{ text_stock }} {{ product.quantity }}</small><br>
+                                                    <small>{{ text_suplierqty }} {{ product.suplierqty }}</small></p>
+                                            {% else %}
 
 
-                    <p class="mt-10"><small>{{ text_stock }} {{ product.quantity }}</small><br>
-                        <small>{{ text_suplierqty }} {{ product.suplierqty }}</small></p>
+                                                <p class="mt-10"><small>{{ text_stock }} {% if product.quantity > 0 %} <span style="color:green">Dostupno</span> {% else %} <span style="color:red">Nedostupno</span>{% endif %}</small><br>
+                                                    <small>{{ text_suplierqty }} {% if product.suplierqty > 0 %} <span style="color:green">Dostupno</span> {% else %} <span style="color:red">Nedostupno</span>{% endif %}</small></p>
+
+                                            {% endif %}
 
 
 
-                    {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
-                        <div class="input-group addtocart" >
+                                            {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
+                                                <div class="input-group addtocart" >
 
                       <span class="input-group-btn ">
                           <button type="button" class="btn btn-default btn-number btn-left" onclick="decreaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-minus"></span>
                             </button>
                          </span>
-                            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
-                            <span class="input-group-btn">
+                                                    <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
+                                                    <span class="input-group-btn">
                           <button type="button" class="btn btn-default btn-number" onclick="increaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-plus"></span>
                           </button>
                         </span>
 
-                            <span class="input-group-btn">
+                                                    <span class="input-group-btn">
                         <button type="button" class="btn btn-neutral" disabled
                                 onclick="cart.add('{{ product.product_id }}', $(this).parent().parent().find('.input-number').val());">
                             <span class="global-cart"></span> <span class="hidden-xs hidden-sm hidden-md"></span>
                         </button>
                        </span>
-                        </div>
-                    {% else %}
-                        <div class="input-group addtocart" >
+                                                </div>
+                                            {% else %}
+                                                <div class="input-group addtocart" >
 
                       <span class="input-group-btn ">
                           <button type="button" class="btn btn-default btn-number btn-left" onclick="decreaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-minus"></span>
                             </button>
                          </span>
-                            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
-                            <span class="input-group-btn">
+                                                    <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
+                                                    <span class="input-group-btn">
                           <button type="button" class="btn btn-default btn-number" onclick="increaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-plus"></span>
                           </button>
                         </span>
 
-                            <span class="input-group-btn">
+                                                    <span class="input-group-btn">
                         <button type="button" class="btn btn-neutral"
                                 onclick="cart.add('{{ product.product_id }}', $(this).parent().parent().find('.input-number').val());">
                             <span class="global-cart"></span> <span class="hidden-xs hidden-sm hidden-md"></span>
                         </button>
                        </span>
-                        </div>
-                    {% endif %}
+                                                </div>
+                                            {% endif %}
 
-                {% endif %}
+                                        {% endif %}
 
-            </div><!-- .price-wrapper -->
+                                    </div><!-- .price-wrapper -->
 
-                        
-            <div class="plain-links">
-            <a class="icon is_wishlist link-hover-color" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span> {{ button_wishlist }}</a>
-            <a class="icon is_compare link-hover-color" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><span class="icon-refresh"></span> {{ button_compare }}</a>
-            <a class="icon is_quickview link-hover-color" onclick="quickview('{{ product.product_id }}');"><span class="icon-magnifier-add"></span> {{ basel_button_quickview }}</a>
-            </div><!-- .plain-links-->
-            </div><!-- .caption-->
-            {% if product.sale_end_date and countdown_status %}
-            <script>
-			  $(function() {
-				$(".module{{ module }} .sale-counter.id{{ product.product_id }}").countdown("{{ product.sale_end_date }}").on('update.countdown', function(event) {
-			  var $this = $(this).html(event.strftime(''
-				+ '<div>'
-				+ '%D<i>{{ basel_text_days }}</i></div><div>'
-				+ '%H <i>{{ basel_text_hours }}</i></div><div>'
-				+ '%M <i>{{ basel_text_mins }}</i></div><div>'
-				+ '%S <i>{{ basel_text_secs }}</i></div></div>'));
-			});
-			  });
-			</script>
-            {% endif %}
+
+                                    <div class="plain-links">
+                                        <a class="icon is_wishlist link-hover-color" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span> {{ button_wishlist }}</a>
+                                        <a class="icon is_compare link-hover-color" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><span class="icon-refresh"></span> {{ button_compare }}</a>
+                                        <a class="icon is_quickview link-hover-color" onclick="quickview('{{ product.product_id }}');"><span class="icon-magnifier-add"></span> {{ basel_button_quickview }}</a>
+                                    </div><!-- .plain-links-->
+                                </div><!-- .caption-->
+                                {% if product.sale_end_date and countdown_status %}
+                                    <script>
+                                        $(function() {
+                                            $(".module{{ module }} .sale-counter.id{{ product.product_id }}").countdown("{{ product.sale_end_date }}").on('update.countdown', function(event) {
+                                                var $this = $(this).html(event.strftime(''
+                                                    + '<div>'
+                                                    + '%D<i>{{ basel_text_days }}</i></div><div>'
+                                                    + '%H <i>{{ basel_text_hours }}</i></div><div>'
+                                                    + '%M <i>{{ basel_text_mins }}</i></div><div>'
+                                                    + '%S <i>{{ basel_text_secs }}</i></div></div>'));
+                                            });
+                                        });
+                                    </script>
+                                {% endif %}
+                            </div>
+                        </div><!-- .single-product ends -->
+                    {% endfor %}
+                </div>
             </div>
-            </div><!-- .single-product ends -->
         {% endfor %}
+        {% if use_button %}
+            <!-- Button -->
+            <div class="widget_bottom_btn {% if carousel and carousel_b %}has-dots{% endif %}">
+                <a class="btn btn-contrast" href="{{ link_href ? link_href : '' }}">{{ link_title }}</a>
+            </div>
+        {% endif %}
     </div>
-</div>
-{% endfor %}
-{% if use_button %}
-<!-- Button -->
-<div class="widget_bottom_btn {% if carousel and carousel_b %}has-dots{% endif %}">
-<a class="btn btn-contrast" href="{{ link_href ? link_href : '' }}">{{ link_title }}</a>
-</div>
-{% endif %}
-</div>
-<div class="clearfix"></div>
+    <div class="clearfix"></div>
 </div>
 {% if carousel %}
-<script>
-$('.grid-holder.prod_module{{ module }}').slick({
-    accessibility: false,
-{% if carousel_a %}
-prevArrow: "<a class=\"arrow-left icon-arrow-left\"></a>",
-nextArrow: "<a class=\"arrow-right icon-arrow-right\"></a>",
-{% else %}
-arrows: false,
-{% endif %}
-{% if direction == 'rtl' %}
-rtl: true,
-{% endif %}
-{% if carousel_b %}
-dots:true,
-{% endif %}
-respondTo:'min',
-rows:{{ rows }},
-{% if columns == '5' %}
-slidesToShow:5,slidesToScroll:5,responsive:[{breakpoint:1100,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
-{% elseif columns == '4' %}
-slidesToShow:4,slidesToScroll:4,responsive:[{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
-{% elseif columns == '3' %}
-slidesToShow:3,slidesToScroll:3,responsive:[{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
-{% elseif columns == '2' %}
-slidesToShow:2,slidesToScroll:2,responsive:[
-{% elseif columns == '1' or columns == 'list' %}
-adaptiveHeight:true,slidesToShow:1,slidesToScroll:1,responsive:[
-{% endif %}
-{% if items_mobile_fw %}
-{breakpoint:420,settings:{slidesToShow:1,slidesToScroll:1}}
-{% endif %}
-]
-});
-$('.product-style2 .single-product .icon').attr('data-placement', 'top');
-$('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
-{% if carousel_a and rows > 1 %}
-$(window).load(function() {
-var p_c_o = $('.prod_module{{ module }}').offset().top;
-var p_c_o_b = $('.prod_module{{ module }}').offset().top + $('.prod_module{{ module }}').outerHeight(true) - 100;
-var p_sticky_arrows = function(){
-var p_m_o = $(window).scrollTop() + ($(window).height()/2);
-if (p_m_o > p_c_o && p_m_o < p_c_o_b) {
-$('.prod_module{{ module }} .slick-arrow').addClass('visible').css('top', p_m_o - p_c_o + 'px');
-} else {
-$('.prod_module{{ module }} .slick-arrow').removeClass('visible');
-}
-};
-$(window).scroll(function() {p_sticky_arrows();});
-});
-{% endif %}
-</script>
+    <script>
+        $('.grid-holder.prod_module{{ module }}').slick({
+            accessibility: false,
+            {% if carousel_a %}
+            prevArrow: "<a class=\"arrow-left icon-arrow-left\"></a>",
+            nextArrow: "<a class=\"arrow-right icon-arrow-right\"></a>",
+            {% else %}
+            arrows: false,
+            {% endif %}
+            {% if direction == 'rtl' %}
+            rtl: true,
+            {% endif %}
+            {% if carousel_b %}
+            dots:true,
+            {% endif %}
+            respondTo:'min',
+            rows:{{ rows }},
+            {% if columns == '5' %}
+            slidesToShow:5,slidesToScroll:5,responsive:[{breakpoint:1100,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+                {% elseif columns == '4' %}
+                slidesToShow:4,slidesToScroll:4,responsive:[{breakpoint:960,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+            {% elseif columns == '3' %}
+            slidesToShow:3,slidesToScroll:3,responsive:[{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},
+            {% elseif columns == '2' %}
+            slidesToShow:2,slidesToScroll:2,responsive:[
+            {% elseif columns == '1' or columns == 'list' %}
+            adaptiveHeight:true,slidesToShow:1,slidesToScroll:1,responsive:[
+            {% endif %}
+            {% if items_mobile_fw %}
+            {breakpoint:420,settings:{slidesToShow:1,slidesToScroll:1}}
+            {% endif %}
+        ]
+        });
+        $('.product-style2 .single-product .icon').attr('data-placement', 'top');
+        $('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
+        {% if carousel_a and rows > 1 %}
+        $(window).load(function() {
+            var p_c_o = $('.prod_module{{ module }}').offset().top;
+            var p_c_o_b = $('.prod_module{{ module }}').offset().top + $('.prod_module{{ module }}').outerHeight(true) - 100;
+            var p_sticky_arrows = function(){
+                var p_m_o = $(window).scrollTop() + ($(window).height()/2);
+                if (p_m_o > p_c_o && p_m_o < p_c_o_b) {
+                    $('.prod_module{{ module }} .slick-arrow').addClass('visible').css('top', p_m_o - p_c_o + 'px');
+                } else {
+                    $('.prod_module{{ module }} .slick-arrow').removeClass('visible');
+                }
+            };
+            $(window).scroll(function() {p_sticky_arrows();});
+        });
+        {% endif %}
+    </script>
 {% endif %}
 
 <script>

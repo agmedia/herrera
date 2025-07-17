@@ -51,7 +51,12 @@
             display:none;
         }
     </style>
+   <style>
+           {% if user_group_id == 12 %}
+        #menu-hbseo, #menu-system{display:none}
 
+        {% endif %}
+    </style>
     {% if style== '1' %}
 
         <style>

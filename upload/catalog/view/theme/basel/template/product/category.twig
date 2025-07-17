@@ -37,34 +37,39 @@
       <h1 id="page-title">{{ heading_title }}</h1>
 
 
+        
+         
 
 
-        {% if categories and category_subs_status %}
-            <h3 class="lined-title hidden-xs"><span>{{ text_refine }}</span></h3>
-            <div class="grid-holder categories carousel grid-holder grid6 prod_module0 carousel mb-3">
-                {% for category in categories %}
-                    <div class="item single-product">
-                        <a href="{{ category.href }}"><img src="{{ category.thumb }}" alt="{{ category.name }}" title="{{ category.name }}" /></a>
-                        <a href="{{ category.href }}">{{ category.name }}</a></div>
-                {% endfor %}
-            </div>
+      
+           {% if categories and category_subs_status %}
+      <h3 class="lined-title hidden-xs"><span>{{ text_refine }}</span></h3>
+            <div class="grid-holder category grid4  module0">
+          {% for category in categories %}
+         
+                              <div class="item single-category no-subs" style="margin-bottom: 20px;">
 
-            <script>
-                $('.grid-holder.prod_module0').slick({
-                    prevArrow: false,
-                    nextArrow: false,
-                    dots:true,
-                    respondTo:'min',
-                    rows:1,
-                    slidesToShow:8,slidesToScroll:2,responsive:[{breakpoint:1280,settings:{slidesToShow:7,slidesToScroll:2}},{breakpoint:960,settings:{slidesToShow:5,slidesToScroll:2}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:1}},
-                    ]
-                });
-                $('.product-style2 .single-product .icon').attr('data-placement', 'top');
-                $('[data-toggle=\'tooltip\']').tooltip({container: 'body'});
-            </script>
-        {% endif %}
+                                  <div class="banner_wrap hover-zoom">
+     
+                                       <a href="{{ category.href }}"><img src="{{ category.thumb }}" alt="{{ category.name }}" title="{{ category.name }}" /></a>
+                                    </div>
+       
+               <p class="name contrast-heading" style="font-size: 1.1em;">{{ category.name }}</p>
+                 <a class="u-lined" href="{{ category.href }}">Pogledaj artikle</a>
+
+             </div>
+        
+            {% endfor %}
+        </div>
+
+        <style>
+          #tf-filter-0{display:none}
+        </style>
+
+          
+     {% endif %}
 	      
-      {% if products %}
+      {% if products and not categories %}
       <div id="product-view" class="grid">
       
          <div class="table filter">

@@ -5,6 +5,7 @@ use Agmedia\Helpers\Log;
 use Agmedia\Api\Connection\Csv;
 use Agmedia\Models\Product\Product;
 
+
 class ControllerCatalogManufacturer extends Controller {
 	private $error = array();
 
@@ -489,12 +490,19 @@ class ControllerCatalogManufacturer extends Controller {
         Log::store('public function specialImportByBrand()', 'special_brand');
 
         if (isset($this->request->get['name'])) {
-            $param = "&brand=\"" . $this->request->get['name'] . "\"";
+                 $param = "brand=\"" . $this->request->get['name'] . "\"";
+            
+           
 
             Log::store($param, 'special_brand');
 
             $data = $api->post('ProductList', $param);
+            
+              Log::store($data, 'log_data_brend');
+            
             $for_insert = collect($data)->where('onlineShopVisibility', '=', 'visibleOnline')->all();
+            
+            Log::store($for_insert, 'log_brand');
 
             foreach ($for_insert as $item) {
                 $has_product = Product::query()->where('sku', $item['productCode'])->first();

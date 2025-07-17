@@ -53,6 +53,9 @@ class ControllerMailCustomer extends Controller {
 			$mail->setSubject($subject);
 			$mail->setText($this->load->view('mail/customer_approve', $data));
 			$mail->send();
+			
+			         $mail->setTo('nikola@herrera.hr');
+            $mail->send();
 		}
 	}
 

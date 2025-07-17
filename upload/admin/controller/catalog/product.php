@@ -2,6 +2,7 @@
 
 use Agmedia\Api\Api;
 use Agmedia\Api\Helper\Helper;
+use Agmedia\Helpers\Log;
 
 class ControllerCatalogProduct extends Controller {
 	private $error = array();
@@ -1342,9 +1343,11 @@ class ControllerCatalogProduct extends Controller {
         $product = products()->where('sku', $this->request->get['sku'])->first();
 
         $data = $api->post(agconf('import.api.url_image_suffix'), $api->resolveImageData($product->sku));
+        
+          Log::store($data, 'image_mono');
 
-        if (isset($data['response']['result'])) {
-            foreach ($data['response']['result'] as $item) {
+        if (!empty($data)) {
+            foreach ($data as $item) {
                 if (isset($item['Attachment']['contents'])) {
                     $image = Helper::base64_to_jpeg(
                         $item['Attachment']['contents'],

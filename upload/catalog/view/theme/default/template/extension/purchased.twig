@@ -17,11 +17,11 @@
       <h1 id="page-title">{{ heading_title }}</h1>
       {% if products %}
       <div class="table-responsive">
-        <table class="table table-bordered table-hover">
+      <table id="example" class="table table-striped table-bordered" style="width:100%">
           <thead>
             <tr>
-              <td class="text-right">Narudžba</td>
-                <td class="text-right">Datum zadnje narudžbe</td>
+              <td class="text-right">Bn.</td>
+                <td class="text-right">Zadnja narudžba</td>
               <td class="text-center">{{ column_image }}</td>
               <td class="text-left">{{ column_name }}</td>
               <td class="text-left">{{ column_model }}</td>
@@ -36,7 +36,7 @@
             <tr>
               <td class="text-right">{{ product.order_id }}</td>
                 <td class="text-right">{{ product.date_added }}</td>
-              <td class="text-center"><img src="{{ product.image }}" style="padding: 1px; border: 1px solid #DDDDDD;" /></td>
+              <td class="text-center" style="width:250px"><img src="{{ product.image }}" style="padding: 1px; border: 1px solid #DDDDDD;" /></td>
               <td class="text-left"><a href="{{ product.url_product }}">{{ product.name }}</a><br />
 				    {% if product.option %}
 				      {% for option in product.option %}
@@ -91,4 +91,22 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
+<style>
+  .table-bordered > thead > tr > td {
+  font-size: 1em;
+
+  color: #000000;
+ white-space: nowrap !important;
+}
+</style>
+<script>
+
+  var table = new DataTable('#example', {
+    language: {
+        url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/hr.json',
+    },
+});
+  
+
+</script>
 {{ footer }}

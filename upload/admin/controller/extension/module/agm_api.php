@@ -137,6 +137,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         foreach ($products as $product_id => $sku) {
             $data = $api->post(agconf('import.api.url_image_suffix'), $api->resolveImageData($sku));
+            
+             Log::store($data, 'images_data');
 
             if ( ! empty($data)) {
                 foreach ($data as $item) {
@@ -256,6 +258,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
         Log::store($data, 'eracuni');
 
         if ( ! empty($data['query'])) {
+        
+           $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($data['query'], 0, -1) . ";");
             $this->db->query("UPDATE " . DB_PREFIX . "product p SET p.quantity = 0");
@@ -325,30 +329,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
 
         $braytron->getXML('quantity');
 
-     /*   $csv = new Csv(DIR_UPLOAD . 'csv/ProductsData-EN.csv');
-
-        $ideus_data = $csv->collect();
-
-        $ideus = new Csv\Ideus($ideus_data->toArray());*/
-
         $bt = collect($braytron->quantity);
         $data = [];
-
-      /*  foreach ($ideus->getQuantity() as $item) {
-            $found = $bt->where('sku', $item['sku'])->first();
-
-            if ($found) {
-                $data[$item['sku']] = [
-                    'sku' => $item['sku'],
-                    'quantity' => $item['quantity'] + $found['quantity']
-                ];
-            } else {
-                $data[$item['sku']] = [
-                    'sku' => $item['sku'],
-                    'quantity' => $item['quantity']
-                ];
-            }
-        }*/
 
         foreach ($bt->all() as $item) {
             if ( ! isset($data[$item['sku']])) {
@@ -374,6 +356,164 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => 1]));
     }
+
+        public function updateQuantityVayox()
+    {
+          $vayox = new Csv\Vayox();
+
+        $file = file_get_contents('https://panel-d.baselinker.com/inventory_export.php?hash=989da49eb13c3993e89ce390532ddb26');
+        $name = 'vayox.xml';
+
+        file_put_contents(DIR_IMAGE .'/vayox/' . $name, $file);
+
+           $vayox->getXML('quantity');
+
+
+            $bt = collect($vayox->quantity);
+
+
+
+            $data = [];
+
+
+           foreach ($bt->all() as $item) {
+               if ( ! isset($data[$item['sku']])) {
+                   $data[$item['sku']] = [
+                       'sku' => $item['sku'],
+                       'quantity' => $item['quantity']
+                   ];
+               }
+           }
+
+           $str = '';
+
+           foreach ($data as $item) {
+               $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+           }
+
+           $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+           $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
+          $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.ean = pt.uid SET p.suplierqty = pt.quantity");
+
+
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+
+    public function updateQuantityMaster()
+    {
+        $master = new Csv\Master();
+
+        $master->getXML('quantity');
+
+        $bt = collect($master->quantity);
+        $data = [];
+
+        foreach ($bt->all() as $item) {
+            if ( ! isset($data[$item['sku']])) {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+        }
+
+        $str = '';
+
+        foreach ($data as $item) {
+            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+        }
+
+       $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
+        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.suplierqty = pt.quantity");
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+
+    public function updateQuantityDpm()
+    {
+        $dpm = new Csv\Dpm();
+
+        $dpm->getXML('quantity');
+
+        $bt = collect($dpm->quantity);
+        $data = [];
+
+        foreach ($bt->all() as $item) {
+            if ( ! isset($data[$item['sku']])) {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+        }
+
+        $str = '';
+
+        foreach ($data as $item) {
+            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+        }
+
+       $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
+       $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.ean = pt.uid SET p.suplierqty = pt.quantity");
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+
+        //Enovalite
+
+    public function updateQuantityEnovalite()
+    {
+
+        $file = file_get_contents('https://feeds.datafeedwatch.com/87802/7080e8e076d8d390ae658397f58d92ad04281640.csv');
+        $name = 'enovalite.csv';
+
+        file_put_contents(DIR_IMAGE .'/csv/' . $name, $file);
+
+
+           $csv = new Csv(DIR_IMAGE . 'csv/enovalite.csv');
+
+           $enovalite_data = $csv->collect();
+
+           $enovalite = new Csv\Enovalite($enovalite_data->toArray());
+
+
+          foreach ($enovalite->getQuantity() as $item) {
+
+                  $data[$item['sku']] = [
+                      'sku' => $item['sku'],
+                      'quantity' => $item['quantity']
+                  ];
+
+          }
+          
+        $str = '';
+
+        foreach ($data as $item) {
+            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+        }
+
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
+        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.suplierqty = pt.quantity");
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+
 
 
 	protected function validate() {

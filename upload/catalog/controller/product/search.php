@@ -11,6 +11,9 @@ class ControllerProductSearch extends Controller {
 
 		$data['is_logged'] = $this->customer->isLogged();
 
+        $this->user = new Cart\User($this->registry);
+        $data['is_admin_logged'] = $this->user->getId();
+
 		if (isset($this->request->get['search'])) {
 			$search = $this->request->get['search'];
 		} else {

@@ -9,6 +9,9 @@ class ControllerProductSpecial extends Controller {
 
 		$data['is_logged'] = $this->customer->isLogged();
 
+        $this->user = new Cart\User($this->registry);
+        $data['is_admin_logged'] = $this->user->getId();
+
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
@@ -149,6 +152,7 @@ class ControllerProductSpecial extends Controller {
                 'purchase_date' => $this->model_catalog_product->getPurchaseDate($result['product_id'], $customer_id),
                 'model'  => $result['model'],
                 'ean'  => $result['ean'],
+                'upc'  => $result['upc'],
                 'suplierqty'  => $result['suplierqty'],
 				'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 				'price'       => $price,

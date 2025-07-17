@@ -1,6 +1,6 @@
 <?php
 class ModelExtensionPurchased extends Model {
-	public function getPurchased($start = 0, $limit = 20) {
+	public function getPurchased($start = 0, $limit = 100000) {
 		$query = $this->db->query("SET SESSION group_concat_max_len=256000");
 		
 		if ($start < 0) {

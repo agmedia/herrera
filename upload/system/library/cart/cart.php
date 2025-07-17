@@ -163,9 +163,21 @@ class Cart {
 					}
 				}
 
-				$price = $product_query->row['price'];
+                //customer_price:discount
 
-				// Product Discounts
+                $query2 = $this->db->query("SELECT price FROM oc_product_price_by_customer_id uprice WHERE  uprice.customer_id = '". (int)$this->customer->getId() ."' AND '" . (int)$cart['product_id'] . "' = uprice.product_id ");
+
+                if ($query2->num_rows) {
+
+                    $price = $query2->row['price'];
+
+                } else{
+
+                    $price = $product_query->row['price'];
+                }
+
+
+                // Product Discounts
 				$discount_quantity = 0;
 
 				foreach ($cart_query->rows as $cart_2) {
@@ -254,7 +266,7 @@ class Cart {
 					'option'          => $option_data,
 					'download'        => $download_data,
 					'quantity'        => $cart['quantity'],
-                    'suplierqty'        => $cart['suplierqty'],
+                    'suplierqty'        => $product_query->row['suplierqty'],
 					'minimum'         => $product_query->row['minimum'],
 					'subtract'        => $product_query->row['subtract'],
 					'stock'           => $stock,

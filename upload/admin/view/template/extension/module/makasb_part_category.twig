@@ -1,0 +1,8 @@
+{% for category in categories[parrent] %}
+    <div data-parrent="{{ parrent }}" data-id="{{ category.category_id }}" data-sort="{{ category.sort_order}}" class="list-group-item nested-1">
+        {{ category.category_id }} - {{ category.name }}
+        <div data-parrent="{{ category.category_id }}" class="list-group nested-sortable">
+            {% include '/extension/module/makasb_part_category.twig' with {'categories': all, 'parrent': category.category_id, 'all': all} only %}
+        </div>
+    </div>
+{% endfor %}

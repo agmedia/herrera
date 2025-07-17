@@ -25,7 +25,7 @@
 
       
       {% if products %}
-      <div id="product-view" class="grid">
+      <div id="product-view" class="list">
       
       <div class="table filter">
       
@@ -69,7 +69,7 @@
       
       <div class="grid-holder product-holder grid4">
         {% for product in products %}
-        {% include 'basel/template/product/single_product.twig' %}
+        {% include 'basel/template/product/single_product_search.twig' %}
         {% endfor %}
       </div>
       </div> <!-- #product-view ends -->

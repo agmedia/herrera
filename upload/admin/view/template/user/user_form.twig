@@ -116,14 +116,16 @@
 
                     {% if user_group_id == salesman_id %}
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-customers"><span data-toggle="tooltip" title="Autopopuna">Kupci</span></label>
+                            <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Odaberi kupce">Kupci</span></label>
                             <div class="col-sm-10">
-                                <input type="text" name="customer" value="" placeholder="Popis kupaca" id="input-customers" class="form-control"/>
-                                <div id="user-customer" class="well well-sm" style="height: 150px; overflow: auto;">
+                                <div class="well well-sm" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
                                     {% for customer in user_customers %}
-                                        <div id="user-customer{{ customer.customer_id }}">
-                                            <i class="fa fa-minus-circle"></i> {{ customer.name }}
-                                            <input type="hidden" name="user_customer[]" value="{{ customer.customer_id }}"/>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="user_customer[]" value="{{ customer.customer_id }}"
+                                                       {% if customer.customer_id in user_customer_ids %}checked{% endif %}>
+                                                {{ customer.name }}  - {{ customer.address_1 }}  
+                                            </label>
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -135,38 +137,7 @@
         </div>
     </div>
 
-    {% if user_group_id == salesman_id %}
-        <script type="text/javascript">
-            // Category
-            $('input[name=\'customer\']').autocomplete({
-                'source': function(request, response) {
-                    $.ajax({
-                        url: 'index.php?route=customer/customer/autocomplete&user_token={{ user_token }}&filter_tvrtka=' + encodeURIComponent(request),
-                        dataType: 'json',
-                        success: function(json) {
-                            response($.map(json, function(item) {
-                                return {
-                                    label: item['name'] + ' - ' + item['tvrtka'],
-                                    value: item['customer_id']
-                                }
-                            }));
-                        }
-                    });
-                },
-                'select': function(item) {
-                    $('input[name=\'customer\']').val('');
 
-                    $('#user-customer' + item['value']).remove();
-
-                    $('#user-customer').append('<div id="user-customer' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="user_customer[]" value="' + item['value'] + '" /></div>');
-                }
-            });
-
-            $('#user-customer').delegate('.fa-minus-circle', 'click', function() {
-                $(this).parent().remove();
-            });
-        </script>
-    {% endif %}
 
 </div>
 {{ footer }}

@@ -1,179 +1,219 @@
 <div class="item single-product">
     <div class="edge">
-<div class="image" {% if columns == 'list' %}style="width:{{ img_width }}px"{% endif %}>
-    <a href="{{ product.href }}">
-    <img src="{{ product.thumb }}" alt="{{ product.name }}"  title="{{ product.name }}" />
-    {% if product.thumb2 %}
-    <img class="thumb2" src="{{ product.thumb2 }}"  alt="{{ product.name }}" title="{{ product.name }}" />
-    {% endif %}
-    </a>
-{% if product.price and product.special and salebadge_status %}
-    <div class="sale-counter id{{ product.product_id }}"></div>
-    <span class="badge sale_badge"><i>{{ product.sale_badge }}</i></span>
-{% endif %}
-{% if product.new_label %}
-    <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
-{% endif %}
+        <div class="image" {% if columns == 'list' %}style="width:{{ img_width }}px"{% endif %}>
+            <a href="{{ product.href }}">
+                <img src="{{ product.thumb }}" alt="{{ product.name }}"  loading="lazy" title="{{ product.name }}" />
+                {% if product.thumb2 %}
+                    <img class="thumb2" src="{{ product.thumb2 }}" loading="lazy" alt="{{ product.name }}" title="{{ product.name }}" />
+                {% endif %}
+            </a>
+            {% if product.price and product.special and salebadge_status %}
+                <div class="sale-counter id{{ product.product_id }}"></div>
+                <span class="badge sale_badge"><i>{{ product.sale_badge }}</i></span>
+            {% endif %}
+            {% if product.new_label %}
+                <span class="badge new_badge"><i>{{ basel_text_new }}</i></span>
+            {% endif %}
+
+               {% if product.upc %}
+                <span class="badge new_badge jan"><i>{{ product.upc }} gratis</i></span>
+            {% endif %}
 
 
-    {% if product.najprodavanije %}
-        <span class="badge new_badge jan"><i>Najprodavanije</i></span>
-    {% endif %}
+            {% if product.najprodavanije %}
+                <span class="badge new_badge jan"><i>Najprodavanije</i></span>
+            {% endif %}
 
-    {% if product.purchase_date %}
-        <span class="badge new_badge"><small>Zadnja kupnja: {{ product.purchase_date|date('d-m-Y H:i') }}</small></span>
-    {% endif %}
-{% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
- <span class="badge out_of_stock_badge"><i>{{ basel_text_out_of_stock }}</i></span>
-    {% set button_cart = basel_text_out_of_stock %}
+            {% if product.purchase_date %}
+                <span class="badge new_badge"><small>Zadnja kupnja: {{ product.purchase_date|date('d-m-Y H:i') }}</small></span>
+            {% endif %}
+            {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
+                <span class="badge out_of_stock_badge"><i>{{ basel_text_out_of_stock }}</i></span>
+                {% set button_cart = basel_text_out_of_stock %}
 
 
-{% else %}
-	{% set button_cart = default_button_cart %}
-{% endif %}
-<a class="img-overlay" title="{{ product.name }}" href="{{ product.href }}"></a>
+            {% else %}
+                {% set button_cart = default_button_cart %}
+            {% endif %}
+            <a class="img-overlay" title="{{ product.name }}" href="{{ product.href }}"></a>
 
-<div class="icons-wrapper">
-<a class="icon is_wishlist" data-toggle="tooltip" data-placement="{{ tooltip_align }}"  data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span></a>
-<a class="icon is_compare" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh"></span></a>
-<a class="icon is_quickview hidden-xs" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add"></span></a>
-</div> <!-- .icons-wrapper -->
-</div><!-- .image ends -->
-<div class="caption">
-<h3 class="product-name"><a href="{{ product.href }}">{{ product.name }}</a></h3>
-{% if product.rating %}      
-    <div class="rating">
+            <div class="icons-wrapper">
+                <a class="icon is_wishlist" data-toggle="tooltip" data-placement="{{ tooltip_align }}"  data-title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><span class="icon-heart"></span></a>
+                <a class="icon is_compare" onclick="compare.add('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ button_compare }}"><span class="icon-refresh"></span></a>
+                <a class="icon is_quickview hidden-xs" onclick="quickview('{{ product.product_id }}');" data-toggle="tooltip" data-placement="{{ tooltip_align }}" data-title="{{ basel_button_quickview }}"><span class="icon-magnifier-add"></span></a>
+            </div> <!-- .icons-wrapper -->
+        </div><!-- .image ends -->
+        <div class="caption">
+            <h3 class="product-name"><a href="{{ product.href }}">{{ product.name }}</a></h3>
+
+
+            {% if product.attribute_groups %}
+
+                {% for attribute_group in product.attribute_groups %}
+
+                    {% for attribute in attribute_group.attribute %}
+                        {% if attribute.name =='Razina energetske učinkovitosti' or attribute.name=='Klasa energetske učinkovitosti EEi'%}
+
+                            <div class="energy-info">
+    <span class="mark_label" >
+        <p class="mark_label-class">A</p>
+        <p class="mark_label-class" style="font-size: 8px;"> ⬆
+        </p>
+    <p class="mark_label-class">G</p>
+    </span>
+                                <span class="energy{{ attribute.text|replace({' ': ''}) }}">{{ attribute.text }}</span>
+                            </div>
+
+
+
+                        {% endif %}
+                    {% endfor %}
+
+                {% endfor %}
+
+            {% endif %}
+
+
+
+
+            {% if product.rating %}
+                <div class="rating">
     <span class="rating_stars rating r{{ product.rating }}">
     <i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>
     </span>
-    </div>
-{% endif %}
-<div class="price-wrapper">
-{% if product.price %}
-<div class="pwrap">
-  <div class="price">
-                                            {% if not product.special %}
-                                                <span>{{ product.price }}</span>
-                                            {% else %}
-                                                <span class="price-old">{{ product.price }}</span><span class="price-new">{{ product.special }}</span>
-                                            {% endif %}
-                                            {% if product.tax %}
-                                                <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
-                                            {% endif %}
-                                        </div><!-- .price -->
+                </div>
+            {% endif %}
+            <div class="price-wrapper">
+                {% if product.price %}
+                    <div class="pwrap">
+                        <div class="price">
+                            {% if not product.special %}
+                                <span>{{ product.price }}</span>
+                            {% else %}
+                                <span class="price-old">{{ product.price }}</span><span class="price-new">{{ product.special }}</span>
+                            {% endif %}
+                            {% if product.tax %}
+                                <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+                            {% endif %}
+                        </div><!-- .price -->
 
 
- </div>
-
-
-
-<!-- .price -->
-{% endif %}
-
-<p class="model mb-0"><small>Šifra: {{ product.model }}</small></p>
-    {% if product.ean %}
-        <p class="model mb-0"><small>EAN: {{ product.ean }} </small></p>
-    {% endif %}
-    {% if product.attribute_groups %}
-        <div class="attlist">
-            <table class="table table-striped specification">
-                {% for attribute_group in product.attribute_groups %}
-                    <tbody>
-                    {% for attribute in attribute_group.attribute %}
-                        {% if attribute.name =='Boja svjetla' or attribute.name =='Snaga' or attribute.name =='Svjetlosni tok' or attribute.name =='Lumen' or attribute.name =='Kategorija boja'%}
-                        <tr>
-                            <td><b>{{ attribute.name }}:</b></td>
-                            <td>{{ attribute.text }}</td>
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                {% endfor %}
-            </table>
-        </div>
-    {% endif %}
-<p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
-{% if is_logged %}
-
-
-        <p class="mt-10"><small>{{ text_stock }} {{ product.quantity }}</small><br>
-       <small>{{ text_suplierqty }} {{ product.suplierqty }}</small></p>
+                    </div>
 
 
 
-    {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
-        <div class="input-group addtocart" >
+                    <!-- .price -->
+                {% endif %}
+
+                <p class="model mb-0"><small>Šifra: {{ product.model }}</small></p>
+                {% if product.ean %}
+                    <p class="model mb-0"><small>EAN: {{ product.ean }} </small></p>
+                {% endif %}
+                {% if product.attribute_groups %}
+                    <div class="attlist">
+                        <table class="table table-striped specification">
+                            {% for attribute_group in product.attribute_groups %}
+                                <tbody>
+                                {% for attribute in attribute_group.attribute %}
+                                    {% if attribute.name =='Boja svjetla' or attribute.name =='Snaga' or attribute.name =='Svjetlosni tok' or attribute.name =='Lumen' or attribute.name =='Kategorija boja'%}
+                                        <tr>
+                                            <td><b>{{ attribute.name }}:</b></td>
+                                            <td>{{ attribute.text }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% endif %}
+                <p class="description">{% if product.description %}{{ product.description }}{% endif %}</p>
+                {% if is_logged %}
+
+                {% if is_admin_logged %}
+                    <p class="mt-10"><small>{{ text_stock }} {{ product.quantity }}</small><br>
+                        <small>{{ text_suplierqty }} {{ product.suplierqty }}</small></p>
+                {% else %}
+
+
+                    <p class="mt-10"><small>{{ text_stock }} {% if product.quantity > 0 %} <span style="color:green">Dostupno</span> {% else %} <span style="color:red">Nedostupno</span>{% endif %}</small><br>
+                        <small>{{ text_suplierqty }} {% if product.suplierqty > 0 %} <span style="color:green">Dostupno</span> {% else %} <span style="color:red">Nedostupno</span>{% endif %}</small></p>
+
+                {% endif %}
+
+                    {% if (((product.quantity + product.suplierqty) < 1) and (stock_badge_status)) %}
+                        <div class="input-group addtocart" >
 
                       <span class="input-group-btn ">
                           <button type="button" class="btn btn-default btn-number btn-left" onclick="decreaseValue({{ product.product_id }},{{ product.minimum }} )" >
                             <span class="glyphicon glyphicon-minus"></span>
                             </button>
                          </span>
-            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
-            <span class="input-group-btn">
+                            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
+                            <span class="input-group-btn">
                           <button type="button" class="btn btn-default btn-number" onclick="increaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-plus"></span>
                           </button>
                         </span>
 
-            <span class="input-group-btn">
+                            <span class="input-group-btn">
                         <button type="button" class="btn btn-neutral" disabled
                                 onclick="cart.add('{{ product.product_id }}', $(this).parent().parent().find('.input-number').val());">
                             <span class="global-cart"></span> <span class="hidden-xs hidden-sm hidden-md"></span>
                         </button>
                        </span>
-        </div>
-    {% else %}
-        <div class="input-group addtocart" >
+                        </div>
+                    {% else %}
+                        <div class="input-group addtocart" >
 
                       <span class="input-group-btn ">
                           <button type="button" class="btn btn-default btn-number btn-left" onclick="decreaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-minus"></span>
                             </button>
                          </span>
-            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
-            <span class="input-group-btn">
+                            <input type="number" min="{{ product.minimum }}" step="{{ product.minimum }}" name="quantity" class="form-control input-number" id="category{{ product.product_id }}" value="{{ product.minimum }}">
+                            <span class="input-group-btn">
                           <button type="button" class="btn btn-default btn-number" onclick="increaseValue({{ product.product_id }},{{ product.minimum }} )">
                             <span class="glyphicon glyphicon-plus"></span>
                           </button>
                         </span>
 
-            <span class="input-group-btn">
+                            <span class="input-group-btn">
                         <button type="button" class="btn btn-neutral"
                                 onclick="cart.add('{{ product.product_id }}', $(this).parent().parent().find('.input-number').val());">
                             <span class="global-cart"></span> <span class="hidden-xs hidden-sm hidden-md"></span>
                         </button>
                        </span>
-        </div>
-    {% endif %}
+                        </div>
+                    {% endif %}
 
-{% endif %}
+                {% endif %}
 
-<!-- .price-wrapper -->
+                <!-- .price-wrapper -->
 
 
-</div>
+            </div>
 
-<div class="plain-links">
-<a class="icon is_wishlist link-hover-color" onclick="wishlist.add('{{ product.product_id }}');" title="{{ button_wishlist }}"><span class="icon-heart"></span> {{ button_wishlist }}</a>
-<a class="icon is_compare link-hover-color" onclick="compare.add('{{ product.product_id }}');" title="{{ button_compare }}"><span class="icon-refresh"></span> {{ button_compare }}</a>
-<a class="icon is_quickview link-hover-color" onclick="quickview('{{ product.product_id }}');"><span class="icon-magnifier-add"></span> {{ basel_button_quickview }}</a>
-</div><!-- .plain-links-->
-</div><!-- .caption-->
-{% if product.sale_end_date and countdown_status %}
-<script>
-  $(function() {
-	$(".sale-counter.id{{ product.product_id }}").countdown("{{ product.sale_end_date }}").on('update.countdown', function(event) {
-  var $this = $(this).html(event.strftime(''
-    + '<div>'
-    + '%D<i>{{ basel_text_days }}</i></div><div>'
-    + '%H <i>{{ basel_text_hours }}</i></div><div>'
-    + '%M <i>{{ basel_text_mins }}</i></div><div>'
-    + '%S <i>{{ basel_text_secs }}</i></div></div>'));
-});
-});
-</script>
-{% endif %}
+            <div class="plain-links">
+                <a class="icon is_wishlist link-hover-color" onclick="wishlist.add('{{ product.product_id }}');" title="{{ button_wishlist }}"><span class="icon-heart"></span> {{ button_wishlist }}</a>
+                <a class="icon is_compare link-hover-color" onclick="compare.add('{{ product.product_id }}');" title="{{ button_compare }}"><span class="icon-refresh"></span> {{ button_compare }}</a>
+                <a class="icon is_quickview link-hover-color" onclick="quickview('{{ product.product_id }}');"><span class="icon-magnifier-add"></span> {{ basel_button_quickview }}</a>
+            </div><!-- .plain-links-->
+        </div><!-- .caption-->
+        {% if product.sale_end_date and countdown_status %}
+            <script>
+                $(function() {
+                    $(".sale-counter.id{{ product.product_id }}").countdown("{{ product.sale_end_date }}").on('update.countdown', function(event) {
+                        var $this = $(this).html(event.strftime(''
+                            + '<div>'
+                            + '%D<i>{{ basel_text_days }}</i></div><div>'
+                            + '%H <i>{{ basel_text_hours }}</i></div><div>'
+                            + '%M <i>{{ basel_text_mins }}</i></div><div>'
+                            + '%S <i>{{ basel_text_secs }}</i></div></div>'));
+                    });
+                });
+            </script>
+        {% endif %}
 
         <script>
             function increaseValue(id, min) {
@@ -200,7 +240,7 @@
             }
         </script>
 
-   </div>
+    </div>
 </div><!-- .single-product ends -->
 
 

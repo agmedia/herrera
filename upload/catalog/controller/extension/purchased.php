@@ -10,6 +10,9 @@ class ControllerExtensionPurchased extends Controller {
 		$this->load->language('extension/purchased');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+
+			$this->document->addScript('https://cdn.datatables.net/2.2.2/js/dataTables.js');
+			$this->document->addStyle('https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css');
 		
 		$url = '';
 
@@ -53,14 +56,14 @@ class ControllerExtensionPurchased extends Controller {
 		}
 		$total = $counter;
 		
-		$results = $this->model_extension_purchased->getPurchased(($page - 1) * 10, 10);
+		$results = $this->model_extension_purchased->getPurchased(($page - 1) * 1000, 1000);
 
 		foreach ($results as $result) {
 			
 			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image_product = $this->model_tool_image->resize($result['image'], 120, 120);
+				$image_product = $this->model_tool_image->resize($result['image'], 250, 250);
 			} else {
-				$image_product = $this->model_tool_image->resize('no_image.jpg', 120, 120);
+				$image_product = $this->model_tool_image->resize('no_image.jpg', 250, 250);
 			}
 			
 			$option_data = array();
@@ -80,9 +83,16 @@ class ControllerExtensionPurchased extends Controller {
             $svenarudzbe = strip_tags($result['product_order_id']);
             $svenarudzbe = str_replace('#', '',  $svenarudzbe);
 
-            $svenarudzbe= substr($svenarudzbe,0,2);
+           $arr = explode(',', $svenarudzbe,2);
 
-            $svenarudzbe = $this->db->query("SELECT date_added FROM " . DB_PREFIX . "order WHERE order_id = '" . (int)$svenarudzbe . "'");
+
+
+           // $svenarudzbe= substr($svenarudzbe,0,2);
+
+              //echo $svenarudzbe;
+          //  echo'<br>';
+
+            $svenarudzbe = $this->db->query("SELECT date_added FROM " . DB_PREFIX . "order WHERE order_id = '" . (int)$arr[0] . "'");
 
 
 
@@ -111,12 +121,12 @@ class ControllerExtensionPurchased extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $total;
 		$pagination->page = $page;
-		$pagination->limit = 10;
+		$pagination->limit = 1000;
 		$pagination->url = $this->url->link('extension/purchased', 'page={page}', true);
 
 		$data['pagination'] = $pagination->render();
 
-		$data['results'] = sprintf($this->language->get('text_pagination'), ($total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($total - 10)) ? $total : ((($page - 1) * 10) + 10), $total, ceil($total / 10));
+		$data['results'] = sprintf($this->language->get('text_pagination'), ($total) ? (($page - 1) * 1000) + 1 : 0, ((($page - 1) * 1000) > ($total - 1000)) ? $total : ((($page - 1) * 1000) + 1000), $total, ceil($total / 1000));
 
 		$data['continue'] = $this->url->link('account/account', '', true);
 

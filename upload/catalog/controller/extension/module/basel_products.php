@@ -20,6 +20,9 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 		$data['text_tax'] = $this->language->get('text_tax');
 
         $data['is_logged'] = $this->customer->isLogged();
+
+        $this->user = new Cart\User($this->registry);
+        $data['is_admin_logged'] = $this->user->getId();
 		
 		// RTL support
 		$data['direction'] = $this->language->get('direction');
@@ -194,6 +197,7 @@ class ControllerExtensionModuleBaselProducts extends Controller {
 						'price'   	 => $price,
 						'model'  => $result['model'],
                         'ean'  => $result['ean'],
+                        'upc'  => $result['upc'],
 						'priceeur'       => $priceeur,
                         'najprodavanije'        => $result['jan'],
                         'specialeur'     => $specialeur,

@@ -24,6 +24,11 @@ $_['column_points']         = 'Bodovi';
 $_['column_ip']             = 'IP';
 $_['column_total']          = 'Ukupno računa';
 $_['column_action']         = 'Akcija';
+$_['column_delete']         = 'Obriši';
+
+$_['text_loading']         = 'Pričekajte...';
+$_['text_history_delete_success']         = 'Success: History was removed!';
+$_['text_transaction_delete_success']         = 'Uspješno: Popust je maknut!';
 
 // Entry
 $_['entry_customer_group']  = 'Grupa kupaca';

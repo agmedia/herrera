@@ -1,33 +1,270 @@
-[08-Apr-2023 12:48:11 Europe/Zagreb] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 47616768 bytes) in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/image.php on line 45
-[08-Apr-2023 17:22:11 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+[27-May-2025 13:57:45 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Column count doesn't match value count at row 2<br />Error No: 1136<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ("5906881212707", 0, 0),("5906881229729", 100,0, 0),("5906881171660", 0, 0),("5906881174272", 0, 0),("5906881173831", 0, 0),("5900672654271", 0, 0),("5900672654288", 0, 0),("5900672653526", 0, 0),("5906881173824", 0, 0),("5906881172629", 20, 0),("5903876658311", 20, 0),("5903876658328", 20, 0),("5903876658335", 10, 0),("5903876658304", 20, 0),("5906881171349", 0, 0),("5906881174906", 20, 0),("5906881171257", 0, 0),("5906881171240", 0, 0),("5906881176733", 0, 0),("5906881177013", 10, 0),("5906881177006", 10, 0),("5906881176993", 10, 0),("5906881176986", 10, 0),("5906881174470", 0, 0),("5906881175149", 0, 0),("5906881175163", 0, 0),("5906881175248", 200, 0),("5906881175019", 0, 0),("5906881178607", 50, 0),("5906881170922", 0, 0),("5906881179505", 0, 0),("5906881179079", 0, 0),("5906881179178", 0, 0),("5906881179239", 0, 0),("5906881179314", 0, 0),("5906881 in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[27-May-2025 14:08:20 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Column count doesn't match value count at row 2<br />Error No: 1136<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ("5906881212707", 0, 0),("5906881229729", 100,0, 0),("5906881171660", 0, 0),("5906881174272", 0, 0),("5906881173831", 0, 0),("5900672654271", 0, 0),("5900672654288", 0, 0),("5900672653526", 0, 0),("5906881173824", 0, 0),("5906881172629", 20, 0),("5903876658311", 20, 0),("5903876658328", 20, 0),("5903876658335", 10, 0),("5903876658304", 20, 0),("5906881171349", 0, 0),("5906881174906", 20, 0),("5906881171257", 0, 0),("5906881171240", 0, 0),("5906881176733", 0, 0),("5906881177013", 10, 0),("5906881177006", 10, 0),("5906881176993", 10, 0),("5906881176986", 10, 0),("5906881174470", 0, 0),("5906881175149", 0, 0),("5906881175163", 0, 0),("5906881175248", 200, 0),("5906881175019", 0, 0),("5906881178607", 50, 0),("5906881170922", 0, 0),("5906881179505", 0, 0),("5906881179079", 0, 0),("5906881179178", 0, 0),("5906881179239", 0, 0),("5906881179314", 0, 0),("5906881 in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[27-May-2025 14:10:38 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Column count doesn't match value count at row 2<br />Error No: 1136<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ("5906881212707", 0, 0),("5906881229729", 100,0, 0),("5906881171660", 0, 0),("5906881174272", 0, 0),("5906881173831", 0, 0),("5900672654271", 0, 0),("5900672654288", 0, 0),("5900672653526", 0, 0),("5906881173824", 0, 0),("5906881172629", 20, 0),("5903876658311", 20, 0),("5903876658328", 20, 0),("5903876658335", 10, 0),("5903876658304", 20, 0),("5906881171349", 0, 0),("5906881174906", 20, 0),("5906881171257", 0, 0),("5906881171240", 0, 0),("5906881176733", 0, 0),("5906881177013", 10, 0),("5906881177006", 10, 0),("5906881176993", 10, 0),("5906881176986", 10, 0),("5906881174470", 0, 0),("5906881175149", 0, 0),("5906881175163", 0, 0),("5906881175248", 200, 0),("5906881175019", 0, 0),("5906881178607", 50, 0),("5906881170922", 0, 0),("5906881179505", 0, 0),("5906881179079", 0, 0),("5906881179178", 0, 0),("5906881179239", 0, 0),("5906881179314", 0, 0),("5906881 in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[27-May-2025 17:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
 Stack trace:
-#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
-#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
-#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
-#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
-#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
-#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
-[08-Apr-2023 17:22:27 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[10-Jun-2025 08:00:59 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Lock wait timeout exceeded; try restarting transaction<br />Error No: 1205<br />UPDATE oc_product SET model = 'EC 9706045', sku = 'EC 9706045', upc = '', ean = '', jan = '0', isbn = '4.1700', mpn = '', location = '', quantity = '10', suplierqty = '10000', minimum = '1', subtract = '1', stock_status_id = '7', date_available = '2024-06-26', manufacturer_id = '69', shipping = '1', price = '4.17', points = '0', weight = '0', weight_class_id = '1', length = '0', width = '0', height = '0', length_class_id = '1', status = '1', tax_class_id = '11', sort_order = '3', date_modified = NOW() WHERE product_id = '7358' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
 Stack trace:
-#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
-#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
-#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
-#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
-#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
-#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
-[11-Apr-2023 07:58:52 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('UPDATE oc_produ...')
+#1 /home/herrera/public_html/storage/modification/admin/model/catalog/product.php(182): DB->query('UPDATE oc_produ...')
+#2 /home/herrera/public_html/storage/modification/sys in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[15-Jun-2025 17:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
 Stack trace:
-#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
-#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
-#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
-#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
-#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
-#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
-[11-Apr-2023 08:00:07 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Table 'dmb_libermedia.oc_hb_url' doesn't exist<br />Error No: 1146<br />SELECT * FROM `oc_hb_url` WHERE store_id = '0' AND language_id = '3' ORDER BY date_added DESC in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php:51
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jun-2025 01:24:05 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
 Stack trace:
-#0 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db.php(51): DB\MySQLi->query('SELECT * FROM `...')
-#1 /home/dmb/libermedia.dmb.hr/upload/admin/model/extension/hbseo/hb_seourl.php(92): DB->query('SELECT * FROM `...')
-#2 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/loader.php(248): ModelExtensionHbseoHbSeourl->getRoutes(0, '3')
-#3 /home/dmb/libermedia.dmb.hr/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
-#4 /home/dmb/libermedia.dmb.hr/upload/admin/controller/extension/hbseo/hb_seourl.php(187): Proxy->__call('getRoutes', Array)
-#5 /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/engine/action.php(79): ControllerExtensionHbseoHbSeourl->route in /home/dmb/libermedia.dmb.hr/storageunbtbl/modification/system/library/db/mysqli.php on line 51
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jun-2025 09:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jun-2025 17:24:05 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jun-2025 01:24:06 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jun-2025 09:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jun-2025 12:00:55 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '30060-3' for key 'oc_product_description.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_product_description SET product_id = '30060', language_id = '3', name = 'Svijeća za kućanstvo 100mm 2dkg/10kom LAGY2/10', description = 'Svijeća za kućanstvo 100mm 2dkg/10kom&lt;br /&gt;\r\nBoja: bijela&lt;br /&gt;\r\nMaterijal: metal&lt;br /&gt;\r\nVrijeme izgaranja: 2 sati/kom&lt;br /&gt;\r\nParafin: 20g/kom&lt;br /&gt;\r\n&amp;Scaron;irina: 1,6 cm&lt;br /&gt;\r\nVisina: 11 cm&lt;br /&gt;\r\nKomada na paleti: 3600&lt;br /&gt;\r\nTežina: 200g', tag = ',candle', meta_title = 'Svijeća za kućanstvo 100mm 2dkg/10kom LAGY2/10', meta_description = 'Svijeća za kućanstvo 100mm 2dkg/10komBoja: bijelaMaterijal: metalVrijeme izgaranja: 2 sati/komParafin: 20g/komŠirina: 1,6 cmVisina: 11 cmKomada na paleti: 3600Težina: 200g', meta_keyword = 'Svijeća,za,kućanstvo,100mm,2dkg/10kom,LAGY2/10' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack t in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jun-2025 17:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[18-Jun-2025 01:24:03 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[18-Jun-2025 09:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[18-Jun-2025 17:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[19-Jun-2025 01:24:06 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[19-Jun-2025 09:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[25-Jun-2025 17:24:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[03-Jul-2025 17:24:03 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1<br />Error No: 1064<br />INSERT INTO oc_product_temp (uid, quantity, price) VALUES ; in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/controller/extension/module/agm_api.php(352): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerExtensionModuleAgmApi->updateQuantity()
+#3 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object(Registry), Array)
+#4 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerStartupRouter->index()
+#5 /home/herrera/public_html/upload/system/engine/router.php(67): Action- in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[15-Jul-2025 14:33:51 Europe/Zagreb] PHP Fatal error:  Allowed memory size of 1047527424 bytes exhausted (tried to allocate 20480 bytes) in /home/herrera/public_html/upload/system/library/mpimporterexporter/composer/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Collection/Cells.php on line 157
+[15-Jul-2025 14:38:37 Europe/Zagreb] PHP Fatal error:  Allowed memory size of 1047527424 bytes exhausted (tried to allocate 20480 bytes) in /home/herrera/public_html/upload/system/library/mpimporterexporter/composer/vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Collection/Cells.php on line 157
+[15-Jul-2025 16:01:06 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Lock wait timeout exceeded; try restarting transaction<br />Error No: 1205<br />UPDATE oc_product SET model = 'IL-3 BEAUTY AND SPA GOLD', sku = 'IL-3 BEAUTY AND SPA GOLD', upc = '', ean = '5908260617837', jan = '0', isbn = '0.0000', mpn = '', location = '', quantity = '1', suplierqty = '0', minimum = '1', subtract = '1', stock_status_id = '7', date_available = '2025-07-14', manufacturer_id = '83', shipping = '1', price = '3.25', points = '0', weight = '0', weight_class_id = '1', length = '0', width = '0', height = '0', length_class_id = '1', status = '1', tax_class_id = '11', sort_order = '0', date_modified = NOW() WHERE product_id = '30535' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('UPDATE oc_produ...')
+#1 /home/herrera/public_html/storage/modification/admin/model/catalog/product.php(182): DB->query('UPDATE oc_produ...')
+#2 /home/herrera in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[15-Jul-2025 16:01:12 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '30535-10' for key 'oc_product_price_by_cigroup.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_product_price_by_cigroup SET product_id = '30535', group_id = '10', price = '2.6' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/storage/modification/admin/model/catalog/product.php(866): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/admin/model/catalog/product.php(270): ModelCatalogProduct->addProductPriceByGruops('30535', Array)
+#3 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelCatalogProduct->editProduct('30535', Array)
+#4 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#5 /home/herrera/public_html/storage/modification/admin/controller/catalog/product.php(360): Pr in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 15:40:30 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Unknown column 'test' in 'where clause'<br />Error No: 1054<br />SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR '&nbsp;&nbsp;&gt;&nbsp;&nbsp;') AS name, c1.parent_id, c1.sort_order FROM oc_category_path cp LEFT JOIN oc_category c1 ON (cp.category_id = c1.category_id) LEFT JOIN oc_category c2 ON (cp.path_id = c2.category_id) LEFT JOIN oc_category_description cd1 ON (cp.path_id = cd1.category_id) LEFT JOIN oc_category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '3' AND cd2.language_id = '3' AND cp.category_id NOT IN (test) AND c1.parent_id != 0 GROUP BY cp.category_id ORDER BY name ASC in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('SELECT cp.categ...')
+#1 /home/herrera/public_html/storage/modification/admin/model/catalog/category.php(333): DB->query('SELECT cp.categ...') in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 15:41:17 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Unknown column 'test' in 'where clause'<br />Error No: 1054<br />SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR '&nbsp;&nbsp;&gt;&nbsp;&nbsp;') AS name, c1.parent_id, c1.sort_order FROM oc_category_path cp LEFT JOIN oc_category c1 ON (cp.category_id = c1.category_id) LEFT JOIN oc_category c2 ON (cp.path_id = c2.category_id) LEFT JOIN oc_category_description cd1 ON (cp.path_id = cd1.category_id) LEFT JOIN oc_category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '3' AND cd2.language_id = '3' AND cp.category_id NOT IN (test) AND c1.parent_id != 0 GROUP BY cp.category_id ORDER BY name ASC in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('SELECT cp.categ...')
+#1 /home/herrera/public_html/storage/modification/admin/model/catalog/category.php(333): DB->query('SELECT cp.categ...') in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 15:54:23 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/herrera/public_html/storage/modification/admin/controller/customer/customer.php on line 1517
+[16-Jul-2025 15:54:28 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/herrera/public_html/storage/modification/admin/controller/customer/customer.php on line 1517
+[16-Jul-2025 15:54:34 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/herrera/public_html/storage/modification/admin/controller/customer/customer.php on line 1517
+[16-Jul-2025 15:56:08 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/herrera/public_html/storage/modification/admin/controller/customer/customer.php on line 1517
+[16-Jul-2025 15:56:18 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/herrera/public_html/storage/modification/admin/controller/customer/customer.php on line 1523
+[16-Jul-2025 15:56:21 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/herrera/public_html/storage/modification/admin/controller/customer/customer.php on line 1523
+[16-Jul-2025 16:33:58 Europe/Zagreb] PHP Fatal error:  Cannot redeclare ModelCustomerCustomer::getCustomers() in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 16:34:25 Europe/Zagreb] PHP Fatal error:  Cannot redeclare ModelCustomerCustomer::getCustomers() in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 16:34:36 Europe/Zagreb] PHP Fatal error:  Cannot redeclare ModelCustomerCustomer::getCustomers() in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 16:35:11 Europe/Zagreb] PHP Fatal error:  Cannot redeclare ModelCustomerCustomer::getCustomers() in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 16:36:10 Europe/Zagreb] PHP Fatal error:  Cannot redeclare ModelCustomerCustomer::getCustomers() in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 16:36:46 Europe/Zagreb] PHP Fatal error:  Cannot redeclare ModelCustomerCustomer::getCustomers() in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 16:37:06 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Invalid JSON text in argument 1 to function json_extract: "The document is empty." at position 0.<br />Error No: 3141<br />SELECT  customer_id, JSON_UNQUOTE(JSON_EXTRACT(custom_field, '$."1"')) AS name  FROM oc_customer  ORDER BY name  in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('SELECT  custome...')
+#1 /home/herrera/public_html/storage/modification/admin/model/customer/customer.php(578): DB->query('SELECT  custome...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelCustomerCustomer->getCustomersTvrtka()
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(423): Proxy->__call('getCustomersTvr...', Array)
+#5 /home/herrera/public_html/upload/admin/controller/user/user.php(76): ControllerUserUser in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 16:45:09 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Unknown column 'payment_address' in 'field list'<br />Error No: 1054<br />
+        SELECT 
+            customer_id, 
+            JSON_UNQUOTE(JSON_EXTRACT(custom_field, '$."1"')) AS name, payment_address
+        FROM oc_customer 
+        WHERE JSON_VALID(custom_field)
+          AND JSON_EXTRACT(custom_field, '$."1"') IS NOT NULL
+        ORDER BY name
+     in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('\n        SELECT...')
+#1 /home/herrera/public_html/storage/modification/admin/model/customer/customer.php(582): DB->query('\n        SELECT...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelCustomerCustomer->getCustomersTvrtka()
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(423): Proxy->__ in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 16:52:45 Europe/Zagreb] PHP Parse error:  syntax error, unexpected 'ublic' (T_STRING), expecting function (T_FUNCTION) or const (T_CONST) in /home/herrera/public_html/storage/modification/admin/model/customer/customer.php on line 577
+[16-Jul-2025 17:14:55 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '164-16' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '164', user_id = '16' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('16', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 17:38:06 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '164-16' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '164', user_id = '16' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('16', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[16-Jul-2025 17:38:11 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '164-16' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '164', user_id = '16' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('16', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jul-2025 08:21:04 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '164-16' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '164', user_id = '16' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('16', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jul-2025 08:29:56 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '684-19' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '684', user_id = '19' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('19', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jul-2025 08:37:30 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '684-19' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '684', user_id = '19' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('19', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jul-2025 08:37:42 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '684-19' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '684', user_id = '19' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('19', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jul-2025 08:40:25 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '164-16' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '164', user_id = '16' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('16', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51
+[17-Jul-2025 08:40:31 Europe/Zagreb] PHP Fatal error:  Uncaught Exception: Error: Duplicate entry '684-19' for key 'oc_customer_to_user.PRIMARY'<br />Error No: 1062<br />INSERT INTO oc_customer_to_user SET customer_id = '684', user_id = '19' in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php:51
+Stack trace:
+#0 /home/herrera/public_html/storage/modification/system/library/db.php(51): DB\MySQLi->query('INSERT INTO oc_...')
+#1 /home/herrera/public_html/upload/admin/model/user/user.php(21): DB->query('INSERT INTO oc_...')
+#2 /home/herrera/public_html/storage/modification/system/engine/loader.php(248): ModelUserUser->editUser('19', Array)
+#3 /home/herrera/public_html/upload/system/engine/proxy.php(47): Loader->{closure}(Array, Array)
+#4 /home/herrera/public_html/upload/admin/controller/user/user.php(55): Proxy->__call('editUser', Array)
+#5 /home/herrera/public_html/storage/modification/system/engine/action.php(79): ControllerUserUser->edit()
+#6 /home/herrera/public_html/upload/admin/controller/startup/router.php(26): Action->execute(Object( in /home/herrera/public_html/storage/modification/system/library/db/mysqli.php on line 51

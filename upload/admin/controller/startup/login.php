@@ -8,7 +8,11 @@ class ControllerStartupLogin extends Controller {
 			'common/forgotten',
 			'common/reset',
             'extension/module/agm_api/updateQuantityEracuni',
-            'extension/module/agm_api/updateQuantity'
+            'extension/module/agm_api/updateQuantity',
+            'extension/module/agm_api/updateQuantityMaster',
+            'extension/module/agm_api/updateQuantityDpm',
+            'extension/module/agm_api/updateQuantityVayox',
+             'extension/module/agm_api/updateQuantityEnovalite'
 		);
 
 		// User
@@ -27,7 +31,11 @@ class ControllerStartupLogin extends Controller {
 				'error/not_found',
 				'error/permission',
                 'extension/module/agm_api/updateQuantityEracuni',
-                'extension/module/agm_api/updateQuantity'
+                'extension/module/agm_api/updateQuantity',
+                'extension/module/agm_api/updateQuantityMaster',
+                'extension/module/agm_api/updateQuantityDpm',
+                'extension/module/agm_api/updateQuantityVayox',
+                'extension/module/agm_api/updateQuantityEnovalite'
 			);
 
 			if (!in_array($route, $ignore) && (!isset($this->request->get['user_token']) || !isset($this->session->data['user_token']) || ($this->request->get['user_token'] != $this->session->data['user_token']))) {

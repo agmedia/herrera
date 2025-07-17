@@ -17,6 +17,13 @@ class ControllerProductProduct extends Controller {
 		$data['is_logged'] = $this->customer->isLogged();
 
 
+        $this->user = new Cart\User($this->registry);
+        $data['is_admin_logged'] = $this->user->getId();
+
+
+
+
+
 			if ($this->config->get('config_customer_price') && !$this->customer->isLogged()) {
 				$data['attention'] = sprintf($this->language->get('text_login_price'), $this->url->link('account/login'), $this->url->link('account/register'));
 			} else {
@@ -267,6 +274,7 @@ class ControllerProductProduct extends Controller {
 			$data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
 			$data['model'] = $product_info['model'];
 			$data['ean'] = $product_info['ean'];
+			$data['upc'] = $product_info['upc'];
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');

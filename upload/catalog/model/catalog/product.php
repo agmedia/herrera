@@ -13,6 +13,18 @@ class ModelCatalogProduct extends Model {
             $saleprice = ($query->row['discount'] ? $query->row['discount'] : $query->row['price']);
 
             $value = (($orgprice - $saleprice)*100) / $orgprice ;
+//customer_price:discount
+            $query2 = $this->db->query("SELECT price FROM oc_product_price_by_customer_id uprice WHERE  uprice.customer_id = '". (int)$this->customer->getId() ."' AND $product_id = uprice.product_id ") ;
+
+            if ($query2->num_rows && !$query->row['special']) {
+                $query->row['price'] = $query2->row['price'];
+                $saleprice =  $query->row['price'];
+                $value = (($orgprice - $saleprice)*100) / $orgprice ;
+
+            } else{
+                $query->row['price'] = $query->row['price'];
+                $value = (($orgprice - $saleprice)*100) / $orgprice ;
+            }
 
 			return array(
 				'product_id'       => $query->row['product_id'],
@@ -57,7 +69,7 @@ class ModelCatalogProduct extends Model {
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
 				'viewed'           => $query->row['viewed'],
-                'cutomergrouppopust' => $value,
+                'cutomergrouppopust' => round($value),
 			);
 		} else {
 			return false;
@@ -533,9 +545,18 @@ public function getProductRelated($product_id) {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 		}
 
-		$query = $this->db->query($sql);
+	//	$query = $this->db->query($sql);
 
-		return $query->row['total'];
+	//	return $query->row['total'];
+	 // add these 8 lines before the closing brace of the method.
+   $cacheid='product.gettotalproducts.'.md5($sql).(int)$customer_group_id;
+   $total=$this->cache->get($cacheid);
+   if ($total === null ) {
+       $query = $this->db->query($sql);
+       $total = $query->row['total'];
+       $this->cache->set($cacheid,$total);
+   }
+   return $total;
 	}
 
 	public function getProfile($product_id, $recurring_id) {

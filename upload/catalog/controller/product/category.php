@@ -11,6 +11,9 @@ class ControllerProductCategory extends Controller {
 
         $data['is_logged'] = $this->customer->isLogged();
 
+        $this->user = new Cart\User($this->registry);
+        $data['is_admin_logged'] = $this->user->getId();
+
 
 		if (isset($this->request->get['filter'])) {
 			$filter = $this->request->get['filter'];
@@ -230,6 +233,7 @@ class ControllerProductCategory extends Controller {
 					'product_id'  => $result['product_id'],
 					'model'  => $result['model'],
                     'ean'  => $result['ean'],
+                    'upc'  => $result['upc'],
                     'suplierqty'  => $result['suplierqty'],
                     'quantity'  => $result['quantity'],
                     'purchase_date' => $this->model_catalog_product->getPurchaseDate($result['product_id'], $customer_id),

@@ -632,6 +632,19 @@ class ControllerCustomerCustomer extends Controller {
 
         $data['user_token'] = $this->session->data['user_token'];
 
+           $this->load->model('catalog/category');
+        $cat_order['sort'] = 'name';
+
+        $catt = $this->model_customer_customer->getTransactionsByCustomer($this->request->get['customer_id']);
+
+        $cat = array_values($catt);
+
+        $cat_order['notin'] = implode(',', $cat);
+
+
+        $cat_order['order_by'] = 'DESC';
+        $data['category_list'] =  $this->model_catalog_category->getCategoriesback($cat_order);
+
         if (isset($this->request->get['customer_id'])) {
             $data['customer_id'] = (int)$this->request->get['customer_id'];
         } else {
@@ -1385,6 +1398,30 @@ class ControllerCustomerCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function deletetransaction() {
+        $this->load->language('customer/customer');
+
+        $this->load->model('customer/customer');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'GET') && $this->user->hasPermission('modify', 'customer/customer')) {
+            $this->model_customer_customer->deletetransactionbyID($this->request->get['transaction_id'], $this->request->get['category_id'],$this->request->get['customer_id']);
+
+            $data['success'] =  $this->language->get('text_transaction_delete_success');
+
+        } else {
+            $data['success'] = '';
+        }
+
+        if (($this->request->server['REQUEST_METHOD'] == 'GET') && !$this->user->hasPermission('modify', 'customer/customer')) {
+            $data['error'] = $this->language->get('error_permission');
+        } else {
+            $data['error'] = '';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
     public function transaction() {
         $this->load->language('customer/customer');
 
@@ -1395,6 +1432,9 @@ class ControllerCustomerCustomer extends Controller {
         } else {
             $page = 1;
         }
+        $this->load->model('catalog/category');
+
+
 
         $limit = $this->config->get('config_limit_admin');
 
@@ -1403,9 +1443,14 @@ class ControllerCustomerCustomer extends Controller {
         $results = $this->model_customer_customer->getTransactions($this->request->get['customer_id'], ($page - 1) * $limit, $limit);
 
         foreach ($results as $result) {
+
+            $category_name =     $this->model_catalog_category->getCategoryName($result['description']);
+
             $data['transactions'][] = array(
-                'amount'      => $this->currency->format($result['amount'], $this->config->get('config_currency')),
-                'description' => $result['description'],
+                'id'      => $result['customer_transaction_id'],
+                'amount'      => $result['amount'].'%',
+                'description' => $category_name,
+                'category_id' => $result['description'],
                 'date_added'  => date($this->language->get('date_format_short'), strtotime($result['date_added']))
             );
         }
@@ -1417,7 +1462,7 @@ class ControllerCustomerCustomer extends Controller {
         $pagination = new Pagination();
         $pagination->total = $transaction_total;
         $pagination->page = $page;
-        $pagination->limit = $limit;
+        $pagination->limit = 100;
         $pagination->url = $this->url->link('customer/customer/transaction', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', true);
 
         $data['pagination'] = $pagination->render();
@@ -1437,9 +1482,50 @@ class ControllerCustomerCustomer extends Controller {
         } else {
             $this->load->model('customer/customer');
 
-            $this->model_customer_customer->addTransaction($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+            if ($this->request->post['amount'] && $this->request->post['description']) {
+                $cats = $this->request->post['description'];
 
-            $json['success'] = $this->language->get('text_success');
+                if (strpos($cats, ',') !== false) {
+                    $cats = explode(',', $cats);
+                }
+
+                if (is_array($cats)) {
+                    foreach ($cats as $cat) {
+                        $this->model_customer_customer->addTransaction($this->request->get['customer_id'], $cat, $this->request->post['amount']);
+
+                        $getprod = $this->getProductCategories($cat);
+
+                        foreach ($getprod as $product_id) {
+
+                            $price = $this->getProductPrice($product_id, $this->request->post['amount']);
+
+                            $this->AddCustomerPrice($price, $product_id, $this->request->get['customer_id'], $cat);
+                        }
+                    }
+                } else {
+                    $this->model_customer_customer->addTransaction($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+
+                    $getprod = $this->getProductCategories($this->request->post['description']);
+
+                    foreach ($getprod as $product_id) {
+
+                        $price = $this->getProductPrice($product_id, $this->request->post['amount']);
+
+                        $this->AddCustomerPrice($price,$product_id,$this->request->get['customer_id'],$this->request->post['description']);
+                    }
+                }
+
+                $json['success'] = $this->language->get('text_success');
+
+            } else{
+                $json['error'] = 'MOrate upisati sve potrebne podatke: Kategorija i popust';
+            }
+
+
+
+
+
+
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -1674,5 +1760,30 @@ class ControllerCustomerCustomer extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+      public function AddCustomerPrice($price,$product_id,$customer_id,$category_id) {
+        $sql = "INSERT IGNORE INTO ". DB_PREFIX ."product_price_by_customer_id SET price = '". (float)$price ."', product_id = '". (int)$product_id ."', customer_id = '". (int)$customer_id ."', category_id = '". (int)$category_id ."'";
+
+        $this->db->query($sql);
+    }
+
+    public function getProductCategories($category_id) {
+        $product_category_data = array();
+
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE category_id = '" . (int)$category_id . "'");
+
+        foreach ($query->rows as $result) {
+            $product_category_data[] = $result['product_id'];
+        }
+
+        return $product_category_data;
+    }
+
+
+    public function getProductPrice($product_id, $discount) {
+        $query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product WHERE product_id  = '" . (int)$product_id . "'");
+
+
+        return isset($query->row['price'] ) ?    $query->row['price'] * ((100-$discount) / 100) : 0;
     }
 }

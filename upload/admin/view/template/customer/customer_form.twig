@@ -26,6 +26,7 @@
         <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-customer" class="form-horizontal">
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+           <li><a href="#tab-transaction" data-toggle="tab">{{ tab_transaction }}</a></li>
 
             {% if customer_id %}
 
@@ -60,7 +61,7 @@
 
                               <input type="text" name="s" id="myInput"  placeholder="Pretraga po OIB-u"  class="form-control" />
                               <span class="input-group-btn">
-        <button class="btn btn-primary" id="go" type="button">Tra탑i</button>
+        <button class="btn btn-primary" id="go" type="button">Traži</button>
       </span>
 
                             </div><!-- /input-group -->
@@ -843,24 +844,39 @@
                   <button id="button-history" data-loading-text="{{ text_loading }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i> {{ button_history_add }}</button>
                 </div>
               </div>
-              <div class="tab-pane" id="tab-transaction">
+                 <div class="tab-pane" id="tab-transaction">
                 <fieldset>
-                  <legend>{{ text_transaction }}</legend>
+                  <legend>Popusti kupaca</legend>
                   <div id="transaction"></div>
                 </fieldset>
                 <br />
                 <fieldset>
                   <legend>{{ text_transaction_add }}</legend>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-transaction-description">{{ entry_description }}</label>
-                    <div class="col-sm-10">
-                      <input type="text" name="description" value="" placeholder="{{ entry_description }}" id="input-transaction-description" class="form-control" />
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-width">Kategorije</label>
+                        <div class="col-sm-10">
+
+
+
+                            <div id="show_categories" class="top-pad" >
+                                {% if (category_list is defined) and (category_list is not empty) %}
+
+                                    <div class="list-container">
+                                        {% for category in category_list %}
+                                            <input class="category" type="radio" name="megasale_product_category[]" value="{{ category.category_id }}" {% if (sale_data.selected_categories is not empty) and (category.category_id in sale_data.selected_categories) %} checked {% endif %} > {{ category.name }}<br/>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
                     </div>
-                  </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-amount">{{ entry_amount }}</label>
+                    <label class="col-sm-2 control-label" for="input-amount">Popust</label>
                     <div class="col-sm-10">
-                      <input type="text" name="amount" value="" placeholder="{{ entry_amount }}" id="input-amount" class="form-control" />
+                      <input type="text" name="amount" value="" placeholder="Popust" id="input-amount" class="form-control" />
                     </div>
                   </div>
                 </fieldset>
@@ -1254,7 +1270,7 @@
         url: 'index.php?route=customer/customer/addtransaction&user_token={{ user_token }}&customer_id={{ customer_id }}',
         type: 'post',
         dataType: 'json',
-        data: 'description=' + encodeURIComponent($('#tab-transaction input[name=\'description\']').val()) + '&amount=' + encodeURIComponent($('#tab-transaction input[name=\'amount\']').val()),
+        data: 'description=' + encodeURIComponent($('#tab-transaction input[name=\'megasale_product_category[]\']:checked').val()) + '&amount=' + encodeURIComponent($('#tab-transaction input[name=\'amount\']').val())+ '&category_name=' + encodeURIComponent($('#tab-transaction input[name=\'category_name\']').val()),
         beforeSend: function() {
           $('#button-transaction').button('loading');
         },
@@ -1275,6 +1291,9 @@
 
             $('#tab-transaction input[name=\'amount\']').val('');
             $('#tab-transaction input[name=\'description\']').val('');
+
+              location.reload();
+
           }
         },
         error: function(xhr, ajaxOptions, thrownError) {
@@ -1283,6 +1302,32 @@
       });
     });
     //--></script>
+
+
+    <script type="text/javascript"><!--
+        function deletetransaction(transaction_id, category_id) {
+            $.ajax({
+                url: 'index.php?route=customer/customer/deletetransaction&user_token={{ user_token }}&customer_id={{ customer_id }}&transaction_id='+transaction_id + '&category_id='+category_id,
+                type: 'POST',
+                dataType: 'html',
+                beforeSend: function() {
+                    $('.success, .warning').remove();
+                    $('#button-transaction').attr('disabled', true);
+                },
+                complete: function() {
+                    $('#button-transaction').attr('disabled', false);
+                    $('.attention').remove();
+                },
+                success: function(html) {
+
+
+                    location.reload();
+
+                }
+            });
+        };
+        //--></script>
+
   <script type="text/javascript"><!--
     $('#reward').delegate('.pagination a', 'click', function(e) {
       e.preventDefault();

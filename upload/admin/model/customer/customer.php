@@ -510,17 +510,52 @@ class ModelCustomerCustomer extends Model {
 		return $query->row;
 	}
 
+    public function deletetransactionbyID($transaction_id,$category_id, $customer_id) {
+        $this->db->query("DELETE FROM " . DB_PREFIX . "customer_transaction WHERE customer_transaction_id = '" . (int)$transaction_id . "'");
+
+        $this->db->query("DELETE FROM " . DB_PREFIX . "product_price_by_customer_id WHERE category_id = '" . (int)$category_id . "' AND customer_id = '" . (int)$customer_id . "'");
+    }
+
 	public function deleteLoginAttempts($email) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_login` WHERE `email` = '" . $this->db->escape($email) . "'");
 	}
 
+    public function get_selected_category_ids($sale_id) {
 
-    /*******************************************************************************
-    *                                Copyright : AGmedia                           *
-    *                              email: filip@agmedia.hr                         *
-    *******************************************************************************/
+        $sql = "SELECT * FROM " . DB_PREFIX . "category_to_customer_sale WHERE sale_id = '" . (int)$sale_id . "'";
+        $query = $this->db->query($sql);
+        $categories_array = $query->rows;
 
-    public function getCustomersByUser($user_id) {
+        $results = array();
+
+        if (!empty($categories_array)) {
+            foreach ($categories_array as $one_category) {
+                $results[] =  $one_category['category_id'];
+            }
+        }
+
+        return $results;
+        }
+
+    public function getTransactionsByCustomer($customer_id) {
+
+        $sql = "SELECT * FROM " . DB_PREFIX . "customer_transaction WHERE customer_id = '" . (int)$customer_id . "'";
+
+        $query = $this->db->query($sql);
+        $categories_array = $query->rows;
+
+        $results = array();
+
+        if (!empty($categories_array)) {
+            foreach ($categories_array as $one_category) {
+                $results[] =  $one_category['description'];
+            }
+    }
+
+        return $results;
+    }
+
+      public function getCustomersByUser($user_id) {
         $user_customer_data = array();
 
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_to_user WHERE user_id = '" . (int)$user_id . "'");
@@ -531,4 +566,21 @@ class ModelCustomerCustomer extends Model {
 
         return $user_customer_data;
     }
+
+  public function getCustomersTvrtka() {
+    $query = $this->db->query("
+        SELECT 
+            c.customer_id, 
+            JSON_UNQUOTE(JSON_EXTRACT(c.custom_field, '$.\"1\"')) AS name,
+            a.address_1
+        FROM " . DB_PREFIX . "customer c
+        LEFT JOIN " . DB_PREFIX . "address a ON a.customer_id = c.customer_id
+        WHERE JSON_VALID(c.custom_field)
+          AND JSON_EXTRACT(c.custom_field, '$.\"1\"') IS NOT NULL
+        ORDER BY name
+    ");
+
+    return $query->rows;
+}
+      
 }

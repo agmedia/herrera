@@ -419,6 +419,12 @@ class ControllerUserUser extends Controller {
                 );
             }
         }
+        
+         $data['user_customers'] = $this->model_customer_customer->getCustomersTvrtka();
+
+// Dohvati customer_id-eve koje je ovaj user već odabrao
+        $data['user_customer_ids'] = $this->model_user_user->getUserCustomers($this->request->get['user_id']);
+
 
 		$this->load->model('tool/image');
 

@@ -18,7 +18,7 @@ class ModelUserUser extends Model {
 
         if (isset($data['user_customer'])) {
             foreach ($data['user_customer'] as $customer_id) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_to_user SET customer_id = '" . (int)$customer_id . "', user_id = '" . (int)$user_id . "'");
+                $this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "customer_to_user SET customer_id = '" . (int)$customer_id . "', user_id = '" . (int)$user_id . "'");
             }
         }
 	}
@@ -130,6 +130,11 @@ class ModelUserUser extends Model {
 
 		return $query->row;
 	}
+	
+    public function getUserCustomers($user_id) {
+        $query = $this->db->query("SELECT customer_id FROM " . DB_PREFIX . "customer_to_user WHERE user_id = '" . (int)$user_id . "'");
+        return array_column($query->rows, 'customer_id');
+    }
 
 	public function deleteLoginAttempts($username) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_login` WHERE email = '" . $this->db->escape(utf8_strtolower($username)) . "'");

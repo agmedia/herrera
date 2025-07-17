@@ -13,6 +13,9 @@ class ControllerProductManufacturer extends Controller {
 
         $data['is_logged'] = $this->customer->isLogged();
 
+        $this->user = new Cart\User($this->registry);
+        $data['is_admin_logged'] = $this->user->getId();
+
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/home')
@@ -226,6 +229,7 @@ class ControllerProductManufacturer extends Controller {
 					'price'       => $price,
 					'special'     => $special,
                     'model'  => $result['model'],
+                    'upc'  => $result['upc'],
                     'ean'  => $result['ean'],
 					   'priceeur'       => $priceeur,
                     'specialeur'     => $specialeur,

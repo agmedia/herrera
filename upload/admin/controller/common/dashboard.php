@@ -2,6 +2,17 @@
 class ControllerCommonDashboard extends Controller {
 	public function index() {
 		$this->load->language('common/dashboard');
+		
+		
+		  $this->load->model('user/user');
+
+            $user_info = $this->model_user_user->getUser($this->user->getId());
+
+            if ($user_info) {
+                $data['user_group_id'] = $user_info['user_group_id'];
+            } else {
+                $data['user_group_id'] = 0;
+            }
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -29,6 +40,16 @@ class ControllerCommonDashboard extends Controller {
 
         $data['link_ponuda'] = $this->url->link('sale/order',
             'user_token=' . $this->session->data['user_token'], true);
+
+         $data['excelup'] = $this->url->link('extension/module/excelup',
+            'user_token=' . $this->session->data['user_token'], true);
+            
+            
+            	   $data['mobile'] = $this->url->link('extension/module/basel_layerslider',
+            '&module_id=69&user_token=' . $this->session->data['user_token'], true);
+
+  $data['desktop'] = $this->url->link('extension/module/basel_layerslider',
+            '&module_id=43&user_token=' . $this->session->data['user_token'], true);
 
 
 

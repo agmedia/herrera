@@ -28,7 +28,7 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-export" data-toggle="tab"><i class="fa fa-download"></i> <?php echo $tab_export; ?></a></li>
             <li><a href="#tab-import" data-toggle="tab"><i class="fa fa-upload"></i> <?php echo $tab_import; ?></a></li>
-
+            <li><a href="#tab-support" data-toggle="tab"><i class="fa fa-life-ring" aria-hidden="true"></i> <?php echo $tab_support; ?></a></li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab-export">
