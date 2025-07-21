@@ -1403,7 +1403,7 @@ class ControllerCustomerCustomer extends Controller {
 
         $this->load->model('customer/customer');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'GET') && $this->user->hasPermission('modify', 'customer/customer')) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'customer/customer')) {
             $this->model_customer_customer->deletetransactionbyID($this->request->get['transaction_id'], $this->request->get['category_id'],$this->request->get['customer_id']);
 
             $data['success'] =  $this->language->get('text_transaction_delete_success');
