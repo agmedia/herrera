@@ -1268,7 +1268,14 @@
                 url: 'index.php?route=customer/customer/addtransaction&user_token={{ user_token }}&customer_id={{ customer_id }}',
                 type: 'post',
                 dataType: 'json',
-                data: 'description=' + encodeURIComponent($('#tab-transaction input[name=\'megasale_product_category[]\']:checked').val()) + '&amount=' + encodeURIComponent($('#tab-transaction input[name=\'amount\']').val())+ '&category_name=' + encodeURIComponent($('#tab-transaction input[name=\'category_name\']').val()),
+                data: 'description=' + encodeURIComponent(
+                        $('#tab-transaction input[name="megasale_product_category[]"]:checked')
+                            .map(function () {
+                                return this.value;
+                            }).get().join(',')
+                    ) +
+                    '&amount=' + encodeURIComponent($('#tab-transaction input[name="amount"]').val()) +
+                    '&category_name=' + encodeURIComponent($('#tab-transaction input[name="category_name"]').val()),
                 beforeSend: function() {
                     $('#button-transaction').button('loading');
                 },
