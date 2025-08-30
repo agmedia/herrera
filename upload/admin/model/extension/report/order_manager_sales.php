@@ -63,6 +63,9 @@ class ModelExtensionReportOrderManagerSales extends Model {
         $orders = \Agmedia\Models\Order\Order::query()->whereIn('customer_id', $customers_ids);
         $reports = \Agmedia\Api\Models\OC_OrderManagerSales::query()->where('user_id', $data['filter_manager']);
 
+        /*\Agmedia\Helpers\Log::store($reports->get()->toArray(), 'order_manager');
+        \Agmedia\Helpers\Log::store($data['filter_manager'], 'order_manager');*/
+
         if (!empty($data['filter_order_status_id'])) {
             $orders->where('order_status_id', $data['filter_order_status_id']);
         } else {
@@ -83,7 +86,9 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
         foreach ($orders->get() as $order) {
             $customer = $customers->where('customer_id', $order->customer_id)->first();
-            $report = $reports->where('order_id', $order->order_id)->first();
+            $report = \Agmedia\Api\Models\OC_OrderManagerSales::query()->where('user_id', $data['filter_manager'])->where('order_id', $order->order_id)->first();
+
+            \Agmedia\Helpers\Log::store($report, 'order_manager');
 
             /*\Agmedia\Helpers\Log::store($order->order_id, 'orders');
             \Agmedia\Helpers\Log::store($reports->where('order_id', $order->order_id)->first(), 'orders');*/

@@ -1,24 +1,34 @@
 <?php
+
+use Agmedia\Api\Models\OC_OrderManagerSales;
+
 class ControllerAccountLogout extends Controller {
 	public function index() {
 		if ($this->customer->isLogged()) {
-
             // fj.agmedia.hr
             if (isset($this->session->data['order_from_manager']) && isset($this->session->data['order_from_manager']['oms_id'])) {
-                \Agmedia\Api\Models\OC_OrderManagerSales::query()->insert([
+                $id = $this->session->data['order_from_manager']['oms_id'];
+                $has_order = OC_OrderManagerSales::query()->where('id', $id)->first();
+                $update_data = [
                     'start' => date('Y-m-d H:i:s'),
-                    'user_id' => $this->user->getId(),
-                    'customer_id' => $customer_id,
-                ]);
+                    'user_id' => $this->session->data['user_id'],
+                    'customer_id' => $this->session->data['customer_id'],
+                ];
+
+                if ($has_order) {
+                    OC_OrderManagerSales::query()->where('id', $id)->update($update_data);
+                } else {
+                    $id = OC_OrderManagerSales::query()->insert($update_data);
+                }
 
                 $order_id = 0;
                 $total = 0;
                 if (isset($this->session->data['order_id']) && $this->session->data['order_id']) {
                     $order_id = $this->session->data['order_id'];
-                    $total = \Agmedia\Models\Order\Order::query()->where('id', $order_id)->first()->total;
+                    $total = \Agmedia\Models\Order\Order::query()->where('order_id', $order_id)->first()->total;
                 }
 
-                \Agmedia\Api\Models\OC_OrderManagerSales::query()->where('id', $this->session->data['order_from_manager']['oms_id'])->update([
+                OC_OrderManagerSales::query()->where('id', $id)->update([
                     'end' => date('Y-m-d H:i:s'),
                     'napomena' => $total ? 'Odobrenje narudžbe za ' . $total : '',
                     'order_id' => $order_id,

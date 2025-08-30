@@ -140,25 +140,116 @@
         });
       </script>
 {% if view_popup %}
-<!-- Popup -->
-<script>
-$(document).ready(function() {
-if ($(window).width() > {{ popup_width_limit }}) {
-setTimeout(function() {
-$.featherlight({ajax: 'index.php?route=extension/basel/basel_features/basel_popup', variant:'popup-wrapper'});
-}, {{ popup_delay }});
-}
-});
-</script>
+    <!-- Popup -->
+    <script>
+        $(document).ready(function() {
+            if ($(window).width() > {{ popup_width_limit }}) {
+                setTimeout(function() {
+                    $.featherlight({ajax: 'index.php?route=extension/basel/basel_features/basel_popup', variant:'popup-wrapper'});
+                }, {{ popup_delay }});
+            }
+        });
+    </script>
 {% endif %}
 {% if sticky_columns %}
-<!-- Sticky columns -->
-<script>
-if ($(window).width() > 767) {
-$('#column-left, #column-right').theiaStickySidebar({containerSelector:$(this).closest('.row'),additionalMarginTop:{{ sticky_columns_offset }}});
-}
-</script>
+    <!-- Sticky columns -->
+    <script>
+        if ($(window).width() > 767) {
+            $('#column-left, #column-right').theiaStickySidebar({containerSelector:$(this).closest('.row'),additionalMarginTop:{{ sticky_columns_offset }}});
+        }
+    </script>
 {% endif %}
+
+{% if session.order_from_manager %}
+    <script>
+        /**
+         * Some clicks don’t trigger a page load
+         * (AJAX add-to-cart buttons, tab switches, quickviews).
+         * Add a small beacon that auto-captures all in-site <a> clicks,
+         * plus any element you annotate with data-track="".
+         */
+        (function(){
+            var beaconUrl = '{{ url.link("extension/module/impersonation/beacon", "", true) }}';
+
+            function classifyFromHref(href){
+                try {
+                    var u = new URL(href, location.origin);
+                    if (u.origin !== location.origin) return null;
+                    var r = u.searchParams.get('route') || '';
+                    if (!r) {
+                        // default routes like product/product without route param are rare, so bail
+                        return { entity_type:'page', entity_id:null };
+                    }
+                    if (r === 'product/product' && u.searchParams.get('product_id')) {
+                        return { entity_type:'product', entity_id: parseInt(u.searchParams.get('product_id')) || null };
+                    }
+                    if (r === 'product/category' && u.searchParams.get('path')) {
+                        var parts = u.searchParams.get('path').split('_').filter(Boolean);
+                        return { entity_type:'category', entity_id: parts.length ? parseInt(parts[parts.length-1]) : null,
+                            category_path: u.searchParams.get('path') };
+                    }
+                    if ((r === 'product/manufacturer' || r === 'product/manufacturer/info') && u.searchParams.get('manufacturer_id')) {
+                        return { entity_type:'manufacturer', entity_id: parseInt(u.searchParams.get('manufacturer_id')) || null };
+                    }
+                    if (r === 'information/information' && u.searchParams.get('information_id')) {
+                        return { entity_type:'information', entity_id: parseInt(u.searchParams.get('information_id')) || null };
+                    }
+                    if (r === 'product/search') {
+                        return { entity_type:'search', entity_id:null, search: u.searchParams.get('search') || u.searchParams.get('filter_name') || '' };
+                    }
+                    if (r === 'checkout/cart')  return { entity_type:'cart', entity_id:null };
+                    if (r.startsWith('checkout/')) return { entity_type:'checkout', entity_id:null };
+                    return { entity_type:'page', entity_id:null };
+                } catch(e){ return null; }
+            }
+
+            document.addEventListener('click', function(e){
+                var a = e.target.closest('a[href]');
+                if (!a) return;
+
+                // Prefer explicit annotations
+                var et = a.dataset.entityType || null;
+                var eid = a.dataset.entityId ? parseInt(a.dataset.entityId) : null;
+
+                // If not annotated, try to infer from href
+                var infer = (!et) ? classifyFromHref(a.getAttribute('href')) : null;
+                if (!et && infer) {
+                    et  = infer.entity_type;
+                    eid = infer.entity_id || null;
+                }
+
+                // Only send for same-site links
+                try {
+                    var url = new URL(a.href, location.origin);
+                    if (url.origin !== location.origin) return;
+                } catch(_) { return; }
+
+                var payload = {
+                    action: 'link_click',
+                    href: a.href,
+                    text: (a.textContent || '').trim().slice(0,100),
+                    entity_type: et || 'page',
+                    entity_id: eid,
+                    meta: {}
+                };
+                if (infer && infer.category_path) payload.meta.category_path = infer.category_path;
+                if (infer && infer.search !== undefined) payload.meta.search = infer.search;
+
+                var blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+                navigator.sendBeacon(beaconUrl, blob);
+            });
+
+            // Generic UI actions via data-track
+            document.addEventListener('click', function(e){
+                var el = e.target.closest('[data-track]');
+                if (!el) return;
+                var payload = { action: el.dataset.track, meta: el.dataset.meta ? JSON.parse(el.dataset.meta) : null };
+                navigator.sendBeacon(beaconUrl, new Blob([JSON.stringify(payload)], {type:'application/json'}));
+            });
+        })();
+    </script>
+{% endif %}
+
 {% if view_cookie_bar %}
 <!-- Cookie bar -->
 <div class="basel_cookie_bar">

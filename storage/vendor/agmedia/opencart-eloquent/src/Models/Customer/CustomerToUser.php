@@ -14,4 +14,9 @@ class CustomerToUser extends Model
      */
     protected $table = 'customer_to_user';
 
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+
 }
