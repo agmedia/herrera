@@ -212,4 +212,16 @@ class ControllerExtensionReportOrderManagerSales extends Controller {
 
         $this->response->setOutput(json_encode(['labels' => $labels, 'series' => $series]));
     }
+
+
+    public function session_info() {
+        $this->response->addHeader('Content-Type: application/json');
+        $session_id = (int)($this->request->get['session_id'] ?? 0);
+        if (!$session_id) { $this->response->setOutput(json_encode([])); return; }
+
+        $this->load->model('extension/report/order_manager_sales');
+        $info = $this->model_extension_report_order_manager_sales->getSessionInfo($session_id);
+        $this->response->setOutput(json_encode($info ?: []));
+    }
+
 }

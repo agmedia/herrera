@@ -337,4 +337,173 @@ class ModelExtensionReportOrderManagerSales extends Model {
 
         return $rows; // controller will transform to labels + series
     }
+
+
+    public function getSessionInfo(int $session_id): array {
+        $session_id = (int)$session_id;
+
+        $row = $this->db->query("
+        SELECT
+            s.id,
+            s.session_id,
+            s.admin_id,
+            s.customer_id,
+            s.store_id,
+            s.store_host,
+            s.admin_from_url,
+            s.user_agent,
+            s.started_at,
+            s.last_activity_at,
+            s.ended_at,
+            s.duration_seconds,
+            HEX(s.ip) AS ip_hex,
+            COALESCE(s.ended_at, s.last_activity_at) AS end_time,
+            (
+                SELECT COUNT(*) FROM `" . DB_PREFIX . "impersonation_event` e
+                WHERE e.impersonation_session_id = s.id
+            ) AS event_count,
+            (
+                SELECT oms.order_id
+                FROM `" . DB_PREFIX . "order_manager_sales` oms
+                WHERE oms.user_id = s.admin_id
+                  AND oms.customer_id = s.customer_id
+                  AND oms.date_added BETWEEN s.started_at AND COALESCE(s.ended_at, s.last_activity_at)
+                ORDER BY oms.date_added ASC
+                LIMIT 1
+            ) AS order_id
+        FROM `" . DB_PREFIX . "impersonation_session` s
+        WHERE s.id = {$session_id}
+        LIMIT 1
+    ")->row;
+
+        if (!$row) return [];
+
+        // IP decode (HEX -> binary -> text)
+        $ip = null;
+        if (!empty($row['ip_hex']) && ctype_xdigit($row['ip_hex'])) {
+            $bin = @pack('H*', $row['ip_hex']);
+            $ip  = $bin ? @inet_ntop($bin) : null;
+        }
+
+        $geo = $this->geoipLookup($ip);
+
+        // Duration (minutes) – prefer stored seconds if available
+        $end = $row['end_time'];
+        if (!empty($row['duration_seconds'])) {
+            $dur_minutes = (int)round(((int)$row['duration_seconds']) / 60);
+        } else {
+            $start_ts = strtotime($row['started_at']);
+            $end_ts   = strtotime($end ?: $row['last_activity_at']);
+            $dur_minutes = max(0, (int)round(($end_ts - $start_ts) / 60));
+        }
+
+        return [
+            'id'               => (int)$row['id'],
+            'admin_id'         => (int)$row['admin_id'],
+            'customer_id'      => (int)$row['customer_id'],
+            'store_id'         => (int)$row['store_id'],
+            'store_host'       => $row['store_host'],
+            'admin_from_url'   => $row['admin_from_url'],
+            'user_agent'       => $row['user_agent'],
+            'started_at'       => $row['started_at'],
+            'ended_at'         => $row['ended_at'],
+            'last_activity_at' => $row['last_activity_at'],
+            'end_time'         => $end,
+            'duration_minutes' => $dur_minutes,
+            'event_count'      => (int)$row['event_count'],
+            'order_id'         => !empty($row['order_id']) ? (int)$row['order_id'] : null,
+            'ip'   => $ip,
+            'geo'  => $geo
+        ];
+    }
+
+
+    // --- Helpers ---------------------------------------------------------------
+    private function isPublicIp(string $ip): bool {
+        // true = public; false = private/reserved/invalid
+        return (bool)filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+    }
+
+    private function geoipLookup(string $ip_text): array {
+        if (!$ip_text || !$this->isPublicIp($ip_text)) {
+            return ['city'=>null,'region'=>null,'country'=>null,'country_code'=>null,'lat'=>null,'lon'=>null,'timezone'=>null,'org'=>null,'asn'=>null,'source'=>null];
+        }
+
+        $bin = @inet_pton($ip_text);
+        $hex = $bin ? bin2hex($bin) : null;
+
+        // 1) cache hit?
+        if ($hex) {
+            $row = $this->db->query("
+            SELECT city, `region`, country_name AS country, country_code, latitude AS lat, longitude AS lon, timezone, org, asn, source
+            FROM `" . DB_PREFIX . "impersonation_session_geoip_cache`
+            WHERE ip = 0x{$hex}
+        ")->row;
+            if ($row) return $row;
+        }
+
+        // 2) live lookup (HTTPS, free, no key)
+        // ipapi.co: ~1000/day free without signup; city/region/country/lat/lon over HTTPS
+        // docs & limits: https://ipapi.co/free/
+        $url = "https://ipapi.co/" . rawurlencode($ip_text) . "/json/";
+        $ch  = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 2,
+            CURLOPT_TIMEOUT        => 3,
+            CURLOPT_USERAGENT      => 'AG-OC3-GeoIP/1.0'
+        ]);
+        $resp = curl_exec($ch);
+        $http = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $city = $region = $country = $cc = $tz = $org = $asn = null; $lat = $lon = null;
+        if ($http === 200 && $resp) {
+            $j = json_decode($resp, true) ?: [];
+            // ipapi.co fields
+            $city    = $j['city']      ?? null;
+            $region  = $j['region']    ?? null;
+            $country = $j['country_name'] ?? null;
+            $cc      = $j['country']   ?? null;
+            $lat     = isset($j['latitude'])  ? (float)$j['latitude']  : null;
+            $lon     = isset($j['longitude']) ? (float)$j['longitude'] : null;
+            $tz      = $j['timezone'] ?? null;
+            $org     = $j['org']      ?? ($j['org_name'] ?? null);
+            $asn     = $j['asn']      ?? null;
+        }
+
+        // optional fallback (commented). Alternatives:
+        //  - IPinfo (free, token, country-level unlimited): https://ipinfo.io/faq  (more data on paid)  :contentReference[oaicite:0]{index=0}
+        //  - IP2Location: 50k/mo with key; 1k/day keyless: https://www.ip2location.io/pricing  :contentReference[oaicite:1]{index=1}
+        //  - ip-api.com free 45 rpm, HTTP only, non-commercial: https://members.ip-api.com/signup/  :contentReference[oaicite:2]{index=2}
+        //  - ipapi.co free 1k/day over HTTPS, no signup: https://ipapi.co/free/  :contentReference[oaicite:3]{index=3}
+
+        $out = [
+            'city' => $city, 'region' => $region, 'country' => $country, 'country_code' => $cc,
+            'lat'  => $lat,  'lon'    => $lon,    'timezone'=> $tz,      'org'          => $org, 'asn'=> $asn,
+            'source'=> 'ipapi.co'
+        ];
+
+        // 3) upsert cache
+        if ($hex) {
+            $this->db->query("REPLACE INTO `" . DB_PREFIX . "impersonation_session_geoip_cache`
+            (ip, ip_text, country_code, country_name, `region`, city, latitude, longitude, timezone, org, asn, source, created_at, updated_at)
+            VALUES (
+              0x{$hex}, '" . $this->db->escape($ip_text) . "',
+              " . ($cc ? "'" . $this->db->escape($cc) . "'" : "NULL") . ",
+              " . ($country ? "'" . $this->db->escape($country) . "'" : "NULL") . ",
+              " . ($region ? "'" . $this->db->escape($region) . "'" : "NULL") . ",
+              " . ($city ? "'" . $this->db->escape($city) . "'" : "NULL") . ",
+              " . ($lat !== null ? "'" . $this->db->escape((string)$lat) . "'" : "NULL") . ",
+              " . ($lon !== null ? "'" . $this->db->escape((string)$lon) . "'" : "NULL") . ",
+              " . ($tz ? "'" . $this->db->escape($tz) . "'" : "NULL") . ",
+              " . ($org ? "'" . $this->db->escape($org) . "'" : "NULL") . ",
+              " . ($asn ? "'" . $this->db->escape($asn) . "'" : "NULL") . ",
+              'ipapi.co', NOW(), NOW()
+            )");
+        }
+
+        return $out;
+    }
+
 }
