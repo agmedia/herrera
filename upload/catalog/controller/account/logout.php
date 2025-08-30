@@ -35,6 +35,20 @@ class ControllerAccountLogout extends Controller {
                     'date_modified' => date('Y-m-d H:i:s'),
                 ]);
 
+                $mark = $this->session->data['order_from_manager'];
+                $sid  = session_id();
+
+                // Close only the row for this (session_id, admin, customer, store)
+                $this->db->query("UPDATE `" . DB_PREFIX . "impersonation_session`
+                                    SET ended_at = NOW(),
+                                        duration_seconds = TIMESTAMPDIFF(SECOND, started_at, NOW()),
+                                        updated_at = NOW()
+                                    WHERE session_id = '" . $this->db->escape($sid) . "'
+                                      AND admin_id    = " . (int)$mark['admin_id'] . "
+                                      AND customer_id = " . (int)$mark['customer_id'] . "
+                                      AND store_id    = " . (int)($mark['store_id'] ?? 0) . "
+                                      AND ended_at IS NULL");
+
                 unset($this->session->data['order_from_manager']);
             }
 
