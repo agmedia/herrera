@@ -52,3 +52,6 @@ ALTER TABLE herrera.oc_impersonation_event
 
 ALTER TABLE herrera.oc_impersonation_session
     ADD INDEX `idx_sess_actor` (`session_id`, `admin_id`, `customer_id`, `store_id`, `ended_at`);
+
+ALTER TABLE herrera.oc_order_manager_sales
+    ADD INDEX `idx_oms_range` (`user_id`,`customer_id`,`date_added`);

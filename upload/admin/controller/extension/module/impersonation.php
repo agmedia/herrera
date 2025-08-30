@@ -98,7 +98,7 @@ class ControllerExtensionModuleImpersonation extends Controller
         // secret configured at module settings (create a setting: module_impersonation_secret)
         $secret = $this->config->get('module_impersonation_secret') ?: 'change-me';
 
-        $admin_id    = (int)$this->user->getId();
+        $admin_id    = (int)$this->session->data['user_id'];
         $customer_id = (int)$this->request->get['customer_id'];
         $store_id    = (int)($this->request->get['store_id'] ?? 0);
         $from_url    = $this->url->link('customer/customer/edit', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $customer_id, true);
