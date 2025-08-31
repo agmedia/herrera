@@ -128,125 +128,82 @@ class ModelExtensionReportOrderManagerSales extends Model {
         $manager_id = (int)($data['filter_manager'] ?? 0);
         if (!$manager_id) return [];
 
-        // Full-day bounds (strings -> safe DATETIME via STR_TO_DATE)
+        // filter window
         $ds = $data['filter_date_start'] ?? date('Y-m-01');
         $de = $data['filter_date_end']   ?? date('Y-m-d');
-        $ds = $this->db->escape($ds);
-        $de = $this->db->escape($de);
+        $start_dt_sql = "'" . $this->db->escape($ds . ' 00:00:00') . "'";
+        $end_dt_sql   = "'" . $this->db->escape($de . ' 23:59:59') . "'";
 
-        // Build DATETIME expressions once
-        $START_DT = "STR_TO_DATE('{$ds} 00:00:00','%Y-%m-%d %H:%i:%s')";
-        $END_DT   = "STR_TO_DATE('{$de} 23:59:59','%Y-%m-%d %H:%i:%s')";
+        $t_s   = DB_PREFIX . 'impersonation_session';
+        $t_e   = DB_PREFIX . 'impersonation_event';
+        $t_oms = DB_PREFIX . 'order_manager_sales';
+        $t_ord = DB_PREFIX . 'order';
 
-        // MAIN: sessions from oc_impersonation_session (IDs match events)
+        // end expression (handles open sessions)
+        $endExpr = 'COALESCE(s.ended_at, s.last_activity_at)';
+
         $sql = "
-        SELECT
-            s.id,
-            s.started_at AS start_time,
-            COALESCE(s.ended_at, s.last_activity_at) AS end_time,
-            GREATEST(0, TIMESTAMPDIFF(MINUTE, s.started_at, COALESCE(s.ended_at, s.last_activity_at))) AS duration_minutes,
-            (
-                SELECT oms.order_id
-                FROM `" . DB_PREFIX . "order_manager_sales` oms
-                WHERE oms.user_id = s.admin_id
-                  AND oms.customer_id = s.customer_id
-                  AND oms.date_added BETWEEN s.started_at AND COALESCE(s.ended_at, s.last_activity_at)
-                ORDER BY oms.date_added ASC
-                LIMIT 1
-            ) AS order_id
-        FROM `" . DB_PREFIX . "impersonation_session` s
-        WHERE s.admin_id = {$manager_id}
-          AND (
-                (s.started_at BETWEEN {$START_DT} AND {$END_DT})
-             OR (COALESCE(s.ended_at, s.last_activity_at) BETWEEN {$START_DT} AND {$END_DT})
-             OR (s.started_at <= {$START_DT} AND COALESCE(s.ended_at, s.last_activity_at) >= {$END_DT})
+      SELECT
+        s.id,
+        s.started_at AS start_time,
+        {$endExpr}    AS end_time,
+        GREATEST(0, TIMESTAMPDIFF(MINUTE, s.started_at, {$endExpr})) AS duration_minutes,
+
+        /* 1) Primary: order made during this session (using oc_order.date_added) */
+        (
+          SELECT o.order_id
+          FROM `{$t_ord}` o
+          JOIN `{$t_oms}` oms ON oms.order_id = o.order_id
+          WHERE oms.user_id = {$manager_id}
+            AND oms.customer_id = s.customer_id
+            AND o.date_added BETWEEN s.started_at AND {$endExpr}
+          ORDER BY o.date_added ASC
+          LIMIT 1
+        ) AS order_id
+
+      FROM `{$t_s}` s
+      WHERE
+        (
+          s.admin_id = {$manager_id}
+          /* Optional legacy: include sessions without admin_id if tied to this manager via OMS in the same window */
+          OR (
+            s.admin_id = 0 AND EXISTS (
+              SELECT 1
+              FROM `{$t_oms}` oms2
+              WHERE oms2.user_id = {$manager_id}
+                AND oms2.customer_id = s.customer_id
+                /* Accept either oc_order.date_added (via exists) or OMS window overlap as a fallback */
+                AND (
+                  /* Fallback to OMS string window if present (cast safely) */
+                  (
+                    STR_TO_DATE(oms2.start, '%Y-%m-%d %H:%i:%s') <= {$endExpr}
+                    AND STR_TO_DATE(oms2.end,   '%Y-%m-%d %H:%i:%s') >= s.started_at
+                  )
+                  OR oms2.date_added BETWEEN s.started_at AND {$endExpr}
+                )
+            )
           )
-        ORDER BY s.started_at ASC
+        )
+        /* session overlaps filter window */
+        AND s.started_at <= {$end_dt_sql}
+        AND {$endExpr}   >= {$start_dt_sql}
+      ORDER BY s.started_at ASC
     ";
 
         $rows = $this->db->query($sql)->rows ?: [];
 
-        $out = [];
-        foreach ($rows as $r) {
-            $out[] = [
-                'id'               => (int)$r['id'],
-                'start'            => $r['start_time'],
-                'end'              => $r['end_time'],
-                'duration_minutes' => (int)$r['duration_minutes'],
-                'order_id'         => isset($r['order_id']) && $r['order_id'] ? (int)$r['order_id'] : null
-            ];
+        foreach ($rows as &$r) {
+            $r['id']               = (int)$r['id'];
+            $r['duration_minutes'] = (int)$r['duration_minutes'];
+            $r['order_id']         = isset($r['order_id']) && $r['order_id'] !== '' ? (int)$r['order_id'] : null;
+            // keys expected by JS
+            $r['start'] = $r['start_time'];
+            $r['end']   = $r['end_time'];
+            unset($r['start_time'], $r['end_time']);
         }
-
-        // If we still got nothing back (rare), fall back to OMS mapping—but parse VARCHAR dates safely.
-        if (!$out) {
-            // Flexible parsers for OMS.start / OMS.end (VARCHAR):
-            // 1) ISO 'YYYY-mm-dd HH:ii:ss'
-            // 2) ISO with 'T' and optional timezone: replace T->space, strip timezone
-            // 3) Croatian 'dd.mm.YYYY HH:ii:ss'
-            $PARSE_START = "
-            CASE
-              WHEN NULLIF(oms.`start`,'') IS NULL THEN NULL
-              WHEN oms.`start` LIKE '____-__-__ __:__:__' THEN STR_TO_DATE(oms.`start`, '%Y-%m-%d %H:%i:%s')
-              WHEN oms.`start` LIKE '____-__-__T__:__:__%' THEN STR_TO_DATE(REPLACE(SUBSTRING_INDEX(oms.`start`,'+',1), 'T', ' '), '%Y-%m-%d %H:%i:%s')
-              WHEN oms.`start` LIKE '__.__.____ __:__:__' THEN STR_TO_DATE(oms.`start`, '%d.%m.%Y %H:%i:%s')
-              ELSE NULL
-            END
-        ";
-            $PARSE_END = "
-            CASE
-              WHEN NULLIF(oms.`end`,'') IS NULL THEN NULL
-              WHEN oms.`end` LIKE '____-__-__ __:__:__' THEN STR_TO_DATE(oms.`end`, '%Y-%m-%d %H:%i:%s')
-              WHEN oms.`end` LIKE '____-__-__T__:__:__%' THEN STR_TO_DATE(REPLACE(SUBSTRING_INDEX(oms.`end`,'+',1), 'T', ' '), '%Y-%m-%d %H:%i:%s')
-              WHEN oms.`end` LIKE '__.__.____ __:__:__' THEN STR_TO_DATE(oms.`end`, '%d.%m.%Y %H:%i:%s')
-              ELSE NULL
-            END
-        ";
-
-            $sql2 = "
-            SELECT
-              (
-                SELECT s.id
-                FROM `" . DB_PREFIX . "impersonation_session` s
-                WHERE s.admin_id = oms.user_id
-                  AND s.customer_id = oms.customer_id
-                  AND s.started_at <= COALESCE(($PARSE_END), ($PARSE_START), oms.date_added)
-                  AND COALESCE(s.ended_at, s.last_activity_at) >= COALESCE(($PARSE_START), oms.date_added)
-                ORDER BY ABS(TIMESTAMPDIFF(SECOND, s.started_at, COALESCE(($PARSE_START), oms.date_added)))
-                LIMIT 1
-              ) AS session_id,
-              DATE_FORMAT(COALESCE(($PARSE_START), oms.date_added), '%Y-%m-%d %H:%i:%s') AS start_time,
-              DATE_FORMAT(COALESCE(($PARSE_END),   COALESCE(($PARSE_START), oms.date_added)), '%Y-%m-%d %H:%i:%s') AS end_time,
-              GREATEST(0,
-                TIMESTAMPDIFF(
-                  MINUTE,
-                  COALESCE(($PARSE_START), oms.date_added),
-                  COALESCE(($PARSE_END),   COALESCE(($PARSE_START), oms.date_added))
-                )
-              ) AS duration_minutes,
-              oms.order_id
-            FROM `" . DB_PREFIX . "order_manager_sales` oms
-            WHERE oms.user_id = {$manager_id}
-              AND COALESCE(($PARSE_START), oms.date_added) <= {$END_DT}
-              AND COALESCE(($PARSE_END),   COALESCE(($PARSE_START), oms.date_added)) >= {$START_DT}
-            ORDER BY COALESCE(($PARSE_START), oms.date_added) ASC
-        ";
-
-            $fallback = $this->db->query($sql2)->rows ?: [];
-            foreach ($fallback as $r) {
-                $sid = (int)$r['session_id'];
-                if ($sid <= 0) continue; // can't map → skip (no events to show)
-                $out[] = [
-                    'id'               => $sid,
-                    'start'            => $r['start_time'],
-                    'end'              => $r['end_time'],
-                    'duration_minutes' => (int)$r['duration_minutes'],
-                    'order_id'         => isset($r['order_id']) && $r['order_id'] ? (int)$r['order_id'] : null
-                ];
-            }
-        }
-
-        return $out;
+        return $rows;
     }
+
 
 
 

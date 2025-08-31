@@ -1304,6 +1304,8 @@ class ControllerCustomerCustomer extends Controller {
                     'customer_id' => $customer_id,
                     'user_id' => $this->user->getId(),
                 ];
+
+                $this->backfillImpersonationAdmin($this->user->getId(), $customer_id);
             }
 
             $this->load->model('setting/store');
@@ -1786,4 +1788,24 @@ class ControllerCustomerCustomer extends Controller {
 
         return isset($query->row['price'] ) ?    $query->row['price'] * ((100-$discount) / 100) : 0;
     }
+
+
+    private function backfillImpersonationAdmin($admin_id, $customer_id) {
+        $admin_id    = (int)$admin_id;
+        $customer_id = (int)$customer_id;
+
+        // Tie sessions to this admin if they overlap with OMS rows for the same user+customer
+        $this->db->query("
+        UPDATE `" . DB_PREFIX . "impersonation_session` s
+        JOIN `" . DB_PREFIX . "order_manager_sales` oms
+          ON oms.user_id = {$admin_id}
+         AND oms.customer_id = {$customer_id}
+         AND s.customer_id = {$customer_id}
+         AND s.started_at <= COALESCE(STR_TO_DATE(oms.end, '%Y-%m-%d %H:%i:%s'), s.last_activity_at)
+         AND COALESCE(s.ended_at, s.last_activity_at) >= STR_TO_DATE(oms.start, '%Y-%m-%d %H:%i:%s')
+        SET s.admin_id = {$admin_id}
+        WHERE s.admin_id = 0
+    ");
+    }
+
 }
