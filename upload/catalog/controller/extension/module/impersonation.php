@@ -13,6 +13,9 @@ class ControllerExtensionModuleImpersonation extends Controller
         $secret = $this->config->get('module_impersonation_secret') ?: 'change-me';
         $token  = $this->request->get['token'] ?? '';
 
+        \Agmedia\Helpers\Log::store('start()', 'impersonation');
+        \Agmedia\Helpers\Log::store($token, 'impersonation');
+
         if (!$token || strpos($token, '.') === false) {
             $this->response->redirect($this->url->link('common/home'));
             return;
@@ -58,6 +61,9 @@ class ControllerExtensionModuleImpersonation extends Controller
 
     // Event: controller/*/before
     public function before(&$route, &$args) {
+        \Agmedia\Helpers\Log::store('before()', 'impersonation');
+        \Agmedia\Helpers\Log::store($route, 'impersonation');
+
         if (empty($this->session->data['order_from_manager'])) return;
         if (in_array($route, $this->ignore, true)) return;
 
@@ -187,10 +193,14 @@ class ControllerExtensionModuleImpersonation extends Controller
 
     private function ensureSessionRow(): int {
         $mark      = $this->session->data['order_from_manager'];
-        $sid       = session_id();
+        $sid       = $this->session->getId();
         $adminId   = (int)$mark['admin_id'];
         $customerId= (int)$mark['customer_id'];
         $storeId   = (int)($mark['store_id'] ?? 0);
+
+        /*\Agmedia\Helpers\Log::store('ensureSessionRow', 'impersonation');
+        \Agmedia\Helpers\Log::store($this->session->data['order_from_manager'], 'impersonation');
+        \Agmedia\Helpers\Log::store($sid, 'impersonation');*/
 
         // 1) Try to find an open row for THIS (session_id, admin, customer, store)
         $q = $this->db->query("SELECT id FROM `" . DB_PREFIX . "impersonation_session`
@@ -216,6 +226,8 @@ class ControllerExtensionModuleImpersonation extends Controller
         // 3) Insert a fresh row for this customer
         $ip = isset($this->request->server['REMOTE_ADDR']) ? @inet_pton($this->request->server['REMOTE_ADDR']) : null;
         $ua = isset($this->request->server['HTTP_USER_AGENT']) ? substr($this->request->server['HTTP_USER_AGENT'], 0, 1024) : '';
+        $from_url = $this->url->link('customer/customer/edit', 'user_token=' . $this->session->data['user_token'] . '&customer_id=' . $customer_id, true) ?: 'index.php?route=customer/customer/edit&customer_id=' . $customer_id;
+
 
         $this->db->query("INSERT INTO `" . DB_PREFIX . "impersonation_session`
                             SET session_id = '" . $this->db->escape($sid) . "',
@@ -223,7 +235,7 @@ class ControllerExtensionModuleImpersonation extends Controller
                                 customer_id = " . $customerId . ",
                                 store_id = " . $storeId . ",
                                 store_host = '" . $this->db->escape($this->request->server['HTTP_HOST'] ?? '') . "',
-                                admin_from_url = " . $this->toVarchar($mark['from_url'] ?? null, 255) . ",
+                                admin_from_url = " . $this->toVarchar($from_url ?? null, 255) . ",
                                 ip = " . ($ip ? "UNHEX('" . bin2hex($ip) . "')" : "NULL") . ",
                                 user_agent = " . $this->toVarchar($ua, 1024) . ",
                                 started_at = NOW(),
