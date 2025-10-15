@@ -95,6 +95,9 @@ class ControllerExtensionModuleImpersonation extends Controller
     public function link() {
         $this->load->model('setting/setting');
 
+        \Agmedia\Helpers\Log::store('link()', 'impersonation');
+        \Agmedia\Helpers\Log::store($this->session->data, 'impersonation');
+
         // secret configured at module settings (create a setting: module_impersonation_secret)
         $secret = $this->config->get('module_impersonation_secret') ?: 'change-me';
 
