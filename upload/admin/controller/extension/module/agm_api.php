@@ -357,51 +357,69 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $this->response->setOutput(json_encode(['inserted' => 1]));
     }
 
-        public function updateQuantityVayox()
+    public function updateQuantityVayox()
     {
-          $vayox = new Csv\Vayox();
+        $vayox = new Csv\Vayox();
 
         $file = file_get_contents('https://panel-d.baselinker.com/inventory_export.php?hash=989da49eb13c3993e89ce390532ddb26');
         $name = 'vayox.xml';
+        file_put_contents(DIR_IMAGE . '/vayox/' . $name, $file);
 
-        file_put_contents(DIR_IMAGE .'/vayox/' . $name, $file);
+        $vayox->getXML('quantity');
 
-           $vayox->getXML('quantity');
+        $bt = collect($vayox->quantity);
 
+        $data = [];
 
-            $bt = collect($vayox->quantity);
+        foreach ($bt->all() as $item) {
+            $sku = isset($item['sku']) ? trim($item['sku']) : '';
+            // Preskoči ako je EAN/SKU prazan
+            if ($sku === '') {
+                continue;
+            }
+            if (!isset($data[$sku])) {
+                $data[$sku] = [
+                    'sku' => $sku,
+                    'quantity' => (int) $item['quantity']
+                ];
+            }
+        }
 
+        // Ako nakon filtriranja nema ničega, izbjegni prazan INSERT
+        if (empty($data)) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode(['inserted' => 0, 'note' => 'No non-empty EANs in feed']));
+            return;
+        }
 
+        $values = [];
+        foreach ($data as $item) {
+            $uid = $this->db->escape($item['sku']);
+            $qty = (int) $item['quantity'];
+            $values[] = '("' . $uid . '", ' . $qty . ', 0)';
+        }
 
-            $data = [];
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . implode(',', $values));
 
+        // Za svaki slučaj, počisti prazne uid-ove ako su kojim slučajem prošli
+        $this->db->query("DELETE FROM " . DB_PREFIX . "product_temp WHERE uid = '' OR uid IS NULL");
 
-           foreach ($bt->all() as $item) {
-               if ( ! isset($data[$item['sku']])) {
-                   $data[$item['sku']] = [
-                       'sku' => $item['sku'],
-                       'quantity' => $item['quantity']
-                   ];
-               }
-           }
+        // Ažuriraj samo proizvode koji imaju popunjen EAN i koji se poklapaju s feedom
+        $this->db->query("
+        UPDATE " . DB_PREFIX . "product p
+        INNER JOIN " . DB_PREFIX . "product_temp pt
+            ON p.ean = pt.uid
+        SET p.suplierqty = pt.quantity
+        WHERE p.ean IS NOT NULL AND p.ean <> '' AND pt.uid <> ''
+    ");
 
-           $str = '';
-
-           foreach ($data as $item) {
-               $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
-           }
-
-           $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
-
-           $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
-
-          $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.ean = pt.uid SET p.suplierqty = pt.quantity");
-
-
+        // NEMA nikakvog dodatnog update-a za prazne EAN-ove (ne diramo suplierqty)
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode(['inserted' => 1]));
     }
+
 
     public function updateQuantityMaster()
     {
@@ -514,6 +532,54 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $this->response->setOutput(json_encode(['inserted' => 1]));
     }
 
+
+
+/*
+    public function updateQuantityVayox()
+    {
+      //  $vayox = new Csv\Vayox();
+
+        $file = file_get_contents('https://panel-d.baselinker.com/inventory_export.php?hash=989da49eb13c3993e89ce390532ddb26');
+        $name = 'vayox.xml';
+
+        file_put_contents(DIR_IMAGE .'vayox' . $name, $file);
+
+     $vayox->getXML('quantity');
+
+
+
+         $bt = collect($vayox->quantity);
+         $data = [];
+
+
+
+        foreach ($bt->all() as $item) {
+            if ( ! isset($data[$item['sku']])) {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+        }
+
+        $str = '';
+
+        foreach ($data as $item) {
+            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+        }
+
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
+        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.suplierqty = pt.quantity");
+
+
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+    */
 
 
 	protected function validate() {

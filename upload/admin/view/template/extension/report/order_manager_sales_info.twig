@@ -1,3 +1,28 @@
+<style>
+    .top10-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width: 1200px) { .top10-wrap { grid-template-columns: 1fr; } }
+    .panel-mini { margin:0; border:1px solid #ddd; border-radius:4px; }
+    .panel-mini .panel-heading { padding:6px 10px; background:#f7f7f7; border-bottom:1px solid #ddd; }
+    .panel-mini .panel-title { font-size:13px; margin:0; }
+    .table-top10 { margin:0; }
+    .table-top10 th, .table-top10 td { padding:6px 8px; vertical-align:middle; }
+    .table-top10 .rank { width:36px; text-align:center; color:#888; }
+    .table-top10 .name a { text-decoration:none; }
+    .table-top10 .clicks { width:80px; text-align:right; }
+    .table-top10 .actions { width:1%; white-space:nowrap; }
+</style>
+
+<style>
+    .session-meta { background:#f9f9f9; border:1px solid #e3e3e3; border-radius:4px; padding:10px 12px; margin-bottom:12px; }
+    .session-meta .meta-row { display:flex; flex-wrap:wrap; gap:12px; }
+    .session-meta .meta-item { min-width: 220px; }
+    .session-meta .meta-item-new-row { min-width: 0; width: 100%; }
+    .session-meta .label-kv { color:#777; margin-right:4px; }
+    .session-meta .pill { display:inline-block; padding:2px 6px; border-radius:12px; background:#eef5ff; border:1px solid #cfe1ff; }
+    .session-meta .pill.green { background:#eaf9f0; border-color:#cfeede; }
+</style>
+
+
 <div class="row">
     <div id="filter-report" class="col-md-3 col-md-push-9 col-sm-12 hidden-sm hidden-xs">
         <div class="panel panel-default">
@@ -18,36 +43,23 @@
                         {% endfor %}
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label" for="input-date-start">{{ entry_date_start }}</label>
                     <div class="input-group date">
                         <input type="text" name="filter_date_start" value="{{ filter_date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" id="input-date-start" class="form-control" />
-                        <span class="input-group-btn">
-            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-            </span>
+                        <span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label" for="input-date-end">{{ entry_date_end }}</label>
                     <div class="input-group date">
                         <input type="text" name="filter_date_end" value="{{ filter_date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
-                        <span class="input-group-btn">
-            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-            </span>
+                        <span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
                     </div>
                 </div>
-                {#<div class="form-group">
-                    <label class="control-label" for="input-group">{{ entry_group }}</label>
-                    <select name="filter_group" id="input-group" class="form-control">
-                        {% for group in groups %}
-                            {% if group.value == filter_group %}
-                                <option value="{{ group.value }}" selected="selected">{{ group.text }}</option>
-                            {% else %}
-                                <option value="{{ group.value }}">{{ group.text }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>#}
+
                 <div class="form-group">
                     <label class="control-label" for="input-status">{{ entry_status }}</label>
                     <select name="filter_order_status_id" id="input-status" class="form-control">
@@ -61,13 +73,49 @@
                         {% endfor %}
                     </select>
                 </div>
+
                 <div class="form-group text-right">
                     <button type="button" id="button-filter" class="btn btn-default"><i class="fa fa-filter"></i> {{ button_filter }}</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-md-9 col-md-pull-3 col-sm-12">
+        {# Timeline panel #}
+        <div class="panel panel-default" id="panel-sessions" {% if not filter_manager %}style="display:none"{% endif %}>
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-clock-o"></i> Sesije (trajanje prijava) — Timeline</h3>
+            </div>
+            <div class="panel-body">
+                <canvas id="sessionChart" height="120"></canvas>
+                <div class="help-block js-mini-legend" style="margin-top:6px; display:none;"></div>
+                <div id="sessionTable" class="table-responsive" style="margin-top:15px;"></div>
+            </div>
+        </div>
+
+        {# Selected session activity #}
+        <div class="panel panel-default" id="panel-session-detail" style="display:none;">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-bullseye"></i> Aktivnost u odabranoj sesiji</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <canvas id="sessionEventChart" height="220"></canvas>
+                    </div>
+                    <div class="col-sm-7">
+                        <canvas id="sessionTimelineChart" height="220"></canvas>
+                    </div>
+                </div>
+                <div id="sessionMeta" class="session-meta" style="display:none;"></div>
+                <div class="row" style="margin-top:12px;">
+                    <div class="col-sm-12" id="sessionTopLists"></div>
+                </div>
+            </div>
+        </div>
+
+        {# Existing totals table (now includes Sessions column) #}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-bar-chart"></i> {{ heading_title }}</h3>
@@ -80,6 +128,7 @@
                             <td class="text-left">{{ column_order_manager }}</td>
                             <td class="text-left">{{ column_date_start }}</td>
                             <td class="text-left">{{ column_date_end }}</td>
+                            <td class="text-right">Sesije</td>
                             <td class="text-right">{{ column_orders }}</td>
                             <td class="text-right">{{ column_products }}</td>
                             <td class="text-right">{{ column_tax }}</td>
@@ -87,13 +136,13 @@
                         </tr>
                         </thead>
                         <tbody>
-
                         {% if orders %}
                             {% for order in orders %}
                                 <tr>
                                     <td class="text-left">{{ order.manager }}</td>
                                     <td class="text-left">{{ order.date_start }}</td>
                                     <td class="text-left">{{ order.date_end }}</td>
+                                    <td class="text-right"><span class="label label-info">{{ order.sessions }}</span></td>
                                     <td class="text-right">{{ order.orders }}</td>
                                     <td class="text-right">{{ order.products }}</td>
                                     <td class="text-right">{{ order.tax }}</td>
@@ -102,11 +151,10 @@
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td class="text-center" colspan="6">{{ text_no_results }}</td>
+                                <td class="text-center" colspan="8">{{ text_no_results }}</td>
                             </tr>
                         {% endif %}
                         </tbody>
-
                     </table>
                 </div>
                 <div class="row">
@@ -115,13 +163,11 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    {% if manager_orders %}
-        <div class="col-md-9 col-md-pull-3 col-sm-12">
+        {% if manager_orders %}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-bar-chart"></i> Narudžbe po komercijalistima</h3>
+                    <h3 class="panel-title"><i class="fa fa-bar-chart"></i> Narudžbe po kupcima</h3>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
@@ -136,7 +182,6 @@
                             </tr>
                             </thead>
                             <tbody>
-
                             {% for order in manager_orders %}
                                 <tr>
                                     <td class="text-left">{{ order.customer }}</td>
@@ -147,59 +192,332 @@
                                 </tr>
                             {% endfor %}
                             </tbody>
-
                         </table>
                     </div>
-                    {#<div class="row">
-                        <div class="col-sm-6 text-left">{{ pagination }}</div>
-                        <div class="col-sm-6 text-right">{{ results }}</div>
-                    </div>#}
                 </div>
             </div>
-        </div>
-    {% endif %}
-
+        {% endif %}
+    </div>
 </div>
+
 <script type="text/javascript"><!--
     $('#button-filter').on('click', function() {
         var url = '';
 
-        var filter_manager = $('select[name=\'filter_manager\']').val();
+        var filter_manager = $('select[name="filter_manager"]').val();
+        if (filter_manager) url += '&filter_manager=' + encodeURIComponent(filter_manager);
 
-        if (filter_manager) {
-            url += '&filter_manager=' + encodeURIComponent(filter_manager);
-        }
+        var filter_date_start = $('input[name="filter_date_start"]').val();
+        if (filter_date_start) url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
 
-        var filter_date_start = $('input[name=\'filter_date_start\']').val();
+        var filter_date_end = $('input[name="filter_date_end"]').val();
+        if (filter_date_end) url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 
-        if (filter_date_start) {
-            url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
-        }
+        var filter_group = $('select[name="filter_group"]').val();
+        if (filter_group) url += '&filter_group=' + encodeURIComponent(filter_group);
 
-        var filter_date_end = $('input[name=\'filter_date_end\']').val();
-
-        if (filter_date_end) {
-            url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
-        }
-
-        var filter_group = $('select[name=\'filter_group\']').val();
-
-        if (filter_group) {
-            url += '&filter_group=' + encodeURIComponent(filter_group);
-        }
-
-        var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-
-        if (filter_order_status_id != 0) {
-            url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-        }
+        var filter_order_status_id = $('select[name="filter_order_status_id"]').val();
+        if (filter_order_status_id != 0) url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 
         location = 'index.php?route=report/report&code=order_manager_sales&user_token={{ user_token }}' + url;
     });
-    //--></script>
+
+    $('.date').datetimepicker({ language: '{{ datepicker }}', pickTime: false });
+    --></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script type="text/javascript"><!--
-    $('.date').datetimepicker({
-        language: '{{ datepicker }}',
-        pickTime: false
-    });
-    //--></script>
+    (function() {
+        if (!'{{ filter_manager }}') return;
+
+        var utok = '{{ user_token }}';
+        var url = 'index.php?route=extension/report/order_manager_sales/sessions&user_token={{ user_token }}'
+            + '&filter_manager={{ filter_manager|e }}'
+            + '&filter_date_start={{ filter_date_start|e }}'
+            + '&filter_date_end={{ filter_date_end|e }}';
+
+        $.getJSON(url, function(payload) {
+            var sessions = payload.sessions || [];
+
+            // ---- Timeline chart (colored by order presence) ----
+            var labels  = sessions.map(function(s) {
+                var start = new Date(s.start.replace(' ', 'T'));
+                var hh = ('0' + start.getHours()).slice(-2);
+                var mm = ('0' + start.getMinutes()).slice(-2);
+                return start.toLocaleDateString() + ' ' + hh + ':' + mm + (s.order_id ? ' (#' + s.order_id + ')' : '');
+            });
+            var minutes = sessions.map(function(s) { return s.duration_minutes; });
+
+            var barColors   = sessions.map(function(s){ return s.order_id ? 'rgba(46, 204, 113, 0.85)' : 'rgba(52, 152, 219, 0.70)'; });
+            var borderColors= sessions.map(function(s){ return s.order_id ? 'rgb(39, 174, 96)' : 'rgb(41, 128, 185)'; });
+
+            var ctx = document.getElementById('sessionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: { labels: labels, datasets: [{ label: 'Trajanje sesije (minute)', data: minutes, backgroundColor: barColors, borderColor: borderColors, borderWidth: 1 }] },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: { callbacks: {
+                                afterLabel: function(context){
+                                    var i = context.dataIndex;
+                                    var s = sessions[i];
+                                    return s.order_id ? '  Narudžba: #' + s.order_id : '';
+                                }
+                            }}
+                    },
+                    scales: { x: { ticks: { autoSkip:false, maxRotation:45 } }, y: { beginAtZero:true } }
+                }
+            });
+
+            var legendHtml = ''
+                + '<span style="display:inline-block;width:12px;height:12px;background:#27ae60;border:1px solid #1e8449;margin-right:6px;vertical-align:middle;"></span>'
+                + 'Sesija s narudžbom '
+                + '<span style="display:inline-block;width:12px;height:12px;background:#3498db;border:1px solid #2c81ba;margin:0 6px 0 12px;vertical-align:middle;"></span>'
+                + 'Bez narudžbe';
+            $('.js-mini-legend').html(legendHtml).show();
+
+            // ---- Session table (with Aktivnost button) ----
+            var html = '';
+            if (sessions.length) {
+                html += '<table class="table table-bordered"><thead><tr>'
+                    + '<td class="text-left">Početak</td>'
+                    + '<td class="text-left">Kraj</td>'
+                    + '<td class="text-right">Minute</td>'
+                    + '<td class="text-right">Narudžba</td>'
+                    + '<td class="text-right">Akcija</td>'
+                    + '</tr></thead><tbody>';
+
+                sessions.forEach(function(s) {
+                    html += '<tr class="js-session-row" data-sid="'+s.id+'">'
+                        + '<td class="text-left">' + s.start + '</td>'
+                        + '<td class="text-left">' + (s.end || '-') + '</td>'
+                        + '<td class="text-right">' + s.duration_minutes + '</td>'
+                        + '<td class="text-right">' + (s.order_id ? ('#' + s.order_id) : '-') + '</td>'
+                        + '<td class="text-right">'
+                        + '<button type="button" class="btn btn-xs btn-info js-session-activity" data-sid="'+s.id+'">'
+                        +   '<i class="fa fa-bullseye"></i> Aktivnost'
+                        + '</button>'
+                        + '</td>'
+                        + '</tr>';
+                });
+
+                html += '</tbody></table>';
+            } else {
+                html = '<div class="text-center text-muted">{{ text_no_results }}</div>';
+            }
+            $('#sessionTable').html(html);
+
+            // Row click OR “Aktivnost” button loads detail
+            $('#sessionTable').on('click', '.js-session-row', function(e){
+                if ($(e.target).closest('.js-session-activity').length) return;
+                var sid = $(this).data('sid');
+                loadSessionDetail(sid);
+                $('.js-session-row').removeClass('info');
+                $(this).addClass('info');
+            });
+            $('#sessionTable').on('click', '.js-session-activity', function(e){
+                e.preventDefault(); e.stopPropagation();
+                var sid = $(this).data('sid');
+                loadSessionDetail(sid);
+                $('.js-session-row').removeClass('info');
+                $(this).closest('tr').addClass('info');
+            });
+        });
+
+        // ----- Selected session detail (donut + timeline + top lists) -----
+        var detailChart, timelineChart;
+
+        function loadSessionDetail(sessionId) {
+            if (!sessionId) return;
+            $('#panel-session-detail').show();
+
+            // (A) Session meta
+            $.getJSON('index.php?route=extension/report/order_manager_sales/session_info&user_token={{ user_token }}&session_id=' + sessionId, function(info){
+                if (!info || !info.id) { $('#sessionMeta').hide(); return; }
+
+                var started = info.started_at || '-';
+                var ended   = info.end_time || info.ended_at || '';
+                var live    = (!info.ended_at && info.last_activity_at) ? true : false;
+                var durMin  = (typeof info.duration_minutes !== 'undefined') ? info.duration_minutes : '';
+                var ip      = info.ip || '-';
+                var host    = info.store_host || '';
+                var ua      = info.user_agent || '';
+                var order   = info.order_id ? ('#' + info.order_id) : '-';
+                var events  = (typeof info.event_count !== 'undefined') ? info.event_count : '';
+
+                // Geo info
+                var geo = info.geo || {};
+                var place = '-';
+                if (geo.city || geo.region || geo.country) {
+                    var parts = [];
+                    if (geo.city) parts.push(geo.city);
+                    if (geo.region) parts.push(geo.region);
+                    if (geo.country) parts.push(geo.country);
+                    place = parts.join(', ');
+                }
+                var latlon = (geo.lat != null && geo.lon != null) ? (Number(geo.lat).toFixed(4) + ', ' + Number(geo.lon).toFixed(4)) : '';
+                var mapLink = (geo.lat != null && geo.lon != null)
+                    ? '<a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat='+encodeURIComponent(geo.lat)+'&mlon='+encodeURIComponent(geo.lon)+'#map=12/'+encodeURIComponent(geo.lat)+'/'+encodeURIComponent(geo.lon)+'">Prikaži na karti</a>'
+                    : '';
+
+                var statusPill = live
+                    ? '<span class="pill green"><i class="fa fa-circle"></i> Aktivna</span>'
+                    : '<span class="pill"><i class="fa fa-check-circle-o"></i> Završena</span>';
+
+                var html = '';
+                html += '<div class="meta-row">';
+                html +=   '<div class="meta-item"><span class="label-kv">Početak:</span> ' + started + '</div>';
+                html +=   '<div class="meta-item"><span class="label-kv">Kraj:</span> ' + (ended || '-') + '</div>';
+                html +=   '<div class="meta-item-new-row"><span class="label-kv">Sesija:</span> ' + statusPill + '</div>';
+                html +=   '<div class="meta-item-new-row"><span class="label-kv">Trajanje:</span> ' + (durMin !== '' ? (durMin + ' min') : '-') + '</div>';
+                html +=   '<div class="meta-item"><span class="label-kv">IP:</span> ' + ip + '</div>';
+                html +=   '<div class="meta-item-new-row"><span class="label-kv">Trgovina:</span> ' + (host || '-') + '</div>';
+                html +=   '<div class="meta-item"><span class="label-kv">Događaji:</span> ' + (events !== '' ? events : '-') + '</div>';
+                html +=   '<div class="meta-item"><span class="label-kv">Narudžba:</span> ' + order + '</div>';
+                html += '</div>';
+                if (ua) {
+                    html += '<div class="meta-row" style="margin-top:16px;"><div class="meta-item" style="flex:1 1 auto;"><span class="label-kv">User-Agent:</span> <span style="word-break:break-all;">' + $('<div/>').text(ua).html() + '</span></div></div>';
+                }
+                if (info.admin_from_url) {
+                    html += '<div class="meta-row" style="margin-top:16px;"><div class="meta-item" style="flex:1 1 auto;"><span class="label-kv">Pokrenuto iz admina:</span> ' + $('<div/>').text(info.admin_from_url).html() + '</div></div>';
+                }
+
+                html += '<div class="meta-row" style="margin-top:16px;">'
+                    +   '<div class="meta-item"><span class="label-kv">Lokacija:</span> ' + (place || '-') + (latlon ? ' &nbsp; <span class="text-muted">(' + latlon + ')</span> ' : '') + (mapLink ? ' &nbsp; ' + mapLink : '') + '</div>'
+                    + '</div>';
+
+                $('#sessionMeta').html(html).show();
+            });
+
+            // 1) Summary + top lists
+            $.getJSON('index.php?route=extension/report/order_manager_sales/session_event_stats&user_token={{ user_token }}&session_id=' + sessionId, function(stats){
+                var summary = stats.summary || [];
+                var labels = summary.map(function(r){
+                    switch(r.entity_type){
+                        case 'product': return 'Proizvodi';
+                        case 'category': return 'Kategorije';
+                        case 'manufacturer': return 'Proizvođači';
+                        case 'information': return 'Informacije';
+                        case 'search': return 'Pretraga';
+                        case 'cart': return 'Košarica';
+                        case 'checkout': return 'Checkout';
+                        case 'page': default: return 'Stranice';
+                    }
+                });
+                var values = summary.map(function(r){ return parseInt(r.clicks, 10) || 0; });
+
+                var ctx = document.getElementById('sessionEventChart').getContext('2d');
+                if (detailChart && typeof detailChart.destroy === 'function') detailChart.destroy();
+                detailChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: { labels: labels, datasets: [{ data: values }] },
+                    options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+                });
+
+                // Top lists with edit links
+                // Top lists as neat tables (Top 10)
+                var utok = '{{ user_token }}';
+
+                function editHref(kind, id) {
+                    switch (kind) {
+                        case 'product':      return 'index.php?route=catalog/product/edit&user_token=' + utok + '&product_id=' + id;
+                        case 'category':     return 'index.php?route=catalog/category/edit&user_token=' + utok + '&category_id=' + id;
+                        case 'manufacturer': return 'index.php?route=catalog/manufacturer/edit&user_token=' + utok + '&manufacturer_id=' + id;
+                        case 'information':  return 'index.php?route=catalog/information/edit&user_token=' + utok + '&information_id=' + id;
+                        default: return '#';
+                    }
+                }
+
+                function top10Table(title, rows, kind) {
+                    if (!rows || !rows.length) {
+                        return '<div class="panel-mini"><div class="panel-heading"><h4 class="panel-title">' + title + '</h4></div>'
+                            + '<div class="panel-body" style="padding:8px 10px;"><span class="text-muted">Nema klikova.</span></div></div>';
+                    }
+
+                    var html = '';
+                    html += '<div class="panel-mini">';
+                    html +=   '<div class="panel-heading"><h4 class="panel-title">' + title + '</h4></div>';
+                    html +=   '<div class="table-responsive">';
+                    html +=     '<table class="table table-condensed table-striped table-hover table-top10">';
+                    html +=       '<thead><tr>'
+                        +   '<th class="rank">#</th>'
+                        +   '<th class="name">Naziv</th>'
+                        +   '<th class="clicks">Klikovi</th>'
+                        +   '<th class="actions"></th>'
+                        + '</tr></thead><tbody>';
+
+                    rows.forEach(function(r, idx) {
+                        var id = r.product_id || r.category_id || r.manufacturer_id || r.information_id;
+                        var label = r.name || r.title || ('ID ' + id);
+                        var href = editHref(kind, id);
+                        var clicks = parseInt(r.clicks || 0, 10);
+
+                        html += '<tr>'
+                            +    '<td class="rank">' + (idx + 1) + '</td>'
+                            +    '<td class="name"><a href="' + href + '">' + label + '</a></td>'
+                            +    '<td class="clicks">' + clicks + '</td>'
+                            +    '<td class="actions"><a href="' + href + '" class="btn btn-xs btn-default" title="Otvori">'
+                            +      '<i class="fa fa-external-link"></i></a></td>'
+                            +  '</tr>';
+                    });
+
+                    html +=       '</tbody></table>';
+                    html +=   '</div></div>';
+                    return html;
+                }
+
+// Render the four blocks in a tidy grid
+                var blocks = '';
+                blocks += top10Table('Top 10 Proizvodi',      stats.products,      'product');
+                blocks += top10Table('Top 10 Kategorije',     stats.categories,    'category');
+                blocks += top10Table('Top 10 Proizvođači',    stats.manufacturers, 'manufacturer');
+                blocks += top10Table('Top 10 Informacije',    stats.information,   'information');
+
+                $('#sessionTopLists').html('<div class="top10-wrap">' + blocks + '</div>');
+
+            });
+
+            // 2) Timeline by minute & type
+            $.getJSON('index.php?route=extension/report/order_manager_sales/session_event_timeline&user_token={{ user_token }}&session_id=' + sessionId, function(payload){
+                var labels = payload.labels || [];
+                var s = payload.series || {};
+
+                var datasets = [];
+                function add(nameKey, nice, color) {
+                    if (!s[nameKey]) return;
+                    datasets.push({
+                        label: nice, data: s[nameKey],
+                        fill: false, borderWidth: 2, tension: 0.2,
+                        borderColor: color, backgroundColor: color, pointRadius: 2
+                    });
+                }
+                add('product','Proizvodi','#8e44ad');
+                add('category','Kategorije','#d35400');
+                add('manufacturer','Proizvođači','#16a085');
+                add('information','Informacije','#7f8c8d');
+                add('search','Pretraga','#f1c40f');
+                add('cart','Košarica','#2980b9');
+                add('checkout','Checkout','#c0392b');
+                add('page','Stranice','#2ecc71');
+
+                var ctx2 = document.getElementById('sessionTimelineChart').getContext('2d');
+                if (timelineChart && typeof timelineChart.destroy === 'function') timelineChart.destroy();
+                timelineChart = new Chart(ctx2, {
+                    type: 'line',
+                    data: { labels: labels, datasets: datasets },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom' } },
+                        scales: {
+                            x: { ticks: { maxRotation: 45, minRotation: 0 } },
+                            y: { beginAtZero: true, precision: 0 }
+                        }
+                    }
+                });
+            });
+        }
+    })();
+    --></script>
