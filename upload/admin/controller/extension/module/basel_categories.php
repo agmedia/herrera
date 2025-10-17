@@ -23,8 +23,9 @@ class ControllerExtensionModuleBaselCategories extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model($model_module_load);
-		
-		$data['token'] = $this->session->data[$token_prefix];
+
+        $data['user_token'] = $this->session->data['user_token'];
+    $data['token'] = $data['user_token']; // (opcionalno, radi kompatibilnosti)
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			if (!isset($this->request->get['module_id'])) {
