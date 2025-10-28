@@ -88,7 +88,7 @@ class Api
             // Priprema tijela prema tipu
             if ($headers_type === 'json') {
                 if (is_array($body)) {
-                    $body = json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    $body = json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION);
                 } // ako je string, pretpostavljamo da je već JSON
             } elseif ($headers_type === 'form') {
                 if (is_array($body)) {

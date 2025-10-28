@@ -219,7 +219,9 @@ class Eracuni
         $response = [];
 
         foreach ($this->data['products'] as $product) {
-            $price = isset($product['price']) ? (float) round((float) $product['price'], 2) : 0.0;
+            $price = isset($product['price'])
+                ? number_format((float) $product['price'], 2, '.', '')  // string "0.23"
+                : "0.00";
 
             $response[] = [
                 'productCode' => $product['model'],
