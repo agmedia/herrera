@@ -1959,36 +1959,96 @@ class ControllerSaleOrder extends Controller {
     /**
      * Normalizacija payloada: datumi u ISO, numerička polja u float/int, bez '+' u imenima.
      */
-    private function normalizeSalePayload(array $sale): array
+    // U istom kontroleru; promijeni potpis da ne tipizira arg kao array
+    private function normalizeSalePayload($sale): array
     {
-        if (isset($sale['SalesOrder'])) {
-            // datum
-            if (!empty($sale['SalesOrder']['validUntil'])) {
-                $sale['SalesOrder']['validUntil'] = \Carbon\Carbon::parse($sale['SalesOrder']['validUntil'])->format('Y-m-d');
-            }
+        // 1) Ako je string, može biti query-string ili “čisti” JSON
+        if (is_string($sale)) {
+            $saleTrim = trim($sale);
 
-            // buyerName / firstAddressLine: ukloni '+'
-            foreach (['buyerName'] as $k) {
-                if (!empty($sale['SalesOrder'][$k])) {
-                    $sale['SalesOrder'][$k] = str_replace('+', ' ', $sale['SalesOrder'][$k]);
+            // Pokušaj 1: izgleda kao JSON?
+            if ((str_starts_with($saleTrim, '{') && str_ends_with($saleTrim, '}')) ||
+                (str_starts_with($saleTrim, '[') && str_ends_with($saleTrim, ']'))) {
+                $decoded = json_decode($saleTrim, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $sale = $decoded;
+                } else {
+                    throw new \InvalidArgumentException('Neispravan JSON u $sale: ' . json_last_error_msg());
                 }
-            }
-            if (isset($sale['SalesOrder']['Address']['firstAddressLine'])) {
-                $sale['SalesOrder']['Address']['firstAddressLine'] = str_replace('+', ' ', $sale['SalesOrder']['Address']['firstAddressLine']);
-            }
+            } else {
+                // Pokušaj 2: query-string (apiTransactionId=...&sendIssuedInvoiceByEmail=...&SalesOrder={...})
+                $parsed = [];
+                parse_str($saleTrim, $parsed);
 
-            // Items: cast numeric
-            if (!empty($sale['SalesOrder']['Items']) && is_array($sale['SalesOrder']['Items'])) {
-                foreach ($sale['SalesOrder']['Items'] as &$it) {
-                    if (isset($it['quantity']))  $it['quantity']  = (int) $it['quantity'];
-                    if (isset($it['netPrice']))  $it['netPrice']  = (float) $it['netPrice'];
+                if (empty($parsed)) {
+                    throw new \InvalidArgumentException('Nisam uspio parsirati $sale kao query-string.');
                 }
-                unset($it);
+
+                // Ako SalesOrder dođe kao JSON-string, dekodiraj ga
+                if (isset($parsed['SalesOrder']) && is_string($parsed['SalesOrder'])) {
+                    $so = json_decode($parsed['SalesOrder'], true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $parsed['SalesOrder'] = $so;
+                    } else {
+                        throw new \InvalidArgumentException('Ne mogu dekodirati SalesOrder JSON: ' . json_last_error_msg());
+                    }
+                }
+
+                // Opcijski: isto za SalesQuote
+                if (isset($parsed['SalesQuote']) && is_string($parsed['SalesQuote'])) {
+                    $sq = json_decode($parsed['SalesQuote'], true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $parsed['SalesQuote'] = $sq;
+                    } else {
+                        throw new \InvalidArgumentException('Ne mogu dekodirati SalesQuote JSON: ' . json_last_error_msg());
+                    }
+                }
+
+                $sale = $parsed;
             }
+        }
+
+        // 2) Od ove točke očekujemo array
+        if (!is_array($sale)) {
+            throw new \InvalidArgumentException('normalizeSalePayload očekuje array ili string koji se može parsirati.');
+        }
+
+        // 3) Odaberi ključ (SalesOrder ili SalesQuote) ovisno o onom koji postoji
+        $rootKey = isset($sale['SalesOrder']) ? 'SalesOrder' : (isset($sale['SalesQuote']) ? 'SalesQuote' : null);
+        if (!$rootKey) {
+            throw new \InvalidArgumentException('Nedostaje ključ SalesOrder/SalesQuote u payloadu.');
+        }
+
+        // 4) Normalizacije: datum, brojevi, ukloni '+' iz naziva, itd.
+        if (!empty($sale[$rootKey]['validUntil'])) {
+            try {
+                $sale[$rootKey]['validUntil'] = \Carbon\Carbon::parse($sale[$rootKey]['validUntil'])->format('Y-m-d');
+            } catch (\Throwable $e) {
+                // fallback: ostavi kakvo je, ili baci grešku ako ti je strogo
+            }
+        }
+
+        foreach (['buyerName'] as $k) {
+            if (!empty($sale[$rootKey][$k]) && is_string($sale[$rootKey][$k])) {
+                $sale[$rootKey][$k] = str_replace('+', ' ', $sale[$rootKey][$k]);
+            }
+        }
+
+        if (isset($sale[$rootKey]['Address']['firstAddressLine']) && is_string($sale[$rootKey]['Address']['firstAddressLine'])) {
+            $sale[$rootKey]['Address']['firstAddressLine'] = str_replace('+', ' ', $sale[$rootKey]['Address']['firstAddressLine']);
+        }
+
+        if (!empty($sale[$rootKey]['Items']) && is_array($sale[$rootKey]['Items'])) {
+            foreach ($sale[$rootKey]['Items'] as &$it) {
+                if (isset($it['quantity'])) $it['quantity'] = (int) $it['quantity'];
+                if (isset($it['netPrice'])) $it['netPrice'] = (float) $it['netPrice'];
+            }
+            unset($it);
         }
 
         return $sale;
     }
+
 
 
 
