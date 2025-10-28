@@ -1916,8 +1916,9 @@ class ControllerSaleOrder extends Controller {
         }
 
         $order_id = $this->request->get['order_id'];
-        $type     = $this->request->get['type'];
-        $order    = \Agmedia\Models\Order\Order::query()
+        $type     = $this->request->get['type']; // 'order' ili 'quote'
+
+        $order = \Agmedia\Models\Order\Order::query()
             ->where('order_id', $order_id)
             ->with(['products', 'totals'])
             ->first();
@@ -1927,117 +1928,146 @@ class ControllerSaleOrder extends Controller {
         }
 
         $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
-        $sale    = $eracuni->createSale($type);
+        $rawSale = $eracuni->createSale($type); // može biti string (query-string) ili array
 
-        // ❗ osiguraj ispravan format (ISO datumi, brojevi, bez '+')
-        $sale = $this->normalizeSalePayload($sale);
+        // 🔧 Normaliziraj i pretvori u pravi array payload za JSON body
+        $sale = $this->normalizeSalePayload($rawSale, $type === 'order' ? 'order' : 'quote');
 
         $api  = new \Agmedia\Api\Api();
 
         try {
             $endpoint = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
 
-            // prisilno JSON slanje čak i ako Api->post šalje form-data
-            $headers = ['Content-Type' => 'application/json; charset=utf-8', 'Accept' => 'application/json'];
-            $sent = $api->post($endpoint, $sale, $headers); // vidi varijantu A
-            // ako Api->post ne prima headers, napravi dedicated postJson() metodu
+            // Obavezno neka Api->post šalje kao JSON body s Content-Type: application/json
+            // (vidi moj prethodni odgovor za implementaciju Api->post s Guzzle/cURL)
+            $sent = $api->post($endpoint, $sale, [
+                'Content-Type' => 'application/json; charset=utf-8',
+                'Accept'       => 'application/json',
+            ]);
 
             $eracuni->saveResponse($type, $sent, $order_id);
             return $this->response(200, 'Narudžba je poslana..!');
         } catch (\Throwable $e) {
-            // brzi debug u log
-            Log::error('SalesOrderCreate failed', [
+            \Log::error('SalesOrder/Quote create failed', [
                 'order_id' => $order_id,
                 'type'     => $type,
                 'payload'  => $sale,
                 'error'    => $e->getMessage(),
             ]);
-            return $this->response(300, 'Došlo je do greške pri slanju narudžbe.');
+            return $this->response(300, 'Došlo je do greške pri slanju narudžbe: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Normalizacija payloada: datumi u ISO, numerička polja u float/int, bez '+' u imenima.
      */
     // U istom kontroleru; promijeni potpis da ne tipizira arg kao array
-    private function normalizeSalePayload($sale): array
+
+
+    /**
+     * Robustno normalizira payload prodaje (SalesOrder ili SalesQuote).
+     * - Prihvati string (query-string ili raw JSON) ili array.
+     * - Očisti kontrolne znakove, URL-encode, višestruko escapiranje.
+     * - Parsira SalesOrder/SalesQuote u čisti array.
+     * - Normalizira datume, brojeve i '+' u nazivima.
+     *
+     * @param mixed  $sale  String (query-string / JSON / base64) ili array
+     * @param string $type  'order' ili 'quote' (pomaže pri odabiru root ključa kad su oba prisutna)
+     * @return array        Normalizirani payload spreman za slanje kao JSON body
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function normalizeSalePayload($sale, string $type = 'order'): array
     {
-        // 1) Ako je string, može biti query-string ili “čisti” JSON
+        // 0) Ako je već array, nastavi; ako je string — probaj ga pretvoriti u array.
         if (is_string($sale)) {
             $saleTrim = trim($sale);
 
-            // Pokušaj 1: izgleda kao JSON?
-            if ((str_starts_with($saleTrim, '{') && str_ends_with($saleTrim, '}')) ||
-                (str_starts_with($saleTrim, '[') && str_ends_with($saleTrim, ']'))) {
+            // 0a) Pokušaj raw JSON
+            if ($this->looksLikeJson($saleTrim)) {
                 $decoded = json_decode($saleTrim, true);
                 if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                     $sale = $decoded;
                 } else {
-                    throw new \InvalidArgumentException('Neispravan JSON u $sale: ' . json_last_error_msg());
+                    // Ako izgleda kao JSON, ali ne može se dekodirati — probaj stripped slashes
+                    $decoded = json_decode(stripslashes($saleTrim), true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        $sale = $decoded;
+                    } else {
+                        throw new \InvalidArgumentException('Neispravan JSON u $sale: ' . json_last_error_msg());
+                    }
                 }
             } else {
-                // Pokušaj 2: query-string (apiTransactionId=...&sendIssuedInvoiceByEmail=...&SalesOrder={...})
+                // 0b) Pokušaj query-string
                 $parsed = [];
                 parse_str($saleTrim, $parsed);
 
                 if (empty($parsed)) {
-                    throw new \InvalidArgumentException('Nisam uspio parsirati $sale kao query-string.');
-                }
-
-                // Ako SalesOrder dođe kao JSON-string, dekodiraj ga
-                if (isset($parsed['SalesOrder']) && is_string($parsed['SalesOrder'])) {
-                    $so = json_decode($parsed['SalesOrder'], true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        $parsed['SalesOrder'] = $so;
+                    // 0c) Pokušaj base64 (ponekad klijent šalje base64 blob)
+                    if ($this->looksLikeBase64($saleTrim)) {
+                        $decodedBase = base64_decode($saleTrim, true);
+                        if ($decodedBase !== false && $this->looksLikeJson($decodedBase)) {
+                            $decoded = json_decode($decodedBase, true);
+                            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                $sale = $decoded;
+                            } else {
+                                throw new \InvalidArgumentException('Base64 JSON decode neuspješan: ' . json_last_error_msg());
+                            }
+                        } else {
+                            throw new \InvalidArgumentException('Nisam uspio protumačiti $sale (nije query-string/JSON/base64 JSON).');
+                        }
                     } else {
-                        throw new \InvalidArgumentException('Ne mogu dekodirati SalesOrder JSON: ' . json_last_error_msg());
+                        throw new \InvalidArgumentException('Nisam uspio parsirati $sale kao query-string.');
                     }
-                }
-
-                // Opcijski: isto za SalesQuote
-                if (isset($parsed['SalesQuote']) && is_string($parsed['SalesQuote'])) {
-                    $sq = json_decode($parsed['SalesQuote'], true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        $parsed['SalesQuote'] = $sq;
-                    } else {
-                        throw new \InvalidArgumentException('Ne mogu dekodirati SalesQuote JSON: ' . json_last_error_msg());
+                } else {
+                    // U query-string varijanti, SalesOrder/SalesQuote često su JSON-stringovi → dekodiraj ih.
+                    foreach (['SalesOrder', 'SalesQuote'] as $k) {
+                        if (isset($parsed[$k]) && is_string($parsed[$k])) {
+                            $parsed[$k] = $this->decodeInnerJsonField($parsed[$k], $k);
+                        }
                     }
+                    $sale = $parsed;
                 }
-
-                $sale = $parsed;
             }
         }
 
-        // 2) Od ove točke očekujemo array
         if (!is_array($sale)) {
             throw new \InvalidArgumentException('normalizeSalePayload očekuje array ili string koji se može parsirati.');
         }
 
-        // 3) Odaberi ključ (SalesOrder ili SalesQuote) ovisno o onom koji postoji
-        $rootKey = isset($sale['SalesOrder']) ? 'SalesOrder' : (isset($sale['SalesQuote']) ? 'SalesQuote' : null);
+        // 1) Odredi root ključ (SalesOrder / SalesQuote)
+        $rootKey = null;
+        if ($type === 'order' && isset($sale['SalesOrder'])) {
+            $rootKey = 'SalesOrder';
+        } elseif ($type !== 'order' && isset($sale['SalesQuote'])) {
+            $rootKey = 'SalesQuote';
+        } elseif (isset($sale['SalesOrder'])) {
+            $rootKey = 'SalesOrder';
+        } elseif (isset($sale['SalesQuote'])) {
+            $rootKey = 'SalesQuote';
+        }
+
         if (!$rootKey) {
             throw new \InvalidArgumentException('Nedostaje ključ SalesOrder/SalesQuote u payloadu.');
         }
 
-        // 4) Normalizacije: datum, brojevi, ukloni '+' iz naziva, itd.
+        // 2) Normaliziraj datum
         if (!empty($sale[$rootKey]['validUntil'])) {
-            try {
-                $sale[$rootKey]['validUntil'] = \Carbon\Carbon::parse($sale[$rootKey]['validUntil'])->format('Y-m-d');
-            } catch (\Throwable $e) {
-                // fallback: ostavi kakvo je, ili baci grešku ako ti je strogo
-            }
+            $sale[$rootKey]['validUntil'] = $this->toIsoDate($sale[$rootKey]['validUntil']);
         }
 
+        // 3) Ukloni '+' iz naziva (koji često dođe iz query-stringa)
         foreach (['buyerName'] as $k) {
             if (!empty($sale[$rootKey][$k]) && is_string($sale[$rootKey][$k])) {
                 $sale[$rootKey][$k] = str_replace('+', ' ', $sale[$rootKey][$k]);
             }
         }
-
         if (isset($sale[$rootKey]['Address']['firstAddressLine']) && is_string($sale[$rootKey]['Address']['firstAddressLine'])) {
             $sale[$rootKey]['Address']['firstAddressLine'] = str_replace('+', ' ', $sale[$rootKey]['Address']['firstAddressLine']);
         }
 
+        // 4) Castaj brojeve u Items
         if (!empty($sale[$rootKey]['Items']) && is_array($sale[$rootKey]['Items'])) {
             foreach ($sale[$rootKey]['Items'] as &$it) {
                 if (isset($it['quantity'])) $it['quantity'] = (int) $it['quantity'];
@@ -2046,9 +2076,107 @@ class ControllerSaleOrder extends Controller {
             unset($it);
         }
 
+        // 5) (Opcionalno) Korigiraj country kodove prema VAT ID-u (SI… → SI, HR… → HR)
+        if (!empty($sale[$rootKey]['buyerTaxNumber']) && is_string($sale[$rootKey]['buyerTaxNumber'])) {
+            $vat = strtoupper($sale[$rootKey]['buyerTaxNumber']);
+            if (strpos($vat, 'SI') === 0) {
+                $sale[$rootKey]['buyerCountry'] = 'SI';
+                $sale[$rootKey]['country']      = 'SI';
+                if (isset($sale[$rootKey]['Address'])) {
+                    $sale[$rootKey]['Address']['country'] = 'SI';
+                }
+            }
+            if (preg_match('/^\d{11}$/', $vat)) { // npr. hrvatski OIB 11 znamenki
+                $sale[$rootKey]['buyerCountry'] = $sale[$rootKey]['buyerCountry'] ?? 'HR';
+                $sale[$rootKey]['country']      = $sale[$rootKey]['country'] ?? 'HR';
+                if (isset($sale[$rootKey]['Address'])) {
+                    $sale[$rootKey]['Address']['country'] = $sale[$rootKey]['Address']['country'] ?? 'HR';
+                }
+            }
+        }
+
         return $sale;
     }
 
+    /** ---------- Helperi ---------- */
+
+    /** Prepoznaj “izgleda kao JSON” bez PHP 8 funkcija */
+    private function looksLikeJson(string $s): bool
+    {
+        $s = ltrim($s);
+        if ($s === '') return false;
+        $first = $s[0];
+        $last  = substr(rtrim($s), -1);
+        return (($first === '{' && $last === '}') || ($first === '[' && $last === ']'));
+    }
+
+    /** Gruba heuristika za base64 (bez razmaka, dovoljne duljine, valjan alfabet) */
+    private function looksLikeBase64(string $s): bool
+    {
+        if ($s === '' || strlen($s) < 16) return false;
+        // base64 bez razmaka i s ispravnim znakovima
+        return (bool) preg_match('#^[A-Za-z0-9/+]+=*$#', rtrim($s, "\r\n"));
+    }
+
+    /** Dekodiraj JSON string iz query-string polja (SalesOrder/SalesQuote) s čišćenjem kontrolnih znakova */
+    private function decodeInnerJsonField(string $raw, string $fieldName): array
+    {
+        // Pokušaj dvostruki URL decode (često je dvaput encodano)
+        $raw = rawurldecode($raw);
+        $raw = urldecode($raw);
+
+        // Trim navodnika ako je JSON string "u navodnicima"
+        $raw = trim($raw);
+        $raw = trim($raw, "\"'");
+
+        // Normaliziraj u UTF-8
+        if (!mb_check_encoding($raw, 'UTF-8')) {
+            $raw = mb_convert_encoding($raw, 'UTF-8', 'UTF-8');
+        }
+
+        // Ukloni kontrolne znakove (ASCII 0x00–0x1F i 0x7F)
+        $raw = preg_replace('/[\x00-\x1F\x7F]/u', '', $raw);
+
+        // 1. pokušaj: kakav jest
+        $decoded = json_decode($raw, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        // 2. pokušaj: bez backslash-escapinga
+        $decoded = json_decode(stripslashes($raw), true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        // 3. pokušaj: ako izgleda kao base64 iznutra
+        if ($this->looksLikeBase64($raw)) {
+            $b = base64_decode($raw, true);
+            if ($b !== false && $this->looksLikeJson($b)) {
+                $decoded = json_decode($b, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    return $decoded;
+                }
+            }
+        }
+
+        throw new \InvalidArgumentException("Ne mogu dekodirati {$fieldName} JSON: " . json_last_error_msg());
+    }
+
+    /** Pretvori bilo koji prikaz datuma u ISO 8601 (Y-m-d); ako ne uspije, vrati original */
+    private function toIsoDate($val): string
+    {
+        try {
+            if ($val instanceof \DateTimeInterface) {
+                return $val->format('Y-m-d');
+            }
+            // Podrži i tipične formate: 03.11.2025, 2025/11/03, itd.
+            $dt = new \DateTime((string) $val);
+            return $dt->format('Y-m-d');
+        } catch (\Throwable $e) {
+            return (string) $val;
+        }
+    }
 
 
 
