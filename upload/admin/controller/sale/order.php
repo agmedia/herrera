@@ -1910,14 +1910,26 @@ class ControllerSaleOrder extends Controller {
      */
     public function sendOrder()
     {
+        // 1) Validacija
         $pass = \Agmedia\Api\Helper\Helper::validate($this->request->get, 'sendOrder');
         if (!$pass) {
             return $this->response(300, 'Validacija nije prošla..!');
         }
 
-        $order_id = $this->request->get['order_id'];
-        $type     = $this->request->get['type']; // 'order' ili 'quote'
+        // 2) Ulazni parametri
+        $order_id = $this->request->get['order_id'] ?? null;
+        $type_in  = $this->request->get['type'] ?? 'order'; // može doći 'order' | 'quote' | 'offer'
 
+        // Normaliziraj tip: 'quote' -> 'offer'
+        $type = strtolower(trim($type_in));
+        if ($type === 'quote') {
+            $type = 'offer';
+        }
+        if (!in_array($type, ['order', 'offer'], true)) {
+            $type = 'order';
+        }
+
+        // 3) Učitaj narudžbu
         $order = \Agmedia\Models\Order\Order::query()
             ->where('order_id', $order_id)
             ->with(['products', 'totals'])
@@ -1927,36 +1939,61 @@ class ControllerSaleOrder extends Controller {
             return $this->response(300, 'Narudžba ne postoji.');
         }
 
+        // 4) Pripremi payload (ARRAY za JSON body)
         $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
-        $rawSale = $eracuni->createSale($type); // može biti string (query-string) ili array
+        $payload = $eracuni->createSale($type, 'json'); // ← vraća array: ['sendIssuedInvoiceByEmail'=>..., 'apiTransactionId'=>..., 'SalesOrder|SalesQuote'=>[...]]
 
-        // 🔧 Normaliziraj i pretvori u pravi array payload za JSON body
-        $sale = $this->normalizeSalePayload($rawSale, $type === 'order' ? 'order' : 'quote');
-
-        $api  = new \Agmedia\Api\Api();
+        // 5) Pozovi API s JSON bodyjem
+        $api      = new \Agmedia\Api\Api();
+        $endpoint = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
 
         try {
-            $endpoint = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
+            // Api::post($endpoint, $body, $headers_type = 'form', array $extraHeaders = [])
+            // -> koristimo 'json' da pošalje Content-Type: application/json i json_encode payload
+            $resp = $api->post($endpoint, $payload, 'json');
 
-            // Obavezno neka Api->post šalje kao JSON body s Content-Type: application/json
-            // (vidi moj prethodni odgovor za implementaciju Api->post s Guzzle/cURL)
-            $sent = $api->post($endpoint, $sale, [
-                'Content-Type' => 'application/json; charset=utf-8',
-                'Accept'       => 'application/json',
-            ]);
+            // 6) Basic provjere odgovora
+            if ($resp === false || $resp === null) {
+                return $this->response(300, 'Greška pri komunikaciji s API-jem.');
+            }
 
-            $eracuni->saveResponse($type, $sent, $order_id);
+            // $resp može biti:
+            //  - "result" dio (ako ga backend vraća pod response.result, tvoj Api ga već izvadi),
+            //  - ili cijeli decoded JSON (npr. za error: {"response":{"status":"error",...}})
+            // Pokušaj uhvatiti error format:
+            if (is_array($resp)) {
+                // a) format s wrapperom
+                if (isset($resp['response']['status']) && $resp['response']['status'] === 'error') {
+                    $desc = $resp['response']['description'] ?? 'Nepoznata greška';
+                    return $this->response(300, 'API error: ' . $desc);
+                }
+                // b) "ravan" format: status/description na rootu (za svaki slučaj)
+                if (isset($resp['status']) && $resp['status'] === 'error') {
+                    $desc = $resp['description'] ?? 'Nepoznata greška';
+                    return $this->response(300, 'API error: ' . $desc);
+                }
+            }
+
+            // 7) Spremi broj dokumenta (ako je vraćen) i vrati OK
+            if (is_array($resp)) {
+                $eracuni->saveResponse($type === 'order' ? 'order' : 'offer', $resp, $order_id);
+            }
+
             return $this->response(200, 'Narudžba je poslana..!');
+
         } catch (\Throwable $e) {
-            \Log::error('SalesOrder/Quote create failed', [
+            Log::error('SalesOrder/Quote create failed', [
                 'order_id' => $order_id,
+                'type_in'  => $type_in,
                 'type'     => $type,
-                'payload'  => $sale,
+                'payload'  => $payload,
                 'error'    => $e->getMessage(),
             ]);
+
             return $this->response(300, 'Došlo je do greške pri slanju narudžbe: ' . $e->getMessage());
         }
     }
+
 
 
     /**
