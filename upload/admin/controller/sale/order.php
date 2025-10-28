@@ -1918,7 +1918,7 @@ class ControllerSaleOrder extends Controller {
 
         // 2) Ulazni parametri
         $order_id = $this->request->get['order_id'] ?? null;
-        $type_in  = $this->request->get['type'] ?? 'order'; // može doći 'order' | 'quote' | 'offer'
+        $type_in  = $this->request->get['type'] ?? 'order'; // 'order' | 'quote' | 'offer'
 
         // Normaliziraj tip: 'quote' -> 'offer'
         $type = strtolower(trim($type_in));
@@ -1935,56 +1935,38 @@ class ControllerSaleOrder extends Controller {
             return $this->response(300, 'Narudžba ne postoji.');
         }
 
-        // 4) Pripremi payload (ARRAY za JSON body)
-        $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
-        $payload = $eracuni->createSale($type, 'json'); // ['sendIssuedInvoiceByEmail', 'apiTransactionId', 'SalesOrder|SalesQuote' => [...] ]
+        // 4) Izgradi parameters payload (ARRAY) preko Eracuni (JSON mode)
+        $eracuni   = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
+        $params    = $eracuni->createSale($type, 'json'); // ['sendIssuedInvoiceByEmail', 'apiTransactionId', 'SalesOrder|SalesQuote'=>[...]]
 
-        // 4a) Ubrizgaj web API token u JSON (više mogućih ključeva)
-        $apiToken       = agconf('import.api.token');                       // već koristiš ga za BasicAuth
-        $tokenKeyConfig = agconf('import.api.json_token_key');              // npr. 'apiToken' ako znaš točno
-        $keysToTry      = array_values(array_unique(array_filter([
-            $tokenKeyConfig,                         // prioritetno ako je zadano u configu
-            'token',
-            'apiToken',
-            'webservicesToken',
-            'webServicesToken',
-            'webApiToken',
-            'webAPIToken'
-        ])));
+        // 5) API wrapper prema specifikaciji
+        $username  = agconf('import.api.username');
+        $secretKey = agconf('import.api.secret_key'); // << provjeri key u configu (npr. import.api.secret_key)
+        $token     = agconf('import.api.token');
 
-        // Ako nijedan ključ nije prisutan u payloadu, probaj ih redom
-        $tokenInjected = false;
-        foreach ($keysToTry as $k) {
-            if (!array_key_exists($k, $payload)) {
-                $payload[$k] = $apiToken;
-                $tokenInjected = true;
-                break;
-            }
-        }
+        $method = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
 
-        // Dodatno: probaj i u "authentication" objekt (ne ruši ako ne treba)
-        if (!$tokenInjected) {
-            if (!isset($payload['authentication']) || !is_array($payload['authentication'])) {
-                $payload['authentication'] = [];
-            }
-            if (!isset($payload['authentication']['token'])) {
-                $payload['authentication']['token'] = $apiToken;
-                $tokenInjected = true;
-            }
-        }
+        $body = [
+            'username'   => $username,
+            'secretKey'  => $secretKey,
+            'token'      => $token,
+            'method'     => $method,
+            'parameters' => $params
+        ];
 
-        // 5) Pozovi API s JSON bodyjem
-        $api      = new \Agmedia\Api\Api();
-        $endpoint = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
+        // 6) Pozovi /WebServices/API s JSON bodyjem
+        $api = new \Agmedia\Api\Api();
 
         try {
-            // Api::post mora biti patchan da podrži 'json' i da json_encode-a array
-            $resp = $api->post($endpoint, $payload, 'json');
+            // endpoint je JEDAN: WebServices/API
+            $resp = $api->post('WebServices/API', $body, 'json');
 
-            // Logička provjera odgovora (error formati)
+            // 7) Provjere i spremanje broja dokumenta
             if ($resp === false || $resp === null) {
                 return $this->response(300, 'Greška pri komunikaciji s API-jem.');
             }
+
+            // Ako provider vraća wrapper {response:{status:"error"...}}
             if (is_array($resp)) {
                 if (isset($resp['response']['status']) && $resp['response']['status'] === 'error') {
                     $desc = $resp['response']['description'] ?? 'Nepoznata greška';
@@ -1994,26 +1976,24 @@ class ControllerSaleOrder extends Controller {
                     $desc = $resp['description'] ?? 'Nepoznata greška';
                     return $this->response(300, 'API error: ' . $desc);
                 }
-            }
-
-            // Spremi broj dokumenta (ako postoji)
-            if (is_array($resp)) {
+                // spremi broj ako postoji
                 $eracuni->saveResponse($type === 'order' ? 'order' : 'offer', $resp, $order_id);
             }
 
             return $this->response(200, 'Narudžba je poslana..!');
 
         } catch (\Throwable $e) {
-            \Log::error('SalesOrder/Quote create failed', [
+            \Log::error('WebServices/API call failed', [
                 'order_id' => $order_id,
                 'type_in'  => $type_in,
                 'type'     => $type,
-                'payload'  => $payload,
+                'body'     => $body,
                 'error'    => $e->getMessage(),
             ]);
             return $this->response(300, 'Došlo je do greške pri slanju narudžbe: ' . $e->getMessage());
         }
     }
+
 
 
 
