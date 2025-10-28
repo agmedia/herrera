@@ -1941,7 +1941,7 @@ class ControllerSaleOrder extends Controller {
 
         // 5) API wrapper prema specifikaciji
         $username  = agconf('import.api.username');
-        $secretKey = agconf('import.api.secret_key'); // << provjeri key u configu (npr. import.api.secret_key)
+        $secretKey = agconf('import.api.password'); // << provjeri key u configu (npr. import.api.secret_key)
         $token     = agconf('import.api.token');
 
         $method = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
