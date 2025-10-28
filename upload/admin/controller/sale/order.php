@@ -1943,9 +1943,14 @@ class ControllerSaleOrder extends Controller {
         $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
         $payload = $eracuni->createSale($type, 'json'); // ← vraća array: ['sendIssuedInvoiceByEmail'=>..., 'apiTransactionId'=>..., 'SalesOrder|SalesQuote'=>[...]]
 
-        // 5) Pozovi API s JSON bodyjem
+        // 👉 DODAJ TOKEN U JSON ROOT (ključ podešljiv kroz config)
+        $tokenKey = agconf('import.api.json_token_key') ?: 'token'; // npr. 'token' ili 'apiToken' ili 'webservicesToken'
+        $payload[$tokenKey] = agconf('import.api.token');
+
+// 5) Pozovi API s JSON bodyjem
         $api      = new \Agmedia\Api\Api();
         $endpoint = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
+        $resp     = $api->post($endpoint, $payload, 'json');
 
         try {
             // Api::post($endpoint, $body, $headers_type = 'form', array $extraHeaders = [])
