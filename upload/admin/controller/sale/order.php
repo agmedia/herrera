@@ -1911,37 +1911,85 @@ class ControllerSaleOrder extends Controller {
     public function sendOrder()
     {
         $pass = \Agmedia\Api\Helper\Helper::validate($this->request->get, 'sendOrder');
-
-        if ( ! $pass) {
+        if (!$pass) {
             return $this->response(300, 'Validacija nije prošla..!');
         }
 
         $order_id = $this->request->get['order_id'];
         $type     = $this->request->get['type'];
-        $order    = \Agmedia\Models\Order\Order::query()->where('order_id', $order_id)->with(['products', 'totals'])->first();
+        $order    = \Agmedia\Models\Order\Order::query()
+            ->where('order_id', $order_id)
+            ->with(['products', 'totals'])
+            ->first();
 
-        if ($order) {
-            $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
-            $sale    = $eracuni->createSale($type);
-            $api     = new \Agmedia\Api\Api();
+        if (!$order) {
+            return $this->response(300, 'Narudžba ne postoji.');
+        }
 
+        $eracuni = new \Agmedia\Api\Connection\Csv\Eracuni($order->toArray());
+        $sale    = $eracuni->createSale($type);
 
+        // ❗ osiguraj ispravan format (ISO datumi, brojevi, bez '+')
+        $sale = $this->normalizeSalePayload($sale);
 
-            if ($type == 'order') {
-                $sent = $api->post('SalesOrderCreate', $sale);
-            } else {
-            $sent = $api->post('SalesQuoteCreate', $sale);
+        $api  = new \Agmedia\Api\Api();
+
+        try {
+            $endpoint = ($type === 'order') ? 'SalesOrderCreate' : 'SalesQuoteCreate';
+
+            // prisilno JSON slanje čak i ako Api->post šalje form-data
+            $headers = ['Content-Type' => 'application/json; charset=utf-8', 'Accept' => 'application/json'];
+            $sent = $api->post($endpoint, $sale, $headers); // vidi varijantu A
+            // ako Api->post ne prima headers, napravi dedicated postJson() metodu
+
+            $eracuni->saveResponse($type, $sent, $order_id);
+            return $this->response(200, 'Narudžba je poslana..!');
+        } catch (\Throwable $e) {
+            // brzi debug u log
+            Log::error('SalesOrderCreate failed', [
+                'order_id' => $order_id,
+                'type'     => $type,
+                'payload'  => $sale,
+                'error'    => $e->getMessage(),
+            ]);
+            return $this->response(300, 'Došlo je do greške pri slanju narudžbe.');
+        }
+    }
+
+    /**
+     * Normalizacija payloada: datumi u ISO, numerička polja u float/int, bez '+' u imenima.
+     */
+    private function normalizeSalePayload(array $sale): array
+    {
+        if (isset($sale['SalesOrder'])) {
+            // datum
+            if (!empty($sale['SalesOrder']['validUntil'])) {
+                $sale['SalesOrder']['validUntil'] = \Carbon\Carbon::parse($sale['SalesOrder']['validUntil'])->format('Y-m-d');
             }
 
-            if ($sent) {
-                $eracuni->saveResponse($type, $sent, $order_id);
+            // buyerName / firstAddressLine: ukloni '+'
+            foreach (['buyerName'] as $k) {
+                if (!empty($sale['SalesOrder'][$k])) {
+                    $sale['SalesOrder'][$k] = str_replace('+', ' ', $sale['SalesOrder'][$k]);
+                }
+            }
+            if (isset($sale['SalesOrder']['Address']['firstAddressLine'])) {
+                $sale['SalesOrder']['Address']['firstAddressLine'] = str_replace('+', ' ', $sale['SalesOrder']['Address']['firstAddressLine']);
+            }
 
-                return $this->response(200, 'Narudžba je poslana..!');
+            // Items: cast numeric
+            if (!empty($sale['SalesOrder']['Items']) && is_array($sale['SalesOrder']['Items'])) {
+                foreach ($sale['SalesOrder']['Items'] as &$it) {
+                    if (isset($it['quantity']))  $it['quantity']  = (int) $it['quantity'];
+                    if (isset($it['netPrice']))  $it['netPrice']  = (float) $it['netPrice'];
+                }
+                unset($it);
             }
         }
 
-        return $this->response(300, 'Došlo je do greške. Kontaktirajte administratora..!');
+        return $sale;
     }
+
 
 
     /**
