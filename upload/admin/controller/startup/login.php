@@ -10,6 +10,7 @@ class ControllerStartupLogin extends Controller {
             'extension/module/agm_api/updateQuantityEracuni',
             'extension/module/agm_api/updateQuantity',
             'extension/module/agm_api/updateQuantityMaster',
+            'extension/module/agm_api/updateQuantityAllegro',
             'extension/module/agm_api/updateQuantityDpm',
             'extension/module/agm_api/updateQuantityVayox',
              'extension/module/agm_api/updateQuantityEnovalite'
@@ -33,6 +34,7 @@ class ControllerStartupLogin extends Controller {
                 'extension/module/agm_api/updateQuantityEracuni',
                 'extension/module/agm_api/updateQuantity',
                 'extension/module/agm_api/updateQuantityMaster',
+                'extension/module/agm_api/updateQuantityAllegro',
                 'extension/module/agm_api/updateQuantityDpm',
                 'extension/module/agm_api/updateQuantityVayox',
                 'extension/module/agm_api/updateQuantityEnovalite'
