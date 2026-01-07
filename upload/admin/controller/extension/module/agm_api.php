@@ -455,6 +455,41 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $this->response->setOutput(json_encode(['inserted' => 1]));
     }
 
+
+    public function updateQuantityAllegro()
+    {
+        $master = new Csv\Allegro();
+
+        $master->getXML('quantity');
+
+        $bt = collect($master->quantity);
+        $data = [];
+
+        foreach ($bt->all() as $item) {
+            if ( ! isset($data[$item['sku']])) {
+                $data[$item['sku']] = [
+                    'sku' => $item['sku'],
+                    'quantity' => $item['quantity']
+                ];
+            }
+        }
+
+        $str = '';
+
+        foreach ($data as $item) {
+            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
+        }
+
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+
+        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.suplierqty = pt.quantity");
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['inserted' => 1]));
+    }
+
     public function updateQuantityDpm()
     {
         $dpm = new Csv\Dpm();
