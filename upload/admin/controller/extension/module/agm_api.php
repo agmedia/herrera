@@ -460,10 +460,8 @@ class ControllerExtensionModuleAgmApi extends Controller {
     {
         $master = new Csv\Allegro();
 
-        // IMPORTANT: target mora biti stock_quantity (tako ti je složen getXML)
-        $res = $master->getXML('stock_quantity');
+        $res = $master->getXML('stock_quantity'); // <- MUST match Allegro::getXML()
 
-        // Ako XML nije učitan/parsiran
         if ($res === false) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode([
@@ -473,15 +471,12 @@ class ControllerExtensionModuleAgmApi extends Controller {
             return;
         }
 
-        $bt = collect($master->quantity);
-
         $data = [];
-        foreach ($bt->all() as $item) {
-            // minimalna validacija + dedupe po sku
+        foreach ($master->quantity as $item) {
             if (!empty($item['sku']) && isset($item['quantity']) && !isset($data[$item['sku']])) {
                 $data[$item['sku']] = [
                     'sku'      => $item['sku'],
-                    'quantity' => (int) $item['quantity']
+                    'quantity' => (int)$item['quantity']
                 ];
             }
         }
@@ -491,11 +486,10 @@ class ControllerExtensionModuleAgmApi extends Controller {
         $values = [];
         foreach ($data as $item) {
             $sku = $this->db->escape($item['sku']);
-            $qty = (int) $item['quantity'];
+            $qty = (int)$item['quantity'];
             $values[] = "('" . $sku . "', " . $qty . ", 0)";
         }
 
-        // Guard: nema više INSERT ... VALUES ;
         if (!$values) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode([
@@ -520,6 +514,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
             'inserted' => count($values)
         ]));
     }
+
 
 
     public function updateQuantityDpm()
