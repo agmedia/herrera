@@ -514,9 +514,27 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
         }
 
-       $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
 
-        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+        $values = [];
+        foreach ($data as $item) {
+            $sku = $this->db->escape($item['sku']);      // IMPORTANT
+            $qty = (int) $item['quantity'];
+            $values[] = "('" . $sku . "', " . $qty . ", 0)";
+        }
+
+        if (!$values) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode([
+                'inserted' => 0,
+                'reason'   => 'No offers parsed from XML (check XML structure / vendorCode / stock_quantity).'
+            ]));
+            return;
+        }
+
+        $this->db->query(
+            "INSERT INTO `" . DB_PREFIX . "product_temp` (`uid`, `quantity`, `price`) VALUES " . implode(',', $values)
+        );
 
        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.ean = pt.uid SET p.suplierqty = pt.quantity");
 

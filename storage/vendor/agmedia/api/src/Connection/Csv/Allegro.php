@@ -35,15 +35,26 @@ class Allegro
      */
     public function getXML(string $target = null)
     {
-        $this->xml = simplexml_load_string(file_get_contents($this->url));
-
-        if ($target && $target == 'stock_quantity') {
-            $this->resolveQuantity();
-
-            return $this;
+        $raw = @file_get_contents($this->url);
+        if ($raw === false) {
+            Log::write('Allegro XML download failed: ' . $this->url);
+            $this->xml = null;
+            return false;
         }
 
-       
+        $xml = @simplexml_load_string($raw);
+        if ($xml === false) {
+            Log::write('Allegro XML parse failed: ' . $this->url);
+            $this->xml = null;
+            return false;
+        }
+
+        $this->xml = $xml;
+
+        if ($target === 'stock_quantity') {
+            $this->resolveQuantity();
+            return $this;
+        }
 
         return $this->xml;
     }
@@ -58,10 +69,20 @@ class Allegro
     {
         $this->quantity = [];
 
-        foreach ($this->xml->offer as $item) {
+        // Support both <offer> and <offers><offer>
+        $offers = $this->xml->offer ?? ($this->xml->offers->offer ?? []);
+
+        foreach ($offers as $item) {
+            $sku = (string) $item->vendorCode;
+            $qty = (string) $item->stock_quantity;
+
+            if ($sku === '') {
+                continue;
+            }
+
             $this->quantity[] = [
-                'sku' => (string) $item->vendorCode,
-                'quantity' => (string) $item->stock_quantity
+                'sku'      => $sku,
+                'quantity' => (int) $qty
             ];
         }
 
