@@ -69,12 +69,12 @@ class Allegro
     {
         $this->quantity = [];
 
-        // Support both <offer> and <offers><offer>
-        $offers = $this->xml->offer ?? ($this->xml->offers->offer ?? []);
+        // yml_catalog -> shop -> offers -> offer
+        $offers = $this->xml->shop->offers->offer ?? [];
 
         foreach ($offers as $item) {
             $sku = (string) $item->vendorCode;
-            $qty = (string) $item->stock_quantity;
+            $qty = (int) $item->stock_quantity;
 
             if ($sku === '') {
                 continue;
@@ -82,10 +82,11 @@ class Allegro
 
             $this->quantity[] = [
                 'sku'      => $sku,
-                'quantity' => (int) $qty
+                'quantity' => $qty
             ];
         }
 
         return $this;
     }
+
 }
