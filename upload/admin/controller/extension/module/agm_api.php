@@ -460,35 +460,67 @@ class ControllerExtensionModuleAgmApi extends Controller {
     {
         $master = new Csv\Allegro();
 
-        $master->getXML('stock_quantity');
+        // IMPORTANT: target mora biti stock_quantity (tako ti je složen getXML)
+        $res = $master->getXML('stock_quantity');
+
+        // Ako XML nije učitan/parsiran
+        if ($res === false) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode([
+                'inserted' => 0,
+                'reason'   => 'Failed to download or parse Allegro XML.'
+            ]));
+            return;
+        }
 
         $bt = collect($master->quantity);
-        $data = [];
 
+        $data = [];
         foreach ($bt->all() as $item) {
-            if ( ! isset($data[$item['sku']])) {
+            // minimalna validacija + dedupe po sku
+            if (!empty($item['sku']) && isset($item['quantity']) && !isset($data[$item['sku']])) {
                 $data[$item['sku']] = [
-                    'sku' => $item['sku'],
-                    'quantity' => $item['quantity']
+                    'sku'      => $item['sku'],
+                    'quantity' => (int) $item['quantity']
                 ];
             }
         }
 
-        $str = '';
-
-        foreach ($data as $item) {
-            $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
-        }
-
         $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
 
-        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
+        $values = [];
+        foreach ($data as $item) {
+            $sku = $this->db->escape($item['sku']);
+            $qty = (int) $item['quantity'];
+            $values[] = "('" . $sku . "', " . $qty . ", 0)";
+        }
 
-        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.sku = pt.uid SET p.suplierqty = pt.quantity");
+        // Guard: nema više INSERT ... VALUES ;
+        if (!$values) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode([
+                'inserted' => 0,
+                'reason'   => 'No quantity rows parsed from XML (check XML structure / mapping).'
+            ]));
+            return;
+        }
+
+        $this->db->query(
+            "INSERT INTO `" . DB_PREFIX . "product_temp` (`uid`, `quantity`, `price`) VALUES " . implode(',', $values)
+        );
+
+        $this->db->query(
+            "UPDATE `" . DB_PREFIX . "product` p
+         INNER JOIN `" . DB_PREFIX . "product_temp` pt ON p.sku = pt.uid
+         SET p.suplierqty = pt.quantity"
+        );
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode(['inserted' => 1]));
+        $this->response->setOutput(json_encode([
+            'inserted' => count($values)
+        ]));
     }
+
 
     public function updateQuantityDpm()
     {
@@ -514,27 +546,9 @@ class ControllerExtensionModuleAgmApi extends Controller {
             $str .= '("' . $item['sku'] . '", ' . $item['quantity'] . ', ' . 0 . '),';
         }
 
-        $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
+       $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "product_temp`");
 
-        $values = [];
-        foreach ($data as $item) {
-            $sku = $this->db->escape($item['sku']);      // IMPORTANT
-            $qty = (int) $item['quantity'];
-            $values[] = "('" . $sku . "', " . $qty . ", 0)";
-        }
-
-        if (!$values) {
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode([
-                'inserted' => 0,
-                'reason'   => 'No offers parsed from XML (check XML structure / vendorCode / stock_quantity).'
-            ]));
-            return;
-        }
-
-        $this->db->query(
-            "INSERT INTO `" . DB_PREFIX . "product_temp` (`uid`, `quantity`, `price`) VALUES " . implode(',', $values)
-        );
+        $this->db->query("INSERT INTO " . DB_PREFIX . "product_temp (uid, quantity, price) VALUES " . substr($str, 0, -1) . ";");
 
        $this->db->query("UPDATE " . DB_PREFIX . "product p INNER JOIN " . DB_PREFIX . "product_temp pt ON p.ean = pt.uid SET p.suplierqty = pt.quantity");
 
