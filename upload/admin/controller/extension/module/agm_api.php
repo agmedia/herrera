@@ -460,7 +460,7 @@ class ControllerExtensionModuleAgmApi extends Controller {
     {
         $master = new Csv\Allegro();
 
-        $master->getXML('quantity');
+        $master->getXML('stock_quantity');
 
         $bt = collect($master->quantity);
         $data = [];
