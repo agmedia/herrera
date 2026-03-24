@@ -10,7 +10,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 body {
-	color: #222
+	color: #222;
 	font-weight: 400;
 	width: 100%;
 	font-size:14px;
@@ -3128,7 +3128,7 @@ body.offset250 .header-bottom, .menu-style {
 	}
 	.col-sm-8 .grid-holder.grid3 .item,
 	.grid-holder.grid3 .item.single-blog {
-		width:calc(50%+1px);
+		width:calc(50% + 1px);
 	}
 }
 @media (min-width: 590px) and (max-width: 767px) {
@@ -5123,7 +5123,7 @@ a.button-circle {
 
 /* Product Listing */
 .table.filter {
-	border-bottom:none
+	border-bottom:none;
 	padding:7px 0;
 }
 .table.filter .view-icon i {
