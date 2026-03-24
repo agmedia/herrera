@@ -2482,10 +2482,10 @@ div.required .control-label:after {
 	font-size:14px;
 }
 .main-menu.vertical > ul > li > a {
-	color:#121212;
-	padding:2px 0 2px 20px;
+	color:#222;
+	padding:0 20px;
 	font-size:15px !important;
-	font-weight:500!important;
+	font-weight:600 !important;
 }
 
 .main-menu.vertical > ul > li > a:hover {
@@ -2500,7 +2500,7 @@ div.required .control-label:after {
 }
 .main-menu.vertical > ul > li > a,
 .main-menu.vertical > ul > li.dropdown-wrapper > a .fa-angle-down {
-	line-height:44px;
+	line-height:40px;
 }
 .column .main-menu.vertical > ul > li > a,
 .column .main-menu.vertical > ul > li.dropdown-wrapper > a .fa-angle-down {
