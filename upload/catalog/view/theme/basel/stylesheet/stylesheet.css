@@ -5379,7 +5379,7 @@ a.button-circle {
 .grid .single-product .product-name:hover,
 .list .single-product .product-name {
 	display: inline-block;
-	color: #2F2F2F;
+	color: #222;
 	font-size: 16px !important;
 	padding: 1px 0;
 	margin-bottom: 8px;
