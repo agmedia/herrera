@@ -1989,7 +1989,7 @@ div.required .control-label:after {
 	cursor:pointer;
 }
 .live-search .table.products tr:hover {
-	background:#fff8e5;
+	background:#f2f2f2;
 }
 .live-search .table.products tr td.image {
 	padding:8px;
