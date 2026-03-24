@@ -2002,7 +2002,7 @@ div.required .control-label:after {
 	text-align: center;
 	padding:12px 8px;
 	font-size:1em;
-	background-color: #d4af37;
+	background-color: #00b5cc;
 	line-height: 18px;
 }
 .live-search .result-text a.view-all-results {
@@ -2665,7 +2665,7 @@ div.required .control-label:after {
 	position: absolute;
 	right: 18px;
 	top: 16px;
-	color: #d4af37;
+	color: #00b5cc;
 	font-size: 18px;
 }
 /* Mobile menu language & currency */
@@ -4582,7 +4582,7 @@ a.scroll-to-top:not(:hover) {
 .pagination > .active > span:hover,
 .pagination > .active > a:focus,
 .pagination > .active > span:focus {
-	background-color: #d4af37;
+	background-color: #00b5cc;
 	border-color: transparent;
 }
 @media (min-width: 768px) {
@@ -4742,7 +4742,7 @@ a.btn-light-outline:hover {
 	color:#000000;
 }
 .btn-outline:hover, a.btn-outline:hover {
-	background-color:#d4af37;
+	background-color:#00b5cc;
 	border-color:transparent;
 	color:#ffffff;
 }
@@ -5994,7 +5994,7 @@ table p{margin-bottom:0px;}
 .btn-option{
 	min-width: 46px;
 	height: 46px;
-	border: 1px solid #d4af37;
+	border: 1px solid #00b5cc;
 	background-color:#fff;
 	margin: 0 6px 6px 0;
 	padding: 5px 10px;
@@ -6296,7 +6296,7 @@ hr {
 }
 #product .options .has-image input[type="radio"]:checked + img,
 #product .options .has-image input[type="checkbox"]:checked + img {
-	border:2px solid #d4af37;
+	border:2px solid #00b5cc;
 }
 #product .options .table-cell .radio:last-child {
 	margin-bottom:0;
@@ -7480,7 +7480,7 @@ div.ui-slider-range.ui-widget-header, .ui-state-default, .ui-widget-content .ui-
 	.mnu {
 		position: absolute;
 		left: 0px;
-		background: #d4af37;
+		background: #00b5cc;
 		width: 50px;
 		height: 50px;
 		color:#fff;
@@ -7938,7 +7938,7 @@ div.ui-slider-range.ui-widget-header, .ui-state-default, .ui-widget-content .ui-
 		width: 100%;
 		height: 1px;
 		margin-top: 2px;
-		background-color: #d4af37 !important;
+		background-color: #00b5cc !important;
 	}
 
 	.breadcrumb-holder .links-holder {
@@ -7980,7 +7980,7 @@ div.ui-slider-range.ui-widget-header, .ui-state-default, .ui-widget-content .ui-
 		display: inline-block;
 		line-height: 1.1;
 		margin-bottom: 5px;
-		color: #d4af37;
+		color: #00b5cc;
 	}
 
 	.cm_item .wide-signup h3 {
