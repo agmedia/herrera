@@ -608,7 +608,7 @@ public function getProductRelated($product_id) {
 
 
     public function getPurchaseDate($product_id, $customer_id) {
-        $query = $this->db->query("SELECT  o.date_added   FROM  " . DB_PREFIX . "order o LEFT JOIN  " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE  op.product_id = $product_id AND o.order_status_id IN (1,3,5) AND o.customer_id = $customer_id ");
+        $query = $this->db->query("SELECT o.date_added FROM " . DB_PREFIX . "order o INNER JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE op.product_id = '" . (int)$product_id . "' AND o.order_status_id IN (1,3,5) AND o.customer_id = '" . (int)$customer_id . "' ORDER BY o.date_added DESC LIMIT 1");
 
 
         if (isset($query->row['date_added'])) {
