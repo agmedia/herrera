@@ -1,0 +1,131 @@
+{{ header }}
+<div id="legal-return-form" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href|e }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}{% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}{% set class = 'col-sm-9' %}
+    {% else %}{% set class = 'col-sm-12' %}{% endif %}
+    <main id="content" class="{{ class }}">{{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      {% if errors.warning %}<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ errors.warning }}</div>{% endif %}
+	  {% if merchant_email %}<p class="legal-return-alternative">{{ text_alternative_channel }} <a href="mailto:{{ merchant_email|e }}">{{ merchant_email|e }}</a>.</p>{% endif %}
+
+      {% if review %}
+      <section class="legal-return-review" aria-labelledby="legal-return-review-title">
+        <h2 id="legal-return-review-title">{{ text_review_heading }}</h2>
+        <div class="alert alert-warning">{{ text_review_notice }}</div>
+        <p class="lead"><strong>{{ request_type == 'withdrawal_14_days' ? text_withdrawal_declaration : text_return_declaration }}</strong></p>
+        <dl class="dl-horizontal legal-return-summary">
+          <dt>{{ entry_request_type }}</dt><dd>{{ request_type == 'withdrawal_14_days' ? text_type_withdrawal : text_type_return }}</dd>
+          <dt>{{ entry_order_id }}</dt><dd>#{{ order_id|e }}</dd>
+          <dt>{{ entry_firstname }} / {{ entry_lastname }}</dt><dd>{{ firstname|e }} {{ lastname|e }}</dd>
+          <dt>{{ entry_email }}</dt><dd>{{ email|e }}</dd>
+          <dt>{{ entry_telephone }}</dt><dd>{{ telephone ? telephone|e : '—' }}</dd>
+          <dt>{{ entry_address }}</dt><dd>{{ address|e|nl2br }}</dd>
+          <dt>{{ entry_received_date }}</dt><dd>{{ received_date|e }}</dd>
+          <dt>{{ entry_product_details }}</dt><dd>{{ product_details|e|nl2br }}</dd>
+          <dt>{{ entry_reason }}</dt><dd>{{ reason ? reason|e|nl2br : '—' }}</dd>
+          <dt>{{ entry_iban }}</dt><dd>{{ iban ? iban|e : '—' }}</dd>
+        </dl>
+        <form action="{{ action|e }}" method="post" class="legal-return-confirm-form">
+          <input type="hidden" name="stage" value="confirm" />
+          <input type="hidden" name="confirm_token" value="{{ confirm_token|e }}" />
+          <div class="buttons clearfix">
+            <a href="{{ edit_url|e }}" class="btn btn-default pull-left"><i class="fa fa-pencil"></i> {{ button_edit }}</a>
+            <button type="submit" class="btn btn-danger btn-lg pull-right">
+              <i class="fa fa-check" aria-hidden="true"></i>
+              {{ request_type == 'withdrawal_14_days' ? button_confirm_withdrawal : button_confirm_return }}
+            </button>
+          </div>
+        </form>
+      </section>
+      {% else %}
+      <p class="lead">{{ text_intro }}</p>
+      <div class="alert alert-info legal-return-rights">
+        <p>{{ text_withdrawal_notice }}</p>
+        <p><a href="{{ eu_withdrawal_url|e }}" target="_blank" rel="noopener noreferrer">{{ text_eu_withdrawal }} <span aria-hidden="true">↗</span></a></p>
+      </div>
+      <div class="well legal-return-warranty-separate">
+        <p>{{ text_separate_warranty }}</p>
+        <a href="{{ eu_guarantee_url|e }}" target="_blank" rel="noopener noreferrer">{{ text_eu_guarantee }} <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <form action="{{ action|e }}" method="post" enctype="application/x-www-form-urlencoded" class="form-horizontal" novalidate>
+        <input type="hidden" name="stage" value="review" />
+        <input type="hidden" name="form_token" value="{{ form_token|e }}" />
+        <div class="legal-return-honeypot" aria-hidden="true"><label>Website <input type="text" name="website" value="" tabindex="-1" autocomplete="off" /></label></div>
+
+        <div class="form-group required{% if errors.request_type %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-request-type">{{ entry_request_type }}</label>
+          <div class="col-sm-9">
+            <select name="request_type" id="input-request-type" class="form-control" required>
+              <option value="">--</option>
+              <option value="withdrawal_14_days"{% if request_type == 'withdrawal_14_days' %} selected{% endif %}>{{ text_type_withdrawal }}</option>
+              <option value="return_other"{% if request_type == 'return_other' %} selected{% endif %}>{{ text_type_return }}</option>
+            </select>
+            {% if errors.request_type %}<div class="text-danger">{{ errors.request_type }}</div>{% endif %}
+          </div>
+        </div>
+        <div class="form-group required{% if errors.order_id %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-order-id">{{ entry_order_id }}</label>
+          <div class="col-sm-9"><input type="number" min="1" max="2147483647" step="1" name="order_id" value="{{ order_id|e }}" id="input-order-id" class="form-control" required />{% if errors.order_id %}<div class="text-danger">{{ errors.order_id }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.firstname %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-firstname">{{ entry_firstname }}</label>
+          <div class="col-sm-9"><input type="text" name="firstname" value="{{ firstname|e }}" id="input-firstname" maxlength="64" class="form-control" autocomplete="given-name" required />{% if errors.firstname %}<div class="text-danger">{{ errors.firstname }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.lastname %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-lastname">{{ entry_lastname }}</label>
+          <div class="col-sm-9"><input type="text" name="lastname" value="{{ lastname|e }}" id="input-lastname" maxlength="64" class="form-control" autocomplete="family-name" required />{% if errors.lastname %}<div class="text-danger">{{ errors.lastname }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.email %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-email">{{ entry_email }}</label>
+          <div class="col-sm-9"><input type="email" name="email" value="{{ email|e }}" id="input-email" maxlength="96" class="form-control" autocomplete="email" required />{% if errors.email %}<div class="text-danger">{{ errors.email }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group{% if errors.telephone %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-telephone">{{ entry_telephone }}</label>
+          <div class="col-sm-9"><input type="tel" name="telephone" value="{{ telephone|e }}" id="input-telephone" maxlength="32" class="form-control" autocomplete="tel" />{% if errors.telephone %}<div class="text-danger">{{ errors.telephone }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.address %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-address">{{ entry_address }}</label>
+          <div class="col-sm-9"><textarea name="address" id="input-address" rows="3" maxlength="1000" class="form-control" autocomplete="street-address" required>{{ address|e }}</textarea>{% if errors.address %}<div class="text-danger">{{ errors.address }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.received_date %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-received-date">{{ entry_received_date }}</label>
+          <div class="col-sm-9"><input type="date" name="received_date" value="{{ received_date|e }}" id="input-received-date" class="form-control" required />{% if errors.received_date %}<div class="text-danger">{{ errors.received_date }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.product_details %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-product-details">{{ entry_product_details }}</label>
+          <div class="col-sm-9"><textarea name="product_details" id="input-product-details" rows="5" maxlength="4000" class="form-control" required>{{ product_details|e }}</textarea>{% if errors.product_details %}<div class="text-danger">{{ errors.product_details }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group{% if errors.reason %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-reason">{{ entry_reason }}</label>
+          <div class="col-sm-9"><textarea name="reason" id="input-reason" rows="4" maxlength="4000" class="form-control">{{ reason|e }}</textarea><p class="help-block">{{ text_reason_help }}</p>{% if errors.reason %}<div class="text-danger">{{ errors.reason }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group{% if errors.iban %} has-error{% endif %}">
+          <label class="col-sm-3 control-label" for="input-iban">{{ entry_iban }}</label>
+          <div class="col-sm-9"><input type="text" name="iban" value="{{ iban|e }}" id="input-iban" maxlength="64" class="form-control" autocomplete="off" />{% if errors.iban %}<div class="text-danger">{{ errors.iban }}</div>{% endif %}</div>
+        </div>
+        <div class="form-group required{% if errors.confirmation %} has-error{% endif %}">
+          <div class="col-sm-offset-3 col-sm-9">
+            <div class="checkbox"><label><input type="checkbox" name="confirmation" value="1" required /> {{ text_confirmation }}</label></div>
+            {% if errors.confirmation %}<div class="text-danger">{{ errors.confirmation }}</div>{% endif %}
+            <p class="help-block">{{ text_privacy }}</p>
+          </div>
+        </div>
+        <div class="buttons clearfix"><button type="submit" class="btn btn-primary btn-lg pull-right">{{ button_submit }} <i class="fa fa-chevron-right"></i></button></div>
+      </form>
+      {% endif %}
+      {{ content_bottom }}
+    </main>
+    {{ column_right }}
+  </div>
+</div>
+<style>
+#legal-return-form{margin-bottom:40px}.legal-return-rights p:last-child,.legal-return-warranty-separate p{margin-bottom:5px}.legal-return-honeypot{position:absolute!important;left:-10000px!important;width:1px;height:1px;overflow:hidden}.legal-return-review{max-width:900px}.legal-return-summary{border:1px solid #ddd;border-radius:4px;padding:20px}.legal-return-summary dd{margin-bottom:12px;overflow-wrap:anywhere}.legal-return-confirm-form{margin-top:20px}@media(max-width:767px){.legal-return-summary{padding:15px}.legal-return-summary dt{text-align:left;margin-top:10px}.legal-return-summary dd{margin-left:0}.legal-return-confirm-form .btn{float:none!important;display:block;width:100%;margin:0 0 12px;white-space:normal}.form-horizontal .control-label{text-align:left}}
+</style>
+{{ footer }}

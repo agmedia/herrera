@@ -1,0 +1,19 @@
+<?php
+$_['heading_title'] = 'Legal guarantee – at least 2 years';
+$_['text_extension'] = 'Extensions';
+$_['text_home'] = 'Home';
+$_['text_edit'] = 'Notice settings';
+$_['text_success'] = 'Settings saved.';
+$_['text_enabled'] = 'Enabled';
+$_['text_disabled'] = 'Disabled';
+$_['text_asset_notice'] = 'The module displays the original, unmodified Croatian colour SVG from the European Commission under Implementing Regulation (EU) 2025/1960.';
+$_['text_open_asset'] = 'Preview official SVG';
+$_['entry_status'] = 'Module status';
+$_['entry_header_status'] = 'Link immediately before footer';
+$_['entry_checkout_status'] = 'Checkout notice';
+$_['entry_email_status'] = 'Order-confirmation email notice';
+$_['entry_eu_url'] = 'Official EU information URL';
+$_['button_save'] = 'Save';
+$_['button_cancel'] = 'Cancel';
+$_['error_permission'] = 'You do not have permission to modify this module.';
+$_['error_url'] = 'Enter a valid HTTPS URL.';

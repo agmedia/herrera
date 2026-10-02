@@ -1,0 +1,19 @@
+<?php
+$_['heading_title'] = 'Zakonsko jamstvo – najmanje 2 godine';
+$_['text_extension'] = 'Proširenja';
+$_['text_home'] = 'Početna';
+$_['text_edit'] = 'Postavke obavijesti';
+$_['text_success'] = 'Postavke su spremljene.';
+$_['text_enabled'] = 'Omogućeno';
+$_['text_disabled'] = 'Onemogućeno';
+$_['text_asset_notice'] = 'Prikazuje se izvorni, neizmijenjeni hrvatski kolor SVG Europske komisije iz Provedbene uredbe (EU) 2025/1960.';
+$_['text_open_asset'] = 'Pregled službenog SVG-a';
+$_['entry_status'] = 'Status modula';
+$_['entry_header_status'] = 'Poveznica neposredno prije podnožja';
+$_['entry_checkout_status'] = 'Obavijest u checkoutu';
+$_['entry_email_status'] = 'Obavijest u potvrdi narudžbe';
+$_['entry_eu_url'] = 'Poveznica na službene EU informacije';
+$_['button_save'] = 'Spremi';
+$_['button_cancel'] = 'Odustani';
+$_['error_permission'] = 'Nemate ovlasti za izmjenu modula.';
+$_['error_url'] = 'Unesite valjanu HTTPS poveznicu.';

@@ -1,0 +1,195 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-generate" data-toggle="tooltip" title="{{ button_generate }}" class="btn btn-success"><i class="fa fa-refresh"></i></button>
+        <button type="submit" form="form-digital-pricelist" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel|e }}" data-toggle="tooltip" title="{{ button_cancel|e }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href|e }}">{{ breadcrumb.text|e }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning|e }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success|e }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> {{ text_large_catalog_warning|e }}</div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3></div>
+      <div class="panel-body">
+        <form action="{{ action|e }}" method="post" enctype="multipart/form-data" id="form-digital-pricelist" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-9">
+              <select name="module_digital_pricelist_status" id="input-status" class="form-control">
+                <option value="1"{% if module_digital_pricelist_status %} selected="selected"{% endif %}>{{ text_enabled }}</option>
+                <option value="0"{% if not module_digital_pricelist_status %} selected="selected"{% endif %}>{{ text_disabled }}</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>{{ text_legal_fields }}</legend>
+            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ help_object_identity }}</div>
+            <div class="form-group required">
+              <label class="col-sm-3 control-label" for="input-object-type">{{ entry_object_type }}</label>
+              <div class="col-sm-9"><input type="text" name="module_digital_pricelist_object_type" value="{{ module_digital_pricelist_object_type|e }}" id="input-object-type" class="form-control" maxlength="191" /></div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-3 control-label" for="input-object-address">{{ entry_object_address }}</label>
+              <div class="col-sm-9"><input type="text" name="module_digital_pricelist_object_address" value="{{ module_digital_pricelist_object_address|e }}" id="input-object-address" class="form-control" maxlength="255" /></div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-3 control-label" for="input-object-code">{{ entry_object_code }}</label>
+              <div class="col-sm-9"><input type="text" name="module_digital_pricelist_object_code" value="{{ module_digital_pricelist_object_code|e }}" id="input-object-code" class="form-control" maxlength="80" /></div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-customer-group"><span data-toggle="tooltip" title="{{ help_customer_group }}">{{ entry_customer_group }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_digital_pricelist_customer_group_id" id="input-customer-group" class="form-control">
+                  {% for customer_group in customer_groups %}
+                  <option value="{{ customer_group.customer_group_id }}"{% if customer_group.customer_group_id == module_digital_pricelist_customer_group_id %} selected="selected"{% endif %}>{{ customer_group.name|e }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-language"><span data-toggle="tooltip" title="{{ help_language }}">{{ entry_language }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_digital_pricelist_language_id" id="input-language" class="form-control">
+                  {% for language in languages %}
+                  <option value="{{ language.language_id }}"{% if language.language_id == module_digital_pricelist_language_id %} selected="selected"{% endif %}>{{ language.name|e }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-unit-attribute"><span data-toggle="tooltip" title="{{ help_unit_attribute }}">{{ entry_unit_attribute }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_digital_pricelist_unit_attribute_id" id="input-unit-attribute" class="form-control">
+                  <option value="0">{{ text_none }}</option>
+                  {% for attribute in attributes %}
+                  <option value="{{ attribute.attribute_id }}"{% if attribute.attribute_id == module_digital_pricelist_unit_attribute_id %} selected="selected"{% endif %}>{{ attribute.attribute_group|e }} &gt; {{ attribute.name|e }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-unit-price-attribute"><span data-toggle="tooltip" title="{{ help_unit_price_attribute }}">{{ entry_unit_price_attribute }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_digital_pricelist_unit_price_attribute_id" id="input-unit-price-attribute" class="form-control">
+                  <option value="0">{{ text_none }}</option>
+                  {% for attribute in attributes %}
+                  <option value="{{ attribute.attribute_id }}"{% if attribute.attribute_id == module_digital_pricelist_unit_price_attribute_id %} selected="selected"{% endif %}>{{ attribute.attribute_group|e }} &gt; {{ attribute.name|e }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group required">
+              <label class="col-sm-3 control-label" for="input-special-sale-name"><span data-toggle="tooltip" title="{{ help_special_sale_name }}">{{ entry_special_sale_name }}</span></label>
+              <div class="col-sm-9"><input type="text" name="module_digital_pricelist_special_sale_name" value="{{ module_digital_pricelist_special_sale_name|e }}" id="input-special-sale-name" class="form-control" maxlength="191" />{% if error_special_sale_name %}<div class="text-danger">{{ error_special_sale_name|e }}</div>{% endif %}</div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_storage }}</legend>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-archive-days"><span data-toggle="tooltip" title="{{ help_archive_days }}">{{ entry_archive_days }}</span></label>
+              <div class="col-sm-9">
+                <input type="number" min="30" max="3650" name="module_digital_pricelist_archive_days" value="{{ module_digital_pricelist_archive_days|e }}" id="input-archive-days" class="form-control" />
+                {% if error_archive_days %}<div class="text-danger">{{ error_archive_days|e }}</div>{% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input-include-disabled"><span data-toggle="tooltip" title="{{ help_include_disabled }}">{{ entry_include_disabled }}</span></label>
+              <div class="col-sm-9">
+                <select name="module_digital_pricelist_include_disabled" id="input-include-disabled" class="form-control">
+                  <option value="0"{% if not module_digital_pricelist_include_disabled %} selected="selected"{% endif %}>{{ text_no }}</option>
+                  <option value="1"{% if module_digital_pricelist_include_disabled %} selected="selected"{% endif %}>{{ text_yes }}</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_feed_urls }}</legend>
+            <div class="form-group"><label class="col-sm-3 control-label">{{ entry_xml_url }}</label><div class="col-sm-9"><div class="input-group"><input type="text" readonly value="{{ xml_url|e }}" class="form-control" /><span class="input-group-btn"><a href="{{ xml_url|e }}" target="_blank" class="btn btn-default"><i class="fa fa-external-link"></i></a></span></div></div></div>
+            <div class="form-group"><label class="col-sm-3 control-label">{{ entry_csv_url }}</label><div class="col-sm-9"><div class="input-group"><input type="text" readonly value="{{ csv_url|e }}" class="form-control" /><span class="input-group-btn"><a href="{{ csv_url|e }}" target="_blank" class="btn btn-default"><i class="fa fa-external-link"></i></a></span></div></div></div>
+            <div class="form-group"><label class="col-sm-3 control-label">{{ entry_archives_url }}</label><div class="col-sm-9"><div class="input-group"><input type="text" readonly value="{{ archives_url|e }}" class="form-control" /><span class="input-group-btn"><a href="{{ archives_url|e }}" target="_blank" class="btn btn-default"><i class="fa fa-external-link"></i></a></span></div></div></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_cron }}</legend>
+            <div class="alert alert-info"><i class="fa fa-clock-o"></i> {{ text_generate_help }}</div>
+            <div class="form-group required">
+              <label class="col-sm-3 control-label" for="input-cron-token"><span data-toggle="tooltip" title="{{ help_cron_token }}">{{ entry_cron_token }}</span></label>
+              <div class="col-sm-9"><input type="text" name="module_digital_pricelist_cron_token" value="{{ module_digital_pricelist_cron_token|e }}" id="input-cron-token" class="form-control" autocomplete="off" />{% if error_cron_token %}<div class="text-danger">{{ error_cron_token|e }}</div>{% endif %}</div>
+            </div>
+            <div class="form-group"><label class="col-sm-3 control-label">{{ entry_cron_url }}</label><div class="col-sm-9"><input type="text" readonly value="{{ cron_url|e }}" class="form-control" /></div></div>
+            <div class="form-group"><label class="col-sm-3 control-label">{{ entry_cli_command }}</label><div class="col-sm-9"><pre style="margin:0;">30 7 * * * {{ cli_command|e }}</pre></div></div>
+          </fieldset>
+        </form>
+        <form action="{{ generate_action|e }}" method="post" id="form-generate"></form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-database"></i> {{ text_storage }}</h3></div>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <tbody>
+                <tr><td>{{ entry_last_generated }}</td><td>{{ last_generated|e }}</td></tr>
+                <tr><td>{{ entry_current_filename }}</td><td><code>{{ current_filename|e }}</code></td></tr>
+                <tr><td>{{ entry_xml_size }}</td><td>{{ xml_size }}</td></tr>
+                <tr><td>{{ entry_csv_size }}</td><td>{{ csv_size }}</td></tr>
+                <tr><td>{{ entry_archive_files }}</td><td>{{ archive_files }}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-7">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-history"></i> {{ text_recent_runs }}</h3></div>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead><tr><td>{{ column_generated_at }}</td><td>{{ column_status }}</td><td>{{ column_products }}</td><td>{{ column_duration }}</td><td>{{ column_message }}</td></tr></thead>
+              <tbody>
+                {% if runs %}
+                {% for run in runs %}
+                <tr>
+                  <td>{{ run.generated_at|e }}</td>
+                  <td><span class="label label-{{ run.status == 'success' ? 'success' : 'danger' }}">{{ run.status|e }}</span></td>
+                  <td>{{ run.product_count|e }}</td>
+                  <td>{{ run.duration_ms|e }} ms</td>
+                  <td>{{ run.message|e }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr><td colspan="5" class="text-center">{{ text_no_runs }}</td></tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

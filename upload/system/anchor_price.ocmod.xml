@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+  <name>Anchor Prices for OpenCart 3</name>
+  <code>anchor_price</code>
+  <version>1.1.0</version>
+  <author>Herrera</author>
+  <link></link>
+
+	  <file path="admin/controller/catalog/product.php">
+	    <operation error="skip">
+	      <ignoreif><![CDATA[anchor-price-product-form-validation-v1]]></ignoreif>
+	      <search><![CDATA[if ($this->error && !isset($this->error['warning'])) {]]></search>
+	      <add position="before"><![CDATA[
+		// anchor-price-product-form-validation-v1
+		if (array_key_exists('anchor_price', $this->request->post) || array_key_exists('anchor_reference_date', $this->request->post)) {
+			$this->load->language('extension/module/anchor_price');
+			$this->load->model('extension/module/anchor_price');
+			$anchor_price = $this->model_extension_module_anchor_price->normalisePrice(isset($this->request->post['anchor_price']) ? $this->request->post['anchor_price'] : '');
+			$anchor_reference_date = $this->model_extension_module_anchor_price->normaliseDate(isset($this->request->post['anchor_reference_date']) ? $this->request->post['anchor_reference_date'] : '');
+
+			if ($anchor_price === false || $anchor_reference_date === false || (($anchor_price === '') !== ($anchor_reference_date === ''))) {
+				$this->error['anchor_price_pair'] = $this->language->get('error_anchor_price_pair');
+
+				if (!isset($this->error['warning'])) {
+					$this->error['warning'] = $this->error['anchor_price_pair'];
+				}
+			}
+		}
+]]></add>
+	    </operation>
+	  </file>
+
+	  <file path="admin/view/template/catalog/product_form.twig">
+	    <operation error="skip">
+	      <ignoreif><![CDATA[anchor-price-admin-product-fields-v1]]></ignoreif>
+	      <search><![CDATA[<label class="col-sm-2 control-label" for="input-tax-class">{{ entry_tax_class }}</label>]]></search>
+	      <add position="before" offset="1"><![CDATA[
+			  {# anchor-price-admin-product-fields-v1 #}
+			  {% if entry_anchor_price is defined %}
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label" for="input-anchor-price"><span data-toggle="tooltip" title="{{ help_anchor_price }}">{{ entry_anchor_price }}</span></label>
+			    <div class="col-sm-10">
+                  <input type="number" min="0.0001" step="0.0001" name="anchor_price" value="{{ anchor_price|e }}" placeholder="{{ entry_anchor_price|e }}" id="input-anchor-price" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-anchor-reference-date"><span data-toggle="tooltip" title="{{ help_anchor_reference_date }}">{{ entry_anchor_reference_date }}</span></label>
+                <div class="col-sm-3">
+                  <div class="input-group date">
+                    <input type="text" name="anchor_reference_date" value="{{ anchor_reference_date|e }}" placeholder="YYYY-MM-DD" data-date-format="YYYY-MM-DD" id="input-anchor-reference-date" class="form-control" />
+                    <span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button></span>
+                  </div>
+			    </div>
+			  </div>
+			  {% endif %}
+]]></add>
+    </operation>
+  </file>
+
+	  <file path="catalog/view/theme/basel/template/product/{single_product,single_product_search}.twig">
+	    <operation error="skip">
+	      <ignoreif><![CDATA[anchor-price-basel-product-card-v1]]></ignoreif>
+	      <search><![CDATA[</div><!-- .price -->]]></search>
+      <add position="after"><![CDATA[
+                            {# anchor-price-basel-product-card-v1 #}
+                            {% if product.anchor_price %}
+                              <p class="anchor-price"><span class="anchor-price__label">{{ product.anchor_price_text }}</span> <span class="anchor-price__value">{{ product.anchor_price }}</span></p>
+                            {% endif %}
+]]></add>
+	    </operation>
+	  </file>
+
+	  <file path="catalog/view/theme/basel/template/extension/module/basel_products.twig">
+	    <operation error="skip">
+	      <ignoreif><![CDATA[anchor-price-basel-products-module-v1]]></ignoreif>
+	      <search><![CDATA[</div><!-- .price -->]]></search>
+	      <add position="after"><![CDATA[
+											{# anchor-price-basel-products-module-v1 #}
+											{% if product.anchor_price %}
+											  <p class="anchor-price"><span class="anchor-price__label">{{ product.anchor_price_text }}</span> <span class="anchor-price__value">{{ product.anchor_price }}</span></p>
+											{% endif %}
+]]></add>
+	    </operation>
+	  </file>
+
+  <file path="catalog/view/theme/basel/template/product/{product,quickview}.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[anchor-price-basel-product-detail-v1]]></ignoreif>
+      <search><![CDATA[{% endif %} <!-- if price ends -->]]></search>
+      <add position="before"><![CDATA[
+                            {# anchor-price-basel-product-detail-v1 #}
+                            {% if anchor_price %}
+                              <p class="anchor-price"><span class="anchor-price__label">{{ anchor_price_text }}</span> <span class="anchor-price__value">{{ anchor_price }}</span></p>
+                            {% endif %}
+]]></add>
+    </operation>
+  </file>
+
+	  <file path="catalog/view/theme/default/template/product/product.twig">
+	    <operation error="skip">
+	      <ignoreif><![CDATA[anchor-price-default-product-detail-v1]]></ignoreif>
+	      <search><![CDATA[            {% if points %}]]></search>
+      <add position="before"><![CDATA[
+            {# anchor-price-default-product-detail-v1 #}
+            {% if anchor_price %}
+            <li class="anchor-price"><span class="anchor-price__label">{{ anchor_price_text }}</span> <span class="anchor-price__value">{{ anchor_price }}</span></li>
+            {% endif %}
+]]></add>
+	    </operation>
+	    <operation error="skip">
+	      <ignoreif><![CDATA[anchor-price-default-related-card-v1]]></ignoreif>
+	      <search><![CDATA[<div class="button-group">]]></search>
+	      <add position="before"><![CDATA[
+			  {# anchor-price-default-related-card-v1 #}
+			  {% if product.anchor_price %}
+			  <p class="anchor-price"><span class="anchor-price__label">{{ product.anchor_price_text }}</span> <span class="anchor-price__value">{{ product.anchor_price }}</span></p>
+			  {% endif %}
+]]></add>
+	    </operation>
+	  </file>
+
+  <file path="catalog/view/theme/default/template/product/{category,search,manufacturer_info,special}.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[anchor-price-default-listing-card-v1]]></ignoreif>
+      <search><![CDATA[                {% if product.rating %}]]></search>
+      <add position="before"><![CDATA[
+                {# anchor-price-default-listing-card-v1 #}
+                {% if product.anchor_price %}
+                <p class="anchor-price"><span class="anchor-price__label">{{ product.anchor_price_text }}</span> <span class="anchor-price__value">{{ product.anchor_price }}</span></p>
+                {% endif %}
+]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/default/template/extension/module/{featured,latest,bestseller,special}.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[anchor-price-default-module-card-v1]]></ignoreif>
+      <search><![CDATA[      <div class="button-group">]]></search>
+      <add position="before"><![CDATA[
+      {# anchor-price-default-module-card-v1 #}
+      {% if product.anchor_price %}
+      <p class="anchor-price"><span class="anchor-price__label">{{ product.anchor_price_text }}</span> <span class="anchor-price__value">{{ product.anchor_price }}</span></p>
+      {% endif %}
+]]></add>
+    </operation>
+  </file>
+</modification>

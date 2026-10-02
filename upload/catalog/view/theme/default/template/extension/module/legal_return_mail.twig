@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head><meta charset="utf-8"><title>#{{ request_id }}</title></head>
+<body style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#222;line-height:1.5">
+  <div style="max-width:680px;margin:0 auto">
+    <h2 style="color:#222">{{ store_name|e }}</h2>
+    <p>{{ is_admin ? text_mail_intro_admin : text_mail_intro_customer }}</p>
+    <p style="padding:12px;border:2px solid #333"><strong>{{ request_type == 'withdrawal_14_days' ? text_withdrawal_declaration : text_return_declaration }}</strong></p>
+    <p><strong>{{ text_mail_reference }}:</strong> #{{ request_id }}<br><strong>{{ text_mail_submitted_at }}:</strong> {{ submitted_at|e }}</p>
+    <table style="border-collapse:collapse;width:100%;margin:18px 0" cellpadding="8">
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_request_type }}</th><td style="border:1px solid #ccc">{{ request_type_label|e }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_order_id }}</th><td style="border:1px solid #ccc">#{{ order_id }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_firstname }} / {{ entry_lastname }}</th><td style="border:1px solid #ccc">{{ firstname|e }} {{ lastname|e }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_email }}</th><td style="border:1px solid #ccc">{{ email|e }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_telephone }}</th><td style="border:1px solid #ccc">{{ telephone|e }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_address }}</th><td style="border:1px solid #ccc">{{ address|e|nl2br }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_received_date }}</th><td style="border:1px solid #ccc">{{ received_date|e }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_product_details }}</th><td style="border:1px solid #ccc">{{ product_details|e|nl2br }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_reason }}</th><td style="border:1px solid #ccc">{{ reason ? reason|e|nl2br : '—' }}</td></tr>
+      <tr><th align="left" style="border:1px solid #ccc;background:#f4f4f4">{{ entry_iban }}</th><td style="border:1px solid #ccc">{{ iban ? iban|e : '—' }}</td></tr>
+    </table>
+    <p style="padding:12px;background:#f4f4f4;border-left:4px solid #555">{{ is_admin ? text_mail_admin_notice : text_mail_notice }}</p>
+  </div>
+</body>
+</html>

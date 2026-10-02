@@ -1,0 +1,18 @@
+<div class="legal-warranty-footer-notice" role="region" aria-label="{{ heading_title|e }}">
+  <div class="legal-warranty-footer-notice__inner">
+    <a class="legal-warranty-footer-notice__link" href="#legal-warranty-modal" data-toggle="modal" aria-controls="legal-warranty-modal" aria-haspopup="dialog"><i class="fa fa-shield" aria-hidden="true"></i> {{ text_open_notice }}</a>
+    <noscript><a class="legal-warranty-footer-notice__fallback" href="{{ asset_url|e }}" target="_blank" rel="noopener noreferrer">{{ text_view_full_notice }}</a></noscript>
+  </div>
+</div>
+<div class="modal fade legal-warranty-modal" id="legal-warranty-modal" tabindex="-1" role="dialog" aria-labelledby="legal-warranty-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document"><div class="modal-content">
+    <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="{{ text_close|e }}"><span aria-hidden="true">&times;</span></button><h2 class="modal-title" id="legal-warranty-modal-title">{{ text_modal_title }}</h2></div>
+    <div class="modal-body">
+      <a href="{{ asset_url|e }}" target="_blank" rel="noopener noreferrer" title="{{ text_view_full_notice|e }}"><img src="{{ asset_url|e }}" alt="{{ text_modal_title|e }}" class="legal-warranty-official-notice" /></a>
+    </div>
+    <div class="modal-footer"><a href="{{ eu_url|e }}" target="_blank" rel="noopener noreferrer" class="btn btn-link">{{ text_eu_information }} <span aria-hidden="true">↗</span></a><button type="button" class="btn btn-default" data-dismiss="modal">{{ text_close }}</button></div>
+  </div></div>
+</div>
+<style>
+.legal-warranty-footer-notice{position:relative;z-index:20;margin:0;background:var(--legal-warranty-accent,#00b5cc);color:#fff}.legal-warranty-footer-notice__inner{max-width:1170px;margin:0 auto;padding:12px 15px;text-align:center}.legal-warranty-footer-notice__link,.legal-warranty-footer-notice__fallback{display:inline;color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:2px}.legal-warranty-footer-notice__link:hover,.legal-warranty-footer-notice__link:focus,.legal-warranty-footer-notice__fallback:hover,.legal-warranty-footer-notice__fallback:focus{color:var(--legal-warranty-dark,#222222);text-decoration:underline}.legal-warranty-modal .modal-dialog{width:96%;max-width:980px;margin:30px auto}.legal-warranty-modal .modal-body{background:#f7f7f7;max-height:72vh;overflow:auto;text-align:center;padding:16px}.legal-warranty-official-notice{display:block;width:100%;height:auto;margin:0 auto;background:#fff}@media(max-width:767px){.legal-warranty-footer-notice__inner{padding:12px}.legal-warranty-footer-notice__link,.legal-warranty-footer-notice__fallback{display:block}.legal-warranty-modal .modal-dialog{width:auto;margin:10px}.legal-warranty-modal .modal-body{max-height:68vh;padding:6px}.legal-warranty-modal .modal-footer{text-align:center}.legal-warranty-modal .modal-footer .btn{display:block;width:100%;white-space:normal}}
+</style>

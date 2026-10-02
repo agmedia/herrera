@@ -1,0 +1,11 @@
+<aside class="legal-warranty-checkout" aria-label="{{ heading_title|e }}">
+  <div class="legal-warranty-checkout__icon"><i class="fa fa-shield" aria-hidden="true"></i></div>
+  <div class="legal-warranty-checkout__content">
+    <p class="legal-warranty-checkout__title"><a href="{{ asset_url|e }}" target="_blank" rel="noopener noreferrer" title="{{ text_view_full_notice|e }}">{{ text_open_notice }} <span aria-hidden="true">↗</span></a></p>
+    <p>{{ text_checkout_notice }}</p>
+    <p><a href="{{ eu_url|e }}" target="_blank" rel="noopener noreferrer">{{ text_eu_information }} <span aria-hidden="true">↗</span></a></p>
+  </div>
+</aside>
+<style>
+.legal-warranty-checkout{display:flex;align-items:flex-start;gap:14px;margin:15px 0 20px;padding:16px 18px;border:2px solid var(--legal-warranty-accent,#00b5cc);border-radius:4px;background:#f7f7f7;color:var(--legal-warranty-dark,#222222)}.legal-warranty-checkout__icon{font-size:28px;color:var(--legal-warranty-accent,#00b5cc);line-height:1}.legal-warranty-checkout__content p{margin:0 0 6px}.legal-warranty-checkout__content p:last-child{margin-bottom:0}.legal-warranty-checkout__title a{color:var(--legal-warranty-dark,#222222);font-size:18px;font-weight:700;text-decoration:underline}.legal-warranty-checkout__title a:hover,.legal-warranty-checkout__title a:focus{color:var(--legal-warranty-accent,#00b5cc);text-decoration:none}@media(max-width:600px){.legal-warranty-checkout{display:block;padding:14px}.legal-warranty-checkout__icon{margin-bottom:8px}.legal-warranty-checkout__title a,.legal-warranty-checkout__content p:last-child a{display:block;white-space:normal}}
+</style>

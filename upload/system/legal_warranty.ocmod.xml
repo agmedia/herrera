@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>EU Legal Guarantee Notice (OC 3.0.3.8)</name>
+  <code>legal_warranty_oc3</code>
+  <version>1.1.0</version>
+  <author>Herrera</author>
+  <link>https://eur-lex.europa.eu/legal-content/HR/TXT/?uri=CELEX:32025R1960</link>
+
+  <file path="catalog/controller/common/footer.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[$data['legal_warranty_footer']]]></ignoreif>
+      <search><![CDATA[return $this->load->view('common/footer', $data);]]></search>
+      <add position="before"><![CDATA[
+		$data['legal_warranty_footer'] = $this->load->controller('extension/module/legal_warranty/footer');
+
+]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/default/template/common/footer.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{{ legal_warranty_footer }}]]></ignoreif>
+      <search><![CDATA[<footer>]]></search>
+      <add position="before"><![CDATA[
+{{ legal_warranty_footer }}]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/basel/template/common/footer.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{{ legal_warranty_footer }}]]></ignoreif>
+      <search><![CDATA[<div id="footer">]]></search>
+      <add position="before"><![CDATA[
+{{ legal_warranty_footer }}]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/checkout/checkout.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[$data['legal_warranty_checkout']]]></ignoreif>
+      <search><![CDATA[$data['column_left'] = $this->load->controller('common/column_left');]]></search>
+      <add position="before"><![CDATA[
+		$data['legal_warranty_checkout'] = $this->load->controller('extension/module/legal_warranty/checkout');
+
+]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/default/template/checkout/checkout.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{{ legal_warranty_checkout }}]]></ignoreif>
+      <search><![CDATA[<h1>{{ heading_title }}</h1>]]></search>
+      <add position="after"><![CDATA[
+      {{ legal_warranty_checkout }}]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/basel/template/checkout/checkout.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{{ legal_warranty_checkout }}]]></ignoreif>
+      <search><![CDATA[<h1 id="page-title">{{ heading_title }}</h1>]]></search>
+      <add position="after"><![CDATA[
+	  {{ legal_warranty_checkout }}]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/extension/quickcheckout/checkout.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[$data['legal_warranty_checkout']]]></ignoreif>
+      <search><![CDATA[$data['column_left'] = $this->load->controller('common/column_left');]]></search>
+      <add position="before"><![CDATA[
+		$data['legal_warranty_checkout'] = $this->load->controller('extension/module/legal_warranty/checkout');
+
+]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/basel/template/extension/quickcheckout/checkout.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{{ legal_warranty_checkout }}]]></ignoreif>
+      <search><![CDATA[<h1 id="page-title">{{ heading_title }}</h1>]]></search>
+      <add position="after"><![CDATA[
+	  {{ legal_warranty_checkout }}]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/mail/order.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[$data['legal_warranty_email']]]></ignoreif>
+      <search><![CDATA[$data['logo'] = $order_info['store_url'] . 'image/' . $this->config->get('config_logo');]]></search>
+      <add position="before"><![CDATA[
+		$data['legal_warranty_email'] = $this->load->controller('extension/module/legal_warranty/email', array('store_url' => $order_info['store_url'], 'language_code' => $order_info['language_code']));
+
+]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/default/template/mail/order_add.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{{ legal_warranty_email }}]]></ignoreif>
+      <search><![CDATA[<p style="margin-top: 0px; margin-bottom: 20px;">{{ text_footer }}</p>]]></search>
+      <add position="before"><![CDATA[
+  {{ legal_warranty_email }}
+]]></add>
+    </operation>
+  </file>
+</modification>

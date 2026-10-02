@@ -1,0 +1,25 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header"><div class="container-fluid">
+    <div class="pull-right"><a href="{{ export_url|e }}" class="btn btn-success" title="{{ button_export }}"><i class="fa fa-download"></i> {{ button_export }}</a> <a href="{{ settings_url|e }}" class="btn btn-default" title="{{ button_settings }}"><i class="fa fa-cog"></i></a></div>
+    <h1>{{ text_requests }}</h1><ul class="breadcrumb">{% for breadcrumb in breadcrumbs %}<li><a href="{{ breadcrumb.href|e }}">{{ breadcrumb.text }}</a></li>{% endfor %}</ul>
+  </div></div>
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-list"></i> {{ text_requests }}</h3></div>
+      <div class="panel-body">
+        <form action="{{ filter_action|e }}" method="get" class="well">
+          <input type="hidden" name="route" value="extension/module/legal_return/requests" /><input type="hidden" name="user_token" value="{{ user_token|e }}" />
+          <div class="row"><div class="col-sm-5"><label>{{ entry_filter_search }}</label><input type="text" name="filter_search" value="{{ filter_search|e }}" class="form-control" /></div>
+            <div class="col-sm-4"><label>{{ entry_filter_status }}</label><select name="filter_status" class="form-control"><option value=""></option>{% for value,label in statuses %}<option value="{{ value|e }}"{% if value == filter_status %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+            <div class="col-sm-3"><label>&nbsp;</label><button type="submit" class="btn btn-primary btn-block"><i class="fa fa-filter"></i> {{ button_filter }}</button></div></div>
+        </form>
+        <div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr><th>{{ column_id }}</th><th>{{ column_order_id }}</th><th>{{ column_customer }}</th><th>{{ column_email }}</th><th>{{ column_type }}</th><th>{{ column_status }}</th><th>{{ column_date_added }}</th><th class="text-right">{{ column_action }}</th></tr></thead>
+          <tbody>{% if requests %}{% for item in requests %}<tr><td>#{{ item.legal_return_id }}</td><td>#{{ item.order_id }}</td><td>{{ item.customer|e }}</td><td>{{ item.email|e }}</td><td>{{ item.request_type }}</td><td>{{ item.status }}</td><td>{{ item.date_added|e }}</td><td class="text-right"><a href="{{ item.view|e }}" class="btn btn-primary" title="{{ button_view }}"><i class="fa fa-eye"></i></a></td></tr>{% endfor %}{% else %}<tr><td colspan="8" class="text-center">{{ text_no_results }}</td></tr>{% endif %}</tbody>
+        </table></div>
+        <div class="row"><div class="col-sm-6 text-left">{{ pagination }}</div><div class="col-sm-6 text-right">{{ results }}</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

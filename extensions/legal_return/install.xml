@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Legal Return and Withdrawal (OC 3.0.3.8)</name>
+  <code>legal_return_oc3</code>
+  <version>1.1.0</version>
+  <author>Herrera</author>
+  <link>https://narodne-novine.nn.hr/clanci/sluzbeni/2026_06_59_728.html</link>
+
+  <file path="catalog/controller/common/footer.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[$data['legal_return_footer']]]></ignoreif>
+      <search><![CDATA[return $this->load->view('common/footer', $data);]]></search>
+      <add position="before"><![CDATA[
+		$data['legal_return_footer'] = $this->load->controller('extension/module/legal_return/footer');
+
+]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/default/template/common/footer.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{% if informations or legal_return_footer %}]]></ignoreif>
+      <search><![CDATA[{% if informations %}]]></search>
+      <add position="replace"><![CDATA[{% if informations or legal_return_footer %}]]></add>
+    </operation>
+    <operation error="skip">
+      <ignoreif><![CDATA[legal_return_footer.href]]></ignoreif>
+      <search index="0"><![CDATA[</ul>]]></search>
+      <add position="before"><![CDATA[
+          {% if legal_return_footer %}
+          <li><a href="{{ legal_return_footer.href|e }}">{{ legal_return_footer.text }}</a></li>
+          {% endif %}]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/basel/template/common/footer.twig">
+    <operation error="skip">
+      <ignoreif><![CDATA[{% if informations or legal_return_footer %}]]></ignoreif>
+      <search><![CDATA[{% if informations %}]]></search>
+      <add position="replace"><![CDATA[{% if informations or legal_return_footer %}]]></add>
+    </operation>
+    <operation error="skip">
+      <ignoreif><![CDATA[legal_return_footer.href]]></ignoreif>
+      <search index="1"><![CDATA[</ul>]]></search>
+      <add position="before"><![CDATA[
+                {% if legal_return_footer %}
+                <li><a href="{{ legal_return_footer.href|e }}">{{ legal_return_footer.text }}</a></li>
+                {% endif %}]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/controller/common/column_left.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[extension/module/legal_return/requests]]></ignoreif>
+      <search><![CDATA[$sale = array();]]></search>
+      <add position="after"><![CDATA[
+
+			if ($this->config->has('module_legal_return_status') && $this->user->hasPermission('access', 'extension/module/legal_return')) {
+				$sale[] = array(
+					'name'     => 'Povrati i raskidi',
+					'href'     => $this->url->link('extension/module/legal_return/requests', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()
+				);
+			}
+]]></add>
+    </operation>
+  </file>
+</modification>

@@ -59,6 +59,9 @@
 !/storage/upload/luceed_json/
 !/storage/upload/assets/
 
+# Generated digital price lists and their 30-day archive
+/storage/digital_pricelist/
+
 # IDE Project files
 /.idea
 /upload/.idea
