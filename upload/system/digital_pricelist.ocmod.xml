@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-  <name>Digital Price List Footer Link (OC 3.0.3.8)</name>
+  <name>Digital Price List Integration (OC 3.0.3.8)</name>
   <code>digital_pricelist_footer_oc3</code>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <author>Herrera</author>
+
+  <file path="admin/controller/common/column_left.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[digital-pricelist-admin-catalog-menu-v1]]></ignoreif>
+      <search><![CDATA[$catalog = array();]]></search>
+      <add position="after"><![CDATA[
+			// digital-pricelist-admin-catalog-menu-v1
+			if ($this->config->get('module_digital_pricelist_status') && $this->user->hasPermission('access', 'extension/module/digital_pricelist')) {
+				$catalog[] = array(
+					'name'     => $this->language->get('text_digital_pricelist'),
+					'href'     => $this->url->link('extension/module/digital_pricelist', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()
+				);
+			}
+
+]]></add>
+    </operation>
+  </file>
 
   <file path="catalog/controller/common/footer.php">
     <operation error="skip">

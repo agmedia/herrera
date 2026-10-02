@@ -8,6 +8,7 @@ $_['text_attribute_group']           = 'Grupe atributa';
 $_['text_backup']                    = 'Pohrana i povrat podataka';
 $_['text_banner']                    = 'Baneri';
 $_['text_catalog']                   = 'Katalog';
+$_['text_digital_pricelist']         = 'Cjenici';
 $_['text_category']                  = 'Kategorije';
 $_['text_country']                   = 'Države';
 $_['text_coupon']                    = 'Kuponi';
