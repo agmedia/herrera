@@ -4,6 +4,91 @@ class ControllerExtensionModuleDigitalPricelist extends Controller {
 		return '';
 	}
 
+	/**
+	 * Public landing page for human-readable access to current and archived feeds.
+	 */
+	public function page() {
+		if (!$this->isEnabled()) {
+			return new Action('error/not_found');
+		}
+
+		$data = $this->load->language('extension/module/digital_pricelist');
+		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription($this->language->get('text_meta_description'));
+
+		$data['breadcrumbs'] = array(
+			array(
+				'text' => $this->language->get('text_home'),
+				'href' => $this->viewUrl($this->url->link('common/home'))
+			),
+			array(
+				'text' => $this->language->get('heading_title'),
+				'href' => $this->viewUrl($this->url->link('extension/module/digital_pricelist/page', '', true))
+			)
+		);
+
+		$data['xml_url'] = $this->viewUrl($this->url->link('extension/module/digital_pricelist/xml', '', true));
+		$data['csv_url'] = $this->viewUrl($this->url->link('extension/module/digital_pricelist/csv', '', true));
+		$data['archives_api_url'] = $this->viewUrl($this->url->link('extension/module/digital_pricelist/archives', '', true));
+		$data['archives'] = array();
+
+		$this->load->model('extension/module/digital_pricelist');
+		$lock = false;
+
+		try {
+			$lock = $this->model_extension_module_digital_pricelist->acquireReadLock();
+			$archives = $this->model_extension_module_digital_pricelist->getArchives();
+			$this->model_extension_module_digital_pricelist->releaseReadLock($lock);
+			$lock = false;
+
+			foreach ($archives as $archive) {
+				$timestamp = strtotime($archive['archived_at']);
+				$data['archives'][] = array(
+					'filename' => $archive['filename'],
+					'format' => strtoupper($archive['format']),
+					'archived_at' => $timestamp ? date($this->language->get('datetime_format'), $timestamp) : $archive['archived_at'],
+					'size' => $this->formatBytes((int)$archive['size']),
+					'url' => $this->viewUrl($this->url->link(
+						'extension/module/digital_pricelist/archive',
+						'file=' . rawurlencode($archive['filename']),
+						true
+					))
+				);
+			}
+		} catch (Throwable $exception) {
+			if (is_resource($lock)) {
+				$this->model_extension_module_digital_pricelist->releaseReadLock($lock);
+			}
+
+			$this->log->write('Digital price list page archive listing failed: ' . $exception->getMessage());
+		}
+
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->setOutput($this->load->view('extension/module/digital_pricelist_page', $data));
+	}
+
+	/**
+	 * Footer link data consumed by digital_pricelist.ocmod.xml.
+	 */
+	public function footer() {
+		if (!$this->isEnabled()) {
+			return array();
+		}
+
+		$this->load->language('extension/module/digital_pricelist');
+
+		return array(
+			'title' => $this->language->get('text_footer_link'),
+			'href' => $this->viewUrl($this->url->link('extension/module/digital_pricelist/page', '', true))
+		);
+	}
+
 	public function xml() {
 		$this->serveCurrent('xml');
 	}
@@ -247,6 +332,24 @@ class ControllerExtensionModuleDigitalPricelist extends Controller {
 
 	private function isEnabled() {
 		return (bool)$this->config->get('module_digital_pricelist_status');
+	}
+
+	private function viewUrl($url) {
+		return str_replace('&amp;', '&', $url);
+	}
+
+	private function formatBytes($bytes) {
+		$bytes = max(0, (int)$bytes);
+		$units = array('B', 'KB', 'MB', 'GB');
+		$unit = 0;
+		$value = (float)$bytes;
+
+		while ($value >= 1024 && $unit < count($units) - 1) {
+			$value /= 1024;
+			$unit++;
+		}
+
+		return number_format($value, $unit === 0 ? 0 : 1, ',', '.') . ' ' . $units[$unit];
 	}
 
 	private function isAuthorisedCronRequest() {

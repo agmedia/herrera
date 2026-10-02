@@ -1,0 +1,24 @@
+<?php
+$_['heading_title'] = 'Cjenici';
+$_['text_meta_description'] = 'Aktualni i arhivirani digitalni cjenici internetske trgovine Herrera u XML i CSV formatu.';
+$_['text_home'] = 'Početna';
+$_['text_footer_link'] = 'Cjenici';
+$_['text_intro'] = 'Preuzmite aktualni digitalni cjenik proizvoda u formatu prilagođenom ljudima i informacijskim sustavima.';
+$_['text_updated_daily'] = 'Cjenici se automatski osvježavaju jednom dnevno i sadrže aktualne cijene, sidrene cijene, barkodove i dostupnost proizvoda.';
+$_['text_xml_title'] = 'XML cjenik';
+$_['text_xml_description'] = 'Strukturirani cjenik namijenjen automatiziranoj razmjeni podataka.';
+$_['text_csv_title'] = 'CSV cjenik';
+$_['text_csv_description'] = 'Tablični cjenik za pregled i obradu u Excelu ili drugim programima.';
+$_['text_archive_title'] = 'Arhiva cjenika';
+$_['text_archive_description'] = 'Prethodne verzije cjenika dostupne su najmanje 30 dana.';
+$_['text_archive_heading'] = 'Prethodne verzije';
+$_['text_archive_empty'] = 'Arhiva još nema prethodnih verzija. Prva će se pojaviti nakon sljedećeg dnevnog ažuriranja.';
+$_['text_archive_api'] = 'Strojno čitljiv popis arhive (JSON)';
+$_['text_format'] = 'Format';
+$_['text_generated'] = 'Arhivirano';
+$_['text_size'] = 'Veličina';
+$_['datetime_format'] = 'd.m.Y. H:i';
+$_['button_open_xml'] = 'Otvori XML';
+$_['button_download_csv'] = 'Preuzmi CSV';
+$_['button_view_archive'] = 'Pregledaj arhivu';
+$_['button_download_archive'] = 'Preuzmi';

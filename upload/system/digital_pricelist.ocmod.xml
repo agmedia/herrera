@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Digital Price List Footer Link (OC 3.0.3.8)</name>
+  <code>digital_pricelist_footer_oc3</code>
+  <version>1.0.0</version>
+  <author>Herrera</author>
+
+  <file path="catalog/controller/common/footer.php">
+    <operation error="skip">
+      <ignoreif><![CDATA[extension/module/digital_pricelist/footer]]></ignoreif>
+      <search><![CDATA[$data['contact'] = $this->url->link('information/contact');]]></search>
+      <add position="before"><![CDATA[
+		$digital_pricelist_footer = $this->load->controller('extension/module/digital_pricelist/footer');
+
+		if ($digital_pricelist_footer) {
+			$data['informations'][] = $digital_pricelist_footer;
+		}
+
+]]></add>
+    </operation>
+  </file>
+</modification>

@@ -1,0 +1,24 @@
+<?php
+$_['heading_title'] = 'Price lists';
+$_['text_meta_description'] = 'Current and archived Herrera online store price lists in XML and CSV formats.';
+$_['text_home'] = 'Home';
+$_['text_footer_link'] = 'Price lists';
+$_['text_intro'] = 'Download the current digital product price list in formats suitable for people and information systems.';
+$_['text_updated_daily'] = 'Price lists are refreshed automatically once a day and contain current prices, anchor prices, barcodes and product availability.';
+$_['text_xml_title'] = 'XML price list';
+$_['text_xml_description'] = 'A structured price list for automated data exchange.';
+$_['text_csv_title'] = 'CSV price list';
+$_['text_csv_description'] = 'A tabular price list for viewing and processing in Excel or other software.';
+$_['text_archive_title'] = 'Price list archive';
+$_['text_archive_description'] = 'Previous price list versions remain available for at least 30 days.';
+$_['text_archive_heading'] = 'Previous versions';
+$_['text_archive_empty'] = 'There are no previous versions yet. The first one will appear after the next daily update.';
+$_['text_archive_api'] = 'Machine-readable archive index (JSON)';
+$_['text_format'] = 'Format';
+$_['text_generated'] = 'Archived';
+$_['text_size'] = 'Size';
+$_['datetime_format'] = 'd/m/Y H:i';
+$_['button_open_xml'] = 'Open XML';
+$_['button_download_csv'] = 'Download CSV';
+$_['button_view_archive'] = 'View archive';
+$_['button_download_archive'] = 'Download';
